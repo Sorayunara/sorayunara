@@ -1,10 +1,18 @@
-# 🌌 Sorayunara Programming Language (`.sora`)
-> **Sorayunara — Fast, Safe, Elegant, and Expressive Language for Systems, Backend, Embedded, & AI/ML.**
+<p align="center">
+  <img src="assets/logo.png" alt="Sorayunara Programming Language Logo" width="220" />
+</p>
 
-**Organization**: Sorayunara  
-**Institution/Business**: Sorayunara  
-**Official Extension**: `.sora`  
-**Registry**: `https://registry.sorayunara.org`  
+<h1 align="center">🌌 Sorayunara Programming Language (<code>.sora</code>)</h1>
+
+<p align="center">
+  <strong>Fast, Safe, Elegant, and Expressive Language for Systems, Backend, Embedded, & AI/ML.</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Sorayunara/sorayunara/actions"><img src="https://img.shields.io/badge/build-passing-brightgreen.svg" alt="Build Status"></a>
+  <a href="https://github.com/Sorayunara/sorayunara/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
+  <a href="https://github.com/Sorayunara/sorayunara"><img src="https://img.shields.io/badge/extension-.sora-purple.svg" alt="Extension"></a>
+</p>
 
 ---
 

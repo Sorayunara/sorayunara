@@ -4,6 +4,7 @@
   "description": "Language Server, Syntax Highlighting, Formatting and Debugging for Sorayunara (.sora)",
   "version": "0.1.0",
   "publisher": "sorayunara",
+  "icon": "icon.png",
   "engines": {
     "vscode": "^1.75.0"
   },
