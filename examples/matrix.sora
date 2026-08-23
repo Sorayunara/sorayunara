@@ -1,0 +1,51 @@
+// examples/matrix.sora — 2D Matrix Multiplication & Linear Algebra in Sorayunara (.sora)
+import std.io
+
+struct Matrix2x2 {
+    a: Int,
+    b: Int,
+    c: Int,
+    d: Int
+}
+
+impl Matrix2x2 {
+    pub fn new(a: Int, b: Int, c: Int, d: Int) -> Matrix2x2 {
+        return Matrix2x2 { a: a, b: b, c: c, d: d }
+    }
+
+    pub fn multiply(&self, other: &Matrix2x2) -> Matrix2x2 {
+        let r_a = (self.a * other.a) + (self.b * other.c)
+        let r_b = (self.a * other.b) + (self.b * other.d)
+        let r_c = (self.c * other.a) + (self.d * other.c)
+        let r_d = (self.c * other.b) + (self.d * other.d)
+        return Matrix2x2::new(r_a, r_b, r_c, r_d)
+    }
+
+    pub fn determinant(&self) -> Int {
+        return (self.a * self.d) - (self.b * self.c)
+    }
+
+    pub fn print_matrix(&self) {
+        print("| " + self.a.to_string() + " " + self.b.to_string() + " |")
+        print("| " + self.c.to_string() + " " + self.d.to_string() + " |")
+    }
+}
+
+fn main() -> Int {
+    print("🌌 Sorayunara Matrix Multiplication Example:")
+    let m1 = Matrix2x2::new(1, 2, 3, 4)
+    let m2 = Matrix2x2::new(5, 6, 7, 8)
+
+    print("Matrix 1:")
+    m1.print_matrix()
+
+    print("Matrix 2:")
+    m2.print_matrix()
+
+    let product = m1.multiply(&m2)
+    print("Product (m1 x m2):")
+    product.print_matrix()
+    print("Determinant: " + product.determinant().to_string())
+
+    return 0
+}

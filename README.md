@@ -12,6 +12,8 @@
   <a href="https://github.com/Sorayunara/sorayunara/actions"><img src="https://img.shields.io/badge/build-passing-brightgreen.svg" alt="Build Status"></a>
   <a href="https://github.com/Sorayunara/sorayunara/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
   <a href="https://github.com/Sorayunara/sorayunara"><img src="https://img.shields.io/badge/extension-.sora-purple.svg" alt="Extension"></a>
+  <a href="https://github.com/Sorayunara/sorayunara/blob/main/CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
+  <a href="https://github.com/Sorayunara/sorayunara/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22"><img src="https://img.shields.io/badge/good%20first%20issues-welcome-7057ff.svg" alt="Good First Issues"></a>
 </p>
 
 ---
@@ -81,6 +83,9 @@ sorayunara publish         # Publish package to official Sorayunara Registry
 
 ## 📄 Documentation & Specification
 - Language Specification: [SPECIFICATION.md](SPECIFICATION.md)
+- Contributing Guide: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Community Good First Issues: [GitHub Issues](https://github.com/Sorayunara/sorayunara/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
+- Starter Project Template: [sorayunara-starter-template](https://github.com/Sorayunara/sorayunara-starter-template)
 - HTML Docs: `docs/index.html` (via `sorayunara doc`)
 - VS Code Extension: `editors/vscode/`
 - WebAssembly Playground: `playground/`
