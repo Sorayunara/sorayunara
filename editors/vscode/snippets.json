@@ -1,0 +1,47 @@
+{
+  "Function": {
+    "prefix": "fn",
+    "body": [
+      "fn ${1:name}(${2:params}) -> ${3:Int} {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Create an Aether function"
+  },
+  "Async Function": {
+    "prefix": "asyncfn",
+    "body": [
+      "async fn ${1:name}(${2:params}) -> ${3:String} {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Create an async function"
+  },
+  "Main Function": {
+    "prefix": "main",
+    "body": [
+      "fn main() {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Aether main entry point"
+  },
+  "Struct": {
+    "prefix": "struct",
+    "body": [
+      "struct ${1:Name} {",
+      "    ${2:field}: ${3:Type},",
+      "}"
+    ],
+    "description": "Create a struct"
+  },
+  "Match": {
+    "prefix": "match",
+    "body": [
+      "match ${1:expr} {",
+      "    ${2:pattern} => ${3:result},",
+      "}"
+    ],
+    "description": "Pattern match"
+  }
+}

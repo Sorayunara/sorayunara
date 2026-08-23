@@ -1,0 +1,12 @@
+// examples/main.sora - Sorayunara Sample Program
+// Organization: Sorayunara
+fn calculate(value: Int) -> Int {
+    let doubled: Int = value * 2
+    return doubled
+}
+
+fn main() -> Int {
+    print("🌌 Sorayunara: Safe, Fast, Expressive Programming Language (.sora)")
+    let result: Int = calculate(21)
+    return result
+}

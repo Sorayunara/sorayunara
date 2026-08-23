@@ -1,0 +1,39 @@
+// std/task.ae - Structured Concurrency & Task Scope Engine for Aether
+
+pub struct TaskHandle<T> {
+    id: Int,
+    is_ready: Bool,
+    result: Option<T>,
+}
+
+impl<T> TaskHandle<T> {
+    pub fn new(id: Int) -> TaskHandle<T> {
+        return TaskHandle {
+            id: id,
+            is_ready: false,
+            result: None,
+        }
+    }
+
+    pub fn await_result(&self) -> Option<T> {
+        return self.result
+    }
+}
+
+pub struct TaskScope {
+    active_tasks: Int,
+}
+
+impl TaskScope {
+    pub fn new() -> TaskScope {
+        return TaskScope { active_tasks: 0 }
+    }
+
+    pub fn spawn_task(&mut self) {
+        self.active_tasks = self.active_tasks + 1
+    }
+
+    pub fn join_all(&mut self) {
+        self.active_tasks = 0
+    }
+}

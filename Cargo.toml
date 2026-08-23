@@ -1,0 +1,16 @@
+[package]
+name = "sorayunara"
+version = "0.1.0"
+edition = "2024"
+authors = ["Sorayunara <dev@sorayunara.org>"]
+description = "Sorayunara Programming Language — Elegant, Safe, High Performance (.sora)"
+
+[[bin]]
+name = "sorayunara"
+path = "src/main.rs"
+
+[lib]
+name = "sorayunara"
+path = "src/lib.rs"
+
+[dependencies]

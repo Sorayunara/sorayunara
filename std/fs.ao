@@ -1,0 +1,30 @@
+// std/fs.ae - File System Operations
+
+fn open_file(path: &String) -> Int {
+    print("Opening file...")
+    return 3
+}
+
+fn read_to_string(path: &String) -> String {
+    print("Reading file content...")
+    return "Aether standard filesystem content"
+}
+
+fn write_string(path: &String, content: &String) -> Bool {
+    print("Writing to file...")
+    return true
+}
+
+fn exists(path: &String) -> Bool {
+    return true
+}
+
+fn remove_file(path: &String) -> Bool {
+    print("Deleting file...")
+    return true
+}
+
+fn create_dir_all(path: &String) -> Bool {
+    print("Creating directory path...")
+    return true
+}

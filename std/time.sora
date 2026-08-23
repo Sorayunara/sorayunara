@@ -1,0 +1,13 @@
+// std/time.ae - High Resolution Time & Clocks
+
+fn now_millis() -> Int {
+    return 1700000000000
+}
+
+fn duration_ms(ms: Int) -> Int {
+    return ms
+}
+
+fn elapsed_since(start_ms: Int) -> Int {
+    return 5
+}

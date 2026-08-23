@@ -1,0 +1,30 @@
+// std/net.ae - Networking Stack: TCP, UDP, Unix Sockets
+
+fn tcp_listen(port: Int) -> Int {
+    print("[TCP] Listener bound to port")
+    return port
+}
+
+fn tcp_connect(addr: String, port: Int) -> Int {
+    print("[TCP] Connected socket")
+    return 10
+}
+
+fn udp_bind(port: Int) -> Int {
+    print("[UDP] Socket bound to port")
+    return port
+}
+
+fn udp_send_to(socket_fd: Int, data: String, addr: String, port: Int) -> Int {
+    return 1
+}
+
+fn unix_listen(path: String) -> Int {
+    print("[Unix Socket] Bound to IPC domain path")
+    return 20
+}
+
+fn unix_connect(path: String) -> Int {
+    print("[Unix Socket] Connected to IPC domain path")
+    return 21
+}

@@ -1,0 +1,17 @@
+// std/collections.ae - Standard Data Structures
+
+fn vector_new() -> [Int] {
+    return [0, 0, 0]
+}
+
+fn vector_len(v: &[Int]) -> Int {
+    return 3
+}
+
+fn map_size() -> Int {
+    return 0
+}
+
+fn deque_len() -> Int {
+    return 0
+}

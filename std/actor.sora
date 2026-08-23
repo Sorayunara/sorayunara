@@ -1,0 +1,37 @@
+// std/actor.ae - Erlang/Elixir-inspired Actor Model & Mailbox for Aether
+
+pub struct Message {
+    sender_id: Int,
+    payload: String,
+}
+
+pub struct Actor {
+    id: Int,
+    mailbox: Array<Message>,
+    running: Bool,
+}
+
+impl Actor {
+    pub fn new(id: Int) -> Actor {
+        return Actor {
+            id: id,
+            mailbox: [],
+            running: true,
+        }
+    }
+
+    pub fn send(&mut self, msg: Message) {
+        self.mailbox.push(msg)
+    }
+
+    pub fn receive(&mut self) -> Option<Message> {
+        if self.mailbox.len() == 0 {
+            return None
+        }
+        return Some(self.mailbox.remove(0))
+    }
+
+    pub fn stop(&mut self) {
+        self.running = false
+    }
+}

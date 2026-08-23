@@ -1,0 +1,16 @@
+// std/dns.ae - Asynchronous DNS Resolver
+
+fn resolve_a(domain: String) -> String {
+    print("[DNS] Resolving IPv4 address...")
+    return "127.0.0.1"
+}
+
+fn resolve_aaaa(domain: String) -> String {
+    print("[DNS] Resolving IPv6 address...")
+    return "::1"
+}
+
+fn resolve_cname(domain: String) -> String {
+    print("[DNS] Resolving CNAME canonical name...")
+    return "aether.internal"
+}

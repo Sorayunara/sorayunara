@@ -1,0 +1,51 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Sorayunara",
+  "scopeName": "source.sora",
+  "patterns": [
+    {
+      "name": "comment.line.double-slash.sorayunara",
+      "match": "//.*$"
+    },
+    {
+      "name": "comment.block.sorayunara",
+      "begin": "/\\*",
+      "end": "\\*/"
+    },
+    {
+      "name": "string.quoted.double.sorayunara",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.sorayunara",
+          "match": "\\\\."
+        }
+      ]
+    },
+    {
+      "name": "keyword.control.sorayunara",
+      "match": "\\b(if|else|while|loop|for|in|return|match|spawn|await|comptime|test|import|pub|mut|move|unsafe)\\b"
+    },
+    {
+      "name": "keyword.declaration.sorayunara",
+      "match": "\\b(fn|let|struct|enum|trait|impl|type|const)\\b"
+    },
+    {
+      "name": "entity.name.type.primitive.sorayunara",
+      "match": "\\b(Int|Float|String|Bool|Char|Option|Result|Task|Chan|RawPointer|Void)\\b"
+    },
+    {
+      "name": "constant.language.boolean.sorayunara",
+      "match": "\\b(true|false|null)\\b"
+    },
+    {
+      "name": "constant.numeric.sorayunara",
+      "match": "\\b[0-9]+(\\.[0-9]+)?\\b"
+    },
+    {
+      "name": "entity.name.function.sorayunara",
+      "match": "\\b([a-zA-Z_][a-zA-Z0-9_]*)\\s*(?=\\()"
+    }
+  ]
+}

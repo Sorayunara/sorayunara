@@ -1,0 +1,21 @@
+// std/json.ae - Aether Official Backend Ecosystem: JSON Parser & Serializer
+
+struct JsonValue {
+    raw: String,
+}
+
+fn json_encode(data: String) -> String {
+    return data
+}
+
+fn json_decode(raw_json: String) -> String {
+    return raw_json
+}
+
+fn json_stringify(raw: String) -> String {
+    return raw
+}
+
+fn json_parse(raw: String) -> String {
+    return raw
+}

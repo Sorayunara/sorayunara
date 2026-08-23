@@ -1,0 +1,11 @@
+// examples/wave.nm - Nami Wave Flow Demo
+fn flow(wave_height: Int) -> Int {
+    let surge: Int = wave_height * 2
+    return surge
+}
+
+fn main() -> Int {
+    print("🌊 Nami: Aesthetic, Minimalist Wave-Flow Execution")
+    let energy: Int = flow(21)
+    return energy
+}

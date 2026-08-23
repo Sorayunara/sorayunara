@@ -1,0 +1,48 @@
+{
+  "name": "sorayunara-language-support",
+  "displayName": "Sorayunara Language Support",
+  "description": "Language Server, Syntax Highlighting, Formatting and Debugging for Sorayunara (.sora)",
+  "version": "0.1.0",
+  "publisher": "sorayunara",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters",
+    "Formatters",
+    "Debuggers"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "sorayunara",
+        "aliases": ["Sorayunara", "sorayunara", "Aoi", "aoi", "Nami", "nami", "Aether", "aether"],
+        "extensions": [".sora", ".ao", ".nm", ".ae"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "sorayunara",
+        "scopeName": "source.sora",
+        "path": "./syntaxes/sorayunara.tmLanguage.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "sorayunara.restartServer",
+        "title": "Sorayunara: Restart Language Server"
+      },
+      {
+        "command": "sorayunara.runTests",
+        "title": "Sorayunara: Run All Tests"
+      },
+      {
+        "command": "sorayunara.formatDocument",
+        "title": "Sorayunara: Format Document"
+      }
+    ]
+  }
+}

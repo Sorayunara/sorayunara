@@ -1,0 +1,9 @@
+// src/main.ae
+import http
+
+fn main() {
+    print("Welcome to Aether project!")
+    let url: String = "https://aether.dev"
+    let response: String = get(&url)
+    print("Response: ", response)
+}

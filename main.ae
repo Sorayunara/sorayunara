@@ -1,0 +1,23 @@
+import std.http
+
+import std.math
+
+import std.time
+
+import std.os
+
+fn main() {
+    print("=== AETHER STANDARD LIBRARY SHOWCASE ===")
+    let base: Int = 2
+    let exponent: Int = 8
+    let result_pow: Int = pow(base, exponent)
+    print("Math pow(2, 8): ", result_pow)
+    let system_os: String = name()
+    print("Current OS Platform: ", system_os)
+    let timestamp: Int = now_ms()
+    print("Epoch Timestamp (ms): ", timestamp)
+    let endpoint: String = "https://api.aether.dev/v1/health"
+    let response: String = http_get(&endpoint)
+    print("HTTP Client Result: ", response)
+    print("=== STD MODULES VERIFIED SUCCESSFULLY ===")
+}

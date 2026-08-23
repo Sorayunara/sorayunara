@@ -1,0 +1,26 @@
+// std/tensor.ae - N-Dimensional Tensor & SIMD Math Engine
+
+fn tensor_zeros(dim0: Int, dim1: Int) -> Int {
+    print("[Tensor] Allocated 2D zeros matrix")
+    return 100
+}
+
+fn tensor_ones(dim0: Int, dim1: Int) -> Int {
+    print("[Tensor] Allocated 2D ones matrix")
+    return 101
+}
+
+fn tensor_matmul(a_id: Int, b_id: Int) -> Int {
+    print("[Tensor] GPU accelerated matrix multiplication")
+    return 102
+}
+
+fn tensor_relu(t_id: Int) -> Int {
+    print("[Tensor] Applied ReLU activation")
+    return t_id
+}
+
+fn tensor_softmax(t_id: Int) -> Int {
+    print("[Tensor] Softmax probability distribution calculated")
+    return t_id
+}

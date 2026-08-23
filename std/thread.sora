@@ -1,0 +1,17 @@
+// std/thread.ae - Native OS Thread Management
+
+struct JoinHandle {
+    thread_id: Int
+}
+
+fn sleep_ms(ms: Int) {
+    print("Thread sleeping...")
+}
+
+fn yield_now() {
+    print("Yielding current thread slice")
+}
+
+fn current_thread_id() -> Int {
+    return 1
+}

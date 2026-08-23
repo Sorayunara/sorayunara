@@ -1,0 +1,32 @@
+// std/math.ae - Aether Standard Library: Math Module
+
+fn abs(x: Int) -> Int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+
+fn min(a: Int, b: Int) -> Int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+fn max(a: Int, b: Int) -> Int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+fn pow(base: Int, exp: Int) -> Int {
+    let mut result: Int = 1
+    let mut i: Int = 0
+    while i < exp {
+        result = result * base
+        i = i + 1
+    }
+    return result
+}

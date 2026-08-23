@@ -1,0 +1,10 @@
+[package]
+name = "demo-service"
+version = "0.1.0"
+edition = "2026"
+entry = "src/main.ae"
+
+[dependencies]
+# http = "1.0.0"
+
+database = "0.1.0"

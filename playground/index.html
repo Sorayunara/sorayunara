@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorayunara Playground — play.sorayunara.org</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <span>🌌</span>
+            <span>Sorayunara Playground</span>
+            <small style="color: var(--text-secondary); font-size: 0.8rem; font-weight: normal;">(v0.1.0 WASM Runtime · Org: Sorayunara)</small>
+        </div>
+        <div class="controls">
+            <select id="example-select">
+                <option value="hello">Hello Sorayunara</option>
+                <option value="concurrency">Async Concurrency</option>
+                <option value="http">HTTP Web Server</option>
+                <option value="pattern">Pattern Matching</option>
+                <option value="ml">ONNX Machine Learning</option>
+            </select>
+            <button id="btn-format">Format (sorayunara fmt)</button>
+            <button id="btn-run" class="primary">▶ Run Program</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="pane">
+            <div class="pane-header">
+                <span>Source Code (main.sora)</span>
+                <span>UTF-8</span>
+            </div>
+            <textarea id="code-editor" spellcheck="false"></textarea>
+        </div>
+
+        <div class="pane">
+            <div class="pane-header">
+                <span>Output Console / Terminal</span>
+                <span id="exec-status">Ready</span>
+            </div>
+            <pre id="terminal-output">Click "▶ Run Program" to compile and execute Sorayunara in the browser.</pre>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
