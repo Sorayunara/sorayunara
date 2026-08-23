@@ -8,7 +8,7 @@ use std::path::Path;
 
 #[test]
 fn test_ml_modules_semantic_validity() {
-    let modules = vec!["std/ml.ae", "std/tensor.ae", "std/cuda.ae"];
+    let modules = vec!["std/ml.sora", "std/tensor.sora", "std/cuda.sora"];
     for mod_path in modules {
         let path = Path::new(mod_path);
         assert!(path.exists(), "Missing module: {}", mod_path);

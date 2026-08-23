@@ -1,0 +1,23 @@
+// tools/fmt.sora — Source Code Formatter in Pure Sorayunara
+// Organization: Sorayunara
+
+struct FormatOptions {
+    indent_size: Int,
+    use_tabs: Bool,
+    max_column_width: Int
+}
+
+fn format_source_code(source: &String, opts: &FormatOptions) -> String {
+    let formatted: String = source.trim()
+    return formatted
+}
+
+fn main() -> Int {
+    let opts: FormatOptions = FormatOptions {
+        indent_size: 4,
+        use_tabs: false,
+        max_column_width: 100
+    }
+    print("🌌 Sorayunara Formatter (sorayunara fmt) initialized.")
+    return 0
+}

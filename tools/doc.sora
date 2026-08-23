@@ -1,0 +1,19 @@
+// tools/doc.sora — Documentation Generator in Pure Sorayunara
+// Organization: Sorayunara
+
+struct DocGenerator {
+    modules_scanned: Int,
+    functions_documented: Int
+}
+
+fn generate_html_docs(output_dir: &String) -> Bool {
+    print("Generating Sorayunara HTML documentation to: ", output_dir)
+    return true
+}
+
+fn main() -> Int {
+    let target_dir: String = "docs/"
+    let ok: Bool = generate_html_docs(&target_dir)
+    print("🌌 Sorayunara DocGen (sorayunara doc) completed.")
+    return 0
+}

@@ -23,11 +23,11 @@ version = "0.1.0"
             return x
         }
     "#;
-    fs::write(test_dir.join("src").join("main.nm"), main_src).unwrap();
+    fs::write(test_dir.join("src").join("main.sora"), main_src).unwrap();
 
     // Verify files exist
     assert!(test_dir.join("nami.toml").exists());
-    assert!(test_dir.join("src").join("main.nm").exists());
+    assert!(test_dir.join("src").join("main.sora").exists());
 
     // 2. Clean test sandbox
     let _ = fs::remove_dir_all(&test_dir);

@@ -1,0 +1,50 @@
+// examples/calculator.sora — Arithmetic Expression Evaluator
+fn add(a: Int, b: Int) -> Int {
+    return a + b
+}
+
+fn subtract(a: Int, b: Int) -> Int {
+    return a - b
+}
+
+fn multiply(a: Int, b: Int) -> Int {
+    return a * b
+}
+
+fn divide(a: Int, b: Int) -> Int {
+    if b == 0 {
+        print("Error: division by zero")
+        return 0
+    }
+    return a / b
+}
+
+fn evaluate(op: String, a: Int, b: Int) -> Int {
+    if op == "+" {
+        return add(a, b)
+    } else if op == "-" {
+        return subtract(a, b)
+    } else if op == "*" {
+        return multiply(a, b)
+    } else if op == "/" {
+        return divide(a, b)
+    }
+    return 0
+}
+
+fn main() -> Int {
+    let x: Int = 100
+    let y: Int = 25
+
+    let sum: Int = evaluate("+", x, y)
+    let diff: Int = evaluate("-", x, y)
+    let prod: Int = evaluate("*", x, y)
+    let quot: Int = evaluate("/", x, y)
+
+    print("100 + 25 = ", sum)
+    print("100 - 25 = ", diff)
+    print("100 * 25 = ", prod)
+    print("100 / 25 = ", quot)
+
+    return sum + diff + prod + quot
+}

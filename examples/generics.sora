@@ -1,0 +1,24 @@
+// examples/generics.sora — Generic Functions and Pair Combinators
+struct Pair<T, U> {
+    first: T,
+    second: U
+}
+
+fn make_pair<T, U>(first: T, second: U) -> Pair<T, U> {
+    return Pair { first: first, second: second }
+}
+
+fn identity<T>(val: T) -> T {
+    return val
+}
+
+fn main() -> Int {
+    let int_val: Int = identity(42)
+    let str_val: String = identity("Sorayunara Generics")
+    let pair: Pair<Int, String> = make_pair(int_val, str_val)
+
+    print("Pair First (Int): ", pair.first)
+    print("Pair Second (String): ", pair.second)
+
+    return pair.first
+}

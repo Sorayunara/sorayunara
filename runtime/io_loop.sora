@@ -1,0 +1,21 @@
+// runtime/io_loop.sora — Non-Blocking I/O Multiplexer (epoll/IOCP/kqueue)
+// Organization: Sorayunara
+
+struct EventLoop {
+    registered_descriptors: Int,
+    is_running: Bool
+}
+
+fn event_loop_new() -> EventLoop {
+    return EventLoop {
+        registered_descriptors: 0,
+        is_running: false
+    }
+}
+
+fn event_loop_poll(loop_state: &mut EventLoop, timeout_ms: Int) -> Int {
+    if !loop_state.is_running {
+        return 0
+    }
+    return loop_state.registered_descriptors
+}

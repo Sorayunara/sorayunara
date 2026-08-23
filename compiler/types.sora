@@ -1,0 +1,48 @@
+// compiler/types.sora — Type Representation and Type System in Pure Sorayunara
+// Organization: Sorayunara
+
+enum TypeKind {
+    TypeInt,
+    TypeFloat,
+    TypeBool,
+    TypeString,
+    TypeChar,
+    TypeVoid,
+    TypeArray(Int),
+    TypeTuple(Int),
+    TypeNamed(String),
+    TypeRef(Bool),
+    TypeTask,
+    TypeChan,
+    TypeInfer
+}
+
+struct TypeInfo {
+    kind: TypeKind,
+    size_bytes: Int,
+    is_copy: Bool
+}
+
+fn type_int() -> TypeInfo {
+    return TypeInfo {
+        kind: TypeKind.TypeInt,
+        size_bytes: 8,
+        is_copy: true
+    }
+}
+
+fn type_bool() -> TypeInfo {
+    return TypeInfo {
+        kind: TypeKind.TypeBool,
+        size_bytes: 1,
+        is_copy: true
+    }
+}
+
+fn type_string() -> TypeInfo {
+    return TypeInfo {
+        kind: TypeKind.TypeString,
+        size_bytes: 24,
+        is_copy: false
+    }
+}

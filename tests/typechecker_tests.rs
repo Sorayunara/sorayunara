@@ -7,7 +7,7 @@ use std::collections::HashMap;
 fn run_analysis(src: &str) -> Result<(sorayunara::symbol_table::SymbolTable, HashMap<Span, sorayunara::symbol_table::Type>), String> {
     let tokens = tokenize(src).map_err(|e| format!("Lexer error: {:?}", e))?;
     let program = parse(tokens).map_err(|(e, _)| format!("Parse error: {}", e))?;
-    check_semantics(&program).map_err(|engine| engine.render_all("test.ae", src))
+    check_semantics(&program).map_err(|engine| engine.render_all("test.sora", src))
 }
 
 fn assert_inferred_type(src: &str, var_name: &str, expected_snippet: &str) {

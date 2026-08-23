@@ -1,0 +1,40 @@
+// examples/structs.sora — Structs, Methods, and Record Operations
+struct Point {
+    x: Int,
+    y: Int
+}
+
+struct Rectangle {
+    top_left: Point,
+    width: Int,
+    height: Int
+}
+
+fn point_new(x: Int, y: Int) -> Point {
+    return Point { x: x, y: y }
+}
+
+fn rectangle_area(rect: &Rectangle) -> Int {
+    return rect.width * rect.height
+}
+
+fn rectangle_perimeter(rect: &Rectangle) -> Int {
+    return 2 * (rect.width + rect.height)
+}
+
+fn main() -> Int {
+    let origin: Point = point_new(0, 0)
+    let rect: Rectangle = Rectangle {
+        top_left: origin,
+        width: 40,
+        height: 20
+    }
+
+    let area: Int = rectangle_area(&rect)
+    let perim: Int = rectangle_perimeter(&rect)
+
+    print("Rectangle Area: ", area)
+    print("Rectangle Perimeter: ", perim)
+
+    return area
+}

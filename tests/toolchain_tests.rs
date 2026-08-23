@@ -33,7 +33,7 @@ fn test_toolchain_test_and_verification_subsystems() {
         verify: true,
         snapshot: true,
     });
-    let results = runner.run_source(test_src, "test_suite.ae").unwrap();
+    let results = runner.run_source(test_src, "test_suite.sora").unwrap();
     assert_eq!(results.len(), 1);
     assert!(results[0].passed);
 }

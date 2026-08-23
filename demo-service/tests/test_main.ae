@@ -1,9 +1,0 @@
-// tests/test_main.ae
-fn main() {
-    print("Running Aether Test Suite...")
-    let a: Int = 10
-    let b: Int = 20
-    if a + b == 30 {
-        print("  ✅ test_addition: PASSED")
-    }
-}

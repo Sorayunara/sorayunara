@@ -44,7 +44,7 @@ fn test_embedded_llvm_ir_emission() {
 
 #[test]
 fn test_embedded_hal_std_module_validity() {
-    let hal_path = Path::new("std/embedded.ae");
+    let hal_path = Path::new("std/embedded.sora");
     assert!(hal_path.exists());
     let content = fs::read_to_string(hal_path).unwrap();
     let tokens = tokenize(&content).unwrap();

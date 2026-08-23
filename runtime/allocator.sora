@@ -1,0 +1,27 @@
+// runtime/allocator.sora — Low-Level Arena & Slab Memory Allocator
+// Organization: Sorayunara
+
+struct MemoryArena {
+    capacity_bytes: Int,
+    allocated_bytes: Int
+}
+
+fn arena_new(capacity: Int) -> MemoryArena {
+    return MemoryArena {
+        capacity_bytes: capacity,
+        allocated_bytes: 0
+    }
+}
+
+fn arena_alloc(arena: &mut MemoryArena, size: Int) -> Int {
+    if arena.allocated_bytes + size > arena.capacity_bytes {
+        return 0 // Out of memory
+    }
+    let offset: Int = arena.allocated_bytes
+    arena.allocated_bytes = arena.allocated_bytes + size
+    return offset
+}
+
+fn arena_reset(arena: &mut MemoryArena) {
+    arena.allocated_bytes = 0
+}

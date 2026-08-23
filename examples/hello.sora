@@ -1,0 +1,5 @@
+// examples/hello.sora — Basic Sorayunara Hello World
+fn main() {
+    print("🌌 Hello from Sorayunara Programming Language!")
+    print("Safe, Fast, Elegant Systems Programming (.sora)")
+}

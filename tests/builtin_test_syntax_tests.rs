@@ -18,7 +18,7 @@ fn test_builtin_test_syntax_passing() {
     "#;
 
     let runner = TestRunner::new(TestOptions::default());
-    let results = runner.run_source(source, "test_file.ae").unwrap();
+    let results = runner.run_source(source, "test_file.sora").unwrap();
 
     assert_eq!(results.len(), 2);
     assert!(results.iter().all(|r| r.passed));
@@ -35,7 +35,7 @@ fn test_builtin_test_syntax_failing_assertion() {
     "#;
 
     let runner = TestRunner::new(TestOptions::default());
-    let results = runner.run_source(source, "test_fail.ae").unwrap();
+    let results = runner.run_source(source, "test_fail.sora").unwrap();
 
     assert_eq!(results.len(), 1);
     assert!(!results[0].passed);
@@ -61,7 +61,7 @@ fn test_builtin_test_options_bench_and_coverage() {
         ..Default::default()
     };
     let runner = TestRunner::new(options);
-    let results = runner.run_source(source, "test_bench.ae").unwrap();
+    let results = runner.run_source(source, "test_bench.sora").unwrap();
 
     assert_eq!(results.len(), 1);
     assert!(results[0].passed);

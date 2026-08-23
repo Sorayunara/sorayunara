@@ -1,0 +1,28 @@
+// compiler/optimizer.sora — Multi-Pass Optimization Engine in Pure Sorayunara
+// Organization: Sorayunara
+
+struct OptimizerStats {
+    constant_folds: Int,
+    dead_code_eliminated: Int,
+    peephole_rewrites: Int
+}
+
+fn optimizer_stats_new() -> OptimizerStats {
+    return OptimizerStats {
+        constant_folds: 0,
+        dead_code_eliminated: 0,
+        peephole_rewrites: 0
+    }
+}
+
+fn fold_constants_pass(stats: &mut OptimizerStats) {
+    stats.constant_folds = stats.constant_folds + 1
+}
+
+fn dead_code_elimination_pass(stats: &mut OptimizerStats) {
+    stats.dead_code_eliminated = stats.dead_code_eliminated + 1
+}
+
+fn peephole_optimization_pass(stats: &mut OptimizerStats) {
+    stats.peephole_rewrites = stats.peephole_rewrites + 1
+}

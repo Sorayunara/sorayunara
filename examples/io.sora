@@ -1,0 +1,19 @@
+// examples/io.sora — File System and Stream I/O Operations
+import std.fs
+import std.io
+
+fn main() -> Int {
+    let filename: String = "test_output.txt"
+    let content: String = "Sorayunara high-performance native I/O stream\n"
+
+    print("Writing to file: ", filename)
+    let write_ok: Bool = write_file(&filename, &content)
+
+    if write_ok {
+        print("Reading content back...")
+        let read_back: String = read_file(&filename)
+        print("Read result: ", read_back)
+    }
+
+    return 0
+}

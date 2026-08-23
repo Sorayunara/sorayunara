@@ -1,0 +1,23 @@
+// examples/concurrency.sora — M:N Lightweight Coroutine Concurrency
+import std.sync
+import std.time
+
+async fn background_task(task_id: Int) -> String {
+    print("Executing background async task #", task_id)
+    return "Task result: SUCCESS"
+}
+
+fn main() -> Int {
+    print("Launching concurrent tasks on Sorayunara runtime...")
+
+    let handle1: Task<String> = spawn background_task(1)
+    let handle2: Task<String> = spawn background_task(2)
+
+    let res1: String = await handle1
+    let res2: String = await handle2
+
+    print("Task 1 resolved: ", res1)
+    print("Task 2 resolved: ", res2)
+
+    return 0
+}

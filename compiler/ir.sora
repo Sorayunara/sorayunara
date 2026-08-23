@@ -1,0 +1,37 @@
+// compiler/ir.sora — Mid-Level Intermediate Representation (Sora Native IR)
+// Organization: Sorayunara
+
+enum Opcode {
+    OpPushInt(Int),
+    OpPushFloat(Float),
+    OpPushBool(Bool),
+    OpPushStr(String),
+    OpLoad(String),
+    OpStore(String),
+    OpAdd,
+    OpSub,
+    OpMul,
+    OpDiv,
+    OpEq,
+    OpJump(Int),
+    OpJumpIfFalse(Int),
+    OpCall(String, Int),
+    OpReturn
+}
+
+struct BasicBlock {
+    id: Int,
+    instructions_count: Int
+}
+
+struct IRFunction {
+    name: String,
+    blocks_count: Int
+}
+
+fn ir_function_new(name: String) -> IRFunction {
+    return IRFunction {
+        name: name,
+        blocks_count: 1
+    }
+}

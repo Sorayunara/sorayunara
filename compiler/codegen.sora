@@ -1,0 +1,31 @@
+// compiler/codegen.sora — Multi-Architecture Direct Machine Code Emitter
+// Organization: Sorayunara
+
+enum TargetArch {
+    ArchX86_64,
+    ArchArm64,
+    ArchRiscv64
+}
+
+enum TargetOS {
+    OsLinux,
+    OsWindows,
+    OsMacos
+}
+
+struct CodeGenTarget {
+    arch: TargetArch,
+    os: TargetOS
+}
+
+fn emit_assembly_header(target: &CodeGenTarget) -> String {
+    return "; Direct Native Assembly Emission Header\n"
+}
+
+fn emit_function_prologue() -> String {
+    return "push rbp\nmov rbp, rsp\n"
+}
+
+fn emit_function_epilogue() -> String {
+    return "mov rsp, rbp\npop rbp\nret\n"
+}

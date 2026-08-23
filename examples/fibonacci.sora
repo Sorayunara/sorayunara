@@ -1,0 +1,35 @@
+// examples/fibonacci.sora — Recursive and Iterative Fibonacci in Sorayunara
+fn fibonacci_recursive(n: Int) -> Int {
+    if n <= 1 {
+        return n
+    }
+    return fibonacci_recursive(n - 1) + fibonacci_recursive(n - 2)
+}
+
+fn fibonacci_iterative(n: Int) -> Int {
+    if n <= 1 {
+        return n
+    }
+    let mut prev: Int = 0
+    let mut curr: Int = 1
+    let mut i: Int = 2
+
+    while i <= n {
+        let next: Int = prev + curr
+        prev = curr
+        curr = next
+        i = i + 1
+    }
+    return curr
+}
+
+fn main() -> Int {
+    let n: Int = 10
+    let rec_res: Int = fibonacci_recursive(n)
+    let iter_res: Int = fibonacci_iterative(n)
+
+    print("Fibonacci Recursive(10): ", rec_res)
+    print("Fibonacci Iterative(10): ", iter_res)
+    assert(rec_res == iter_res)
+    return iter_res
+}

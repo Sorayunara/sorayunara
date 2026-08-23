@@ -1,5 +1,0 @@
-// src/http.ae
-fn get(url: &String) -> String {
-    print("Fetching URL: ", url)
-    return "HTTP 200 OK: { status: 'success' }"
-}

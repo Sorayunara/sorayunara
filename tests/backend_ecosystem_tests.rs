@@ -21,11 +21,11 @@ fn test_backend_ecosystem_server_flow() {
             return 0
         }
     "#;
-    let std_http = std::fs::read_to_string("std/http.ae").unwrap();
-    let std_pg = std::fs::read_to_string("std/postgres.ae").unwrap();
-    let std_json = std::fs::read_to_string("std/json.ae").unwrap();
-    let std_jwt = std::fs::read_to_string("std/jwt.ae").unwrap();
-    let std_crypto = std::fs::read_to_string("std/crypto.ae").unwrap();
+    let std_http = std::fs::read_to_string("std/http.sora").unwrap();
+    let std_pg = std::fs::read_to_string("std/postgres.sora").unwrap();
+    let std_json = std::fs::read_to_string("std/json.sora").unwrap();
+    let std_jwt = std::fs::read_to_string("std/jwt.sora").unwrap();
+    let std_crypto = std::fs::read_to_string("std/crypto.sora").unwrap();
 
     let combined_source = format!(
         "{}\n{}\n{}\n{}\n{}\n{}",
@@ -35,7 +35,7 @@ fn test_backend_ecosystem_server_flow() {
     let tokens = tokenize(&combined_source).unwrap();
     let program = parse(tokens).unwrap();
     if let Err(diag) = check_semantics(&program) {
-        eprintln!("{}", diag.render_all("combined.ae", &combined_source));
+        eprintln!("{}", diag.render_all("combined.sora", &combined_source));
         panic!("Semantic check failed");
     }
 

@@ -1,0 +1,24 @@
+// runtime/scheduler.sora — M:N Green Thread & Coroutine Fiber Scheduler
+// Organization: Sorayunara
+
+struct CoroutineTask {
+    task_id: Int,
+    is_completed: Bool,
+    priority: Int
+}
+
+struct TaskScheduler {
+    tasks_queued: Int,
+    workers_count: Int
+}
+
+fn scheduler_new(workers: Int) -> TaskScheduler {
+    return TaskScheduler {
+        tasks_queued: 0,
+        workers_count: workers
+    }
+}
+
+fn schedule_task(scheduler: &mut TaskScheduler, task: &CoroutineTask) {
+    scheduler.tasks_queued = scheduler.tasks_queued + 1
+}

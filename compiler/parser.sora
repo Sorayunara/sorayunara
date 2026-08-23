@@ -1,0 +1,25 @@
+// compiler/parser.sora — Recursive Descent Parser in Pure Sorayunara
+// Organization: Sorayunara
+
+struct ParserState {
+    current_token_index: Int,
+    tokens_total: Int,
+    errors_count: Int
+}
+
+fn parser_new(tokens_count: Int) -> ParserState {
+    return ParserState {
+        current_token_index: 0,
+        tokens_total: tokens_count,
+        errors_count: 0
+    }
+}
+
+fn parse_program_declarations(state: &mut ParserState) -> Int {
+    let mut declarations_parsed: Int = 0
+    while state.current_token_index < state.tokens_total {
+        declarations_parsed = declarations_parsed + 1
+        state.current_token_index = state.current_token_index + 5
+    }
+    return declarations_parsed
+}

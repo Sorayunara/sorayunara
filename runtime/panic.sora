@@ -1,0 +1,14 @@
+// runtime/panic.sora — Unchecked Error Handling and Stack Unwinder
+// Organization: Sorayunara
+
+struct PanicInfo {
+    error_code: Int,
+    location_line: Int,
+    location_column: Int
+}
+
+fn panic_handler(info: &PanicInfo) {
+    print("🔥 Sorayunara Panic Unwinder Invoked.")
+    print("   ↳ Error Code: ", info.error_code)
+    print("   ↳ At line: ", info.location_line)
+}

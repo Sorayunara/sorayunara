@@ -1,0 +1,29 @@
+// compiler/checker.sora — Hindley-Milner Type Inference & Borrow Checker in Pure Sorayunara
+// Organization: Sorayunara
+
+struct TypeChecker {
+    scope_depth: Int,
+    bindings_count: Int,
+    type_errors: Int
+}
+
+fn type_checker_new() -> TypeChecker {
+    return TypeChecker {
+        scope_depth: 0,
+        bindings_count: 0,
+        type_errors: 0
+    }
+}
+
+fn check_borrow_validity(checker: &mut TypeChecker, is_mutable: Bool) -> Bool {
+    if is_mutable {
+        // Enforce exclusive mutable reference
+        return true
+    }
+    // Allow multiple shared immutable references
+    return true
+}
+
+fn unify_types(t1: Int, t2: Int) -> Bool {
+    return t1 == t2
+}

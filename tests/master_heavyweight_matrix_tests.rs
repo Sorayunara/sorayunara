@@ -34,7 +34,7 @@ fn test_heavyweight_matrix_all_17_areas() {
     // 2. Type System (Static + Inference + Generics + Semantics)
     let sem_res = check_semantics(&program);
     if let Err(ref err) = sem_res {
-        eprintln!("{}", err.render_all("matrix_test.ae", source));
+        eprintln!("{}", err.render_all("matrix_test.sora", source));
     }
     assert!(sem_res.is_ok(), "2. Type System / Semantic check failed");
 
@@ -65,7 +65,7 @@ fn test_heavyweight_matrix_all_17_areas() {
     assert_eq!(exec_val, sorayunara::vm::Value::Int(30));
 
     // 7. FFI & Foreign types
-    assert!(Path::new("std/ffi.nm").exists(), "7. FFI module missing");
+    assert!(Path::new("std/ffi.sora").exists(), "7. FFI module missing");
 
     // 8. Package Registry & Lockfile
     let mut lock = NamiLock::new();
@@ -85,7 +85,7 @@ fn test_heavyweight_matrix_all_17_areas() {
     assert_eq!(audit_res.vulnerabilities_found, 0, "9. Security audit failed");
 
     // 10. Networking Stack
-    let net_modules = vec!["std/http.ae", "std/net.ae", "std/tls.ae", "std/quic.ae", "std/websocket.ae", "std/grpc.ae"];
+    let net_modules = vec!["std/http.sora", "std/net.sora", "std/tls.sora", "std/quic.sora", "std/websocket.sora", "std/grpc.sora"];
     for mod_path in net_modules {
         assert!(Path::new(mod_path).exists(), "10. Networking module missing: {}", mod_path);
     }
@@ -113,8 +113,8 @@ fn test_heavyweight_matrix_all_17_areas() {
     assert!(doc_out.join("index.html").exists(), "15. Doc generator failed");
 
     // 16. Platforms & Standard Library
-    assert!(Path::new("std/embedded.ae").exists(), "16. Baremetal HAL missing");
-    assert!(Path::new("std/ml.ae").exists(), "16. ML Interop missing");
+    assert!(Path::new("std/embedded.sora").exists(), "16. Baremetal HAL missing");
+    assert!(Path::new("std/ml.sora").exists(), "16. ML Interop missing");
 
     // 17. Ecosystem (Playground + VS Code + Specification)
     assert!(Path::new("SPECIFICATION.md").exists(), "17. Specification missing");

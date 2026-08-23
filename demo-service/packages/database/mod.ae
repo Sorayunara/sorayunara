@@ -1,4 +1,0 @@
-// packages/database/mod.ae
-fn info() -> String {
-    return "Package 'database' v0.1.0 ready"
-}

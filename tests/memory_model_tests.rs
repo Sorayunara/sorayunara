@@ -63,7 +63,7 @@ fn test_move_semantics_moves_string_ok() {
     let tokens = tokenize(source).unwrap();
     let program = parse(tokens).unwrap();
     if let Err(engine) = check_semantics(&program) {
-        let rendered = engine.render_all("test.ae", source);
+        let rendered = engine.render_all("test.sora", source);
         panic!("Unexpected semantic error:\n{}", rendered);
     }
 }
@@ -84,7 +84,7 @@ fn test_unsafe_block_semantics_ok() {
     let tokens = tokenize(source).unwrap();
     let program = parse(tokens).unwrap();
     if let Err(engine) = check_semantics(&program) {
-        let rendered = engine.render_all("test.ae", source);
+        let rendered = engine.render_all("test.sora", source);
         panic!("Unexpected unsafe-block semantic error:\n{}", rendered);
     }
 }
@@ -118,7 +118,7 @@ fn test_borrow_instead_of_move_ok() {
     let tokens = tokenize(source).unwrap();
     let program = parse(tokens).unwrap();
     if let Err(engine) = check_semantics(&program) {
-        let rendered = engine.render_all("test.ae", source);
+        let rendered = engine.render_all("test.sora", source);
         panic!("Unexpected borrow-check error:\n{}", rendered);
     }
 }

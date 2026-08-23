@@ -17,7 +17,7 @@ fn test_unit_and_benchmark_and_fuzz_runner() {
 
     // 1. Standard unit test
     let runner_std = TestRunner::new(TestOptions::default());
-    let results_std = runner_std.run_source(source, "test_cases.ae").unwrap();
+    let results_std = runner_std.run_source(source, "test_cases.sora").unwrap();
     assert_eq!(results_std.len(), 2);
     assert!(results_std.iter().all(|r| r.passed));
 
@@ -26,7 +26,7 @@ fn test_unit_and_benchmark_and_fuzz_runner() {
         bench: true,
         ..Default::default()
     });
-    let results_bench = runner_bench.run_source(source, "test_cases.ae").unwrap();
+    let results_bench = runner_bench.run_source(source, "test_cases.sora").unwrap();
     assert_eq!(results_bench.len(), 2);
     assert!(results_bench.iter().all(|r| r.passed));
 
@@ -35,7 +35,7 @@ fn test_unit_and_benchmark_and_fuzz_runner() {
         fuzz: true,
         ..Default::default()
     });
-    let results_fuzz = runner_fuzz.run_source(source, "test_cases.ae").unwrap();
+    let results_fuzz = runner_fuzz.run_source(source, "test_cases.sora").unwrap();
     assert_eq!(results_fuzz.len(), 2);
     assert!(results_fuzz.iter().all(|r| r.passed));
 
@@ -44,7 +44,7 @@ fn test_unit_and_benchmark_and_fuzz_runner() {
         coverage: true,
         ..Default::default()
     });
-    let results_cov = runner_cov.run_source(source, "test_cases.ae").unwrap();
+    let results_cov = runner_cov.run_source(source, "test_cases.sora").unwrap();
     assert_eq!(results_cov.len(), 2);
     assert!(results_cov.iter().all(|r| r.passed));
 }

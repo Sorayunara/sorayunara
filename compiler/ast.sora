@@ -1,0 +1,80 @@
+// compiler/ast.sora — Abstract Syntax Tree Data Structures in Pure Sorayunara
+// Organization: Sorayunara
+
+struct Span {
+    start: Int,
+    end: Int,
+    line: Int,
+    column: Int
+}
+
+enum Literal {
+    IntLit(Int),
+    FloatLit(Float),
+    BoolLit(Bool),
+    StringLit(String),
+    CharLit(Char),
+    NullLit
+}
+
+enum UnaryOp {
+    Neg,
+    Not,
+    Ref,
+    RefMut,
+    Deref
+}
+
+enum BinaryOp {
+    Add,
+    Sub,
+    Mul,
+    Div,
+    Mod,
+    Eq,
+    NotEq,
+    Lt,
+    LtEq,
+    Gt,
+    GtEq,
+    And,
+    Or
+}
+
+struct Param {
+    name: String,
+    type_name: String,
+    is_mut: Bool
+}
+
+struct FunctionDecl {
+    name: String,
+    params_count: Int,
+    return_type: String,
+    is_async: Bool,
+    body_statements_count: Int
+}
+
+struct StructDecl {
+    name: String,
+    fields_count: Int
+}
+
+struct EnumDecl {
+    name: String,
+    variants_count: Int
+}
+
+struct ProgramAST {
+    functions_count: Int,
+    structs_count: Int,
+    enums_count: Int
+}
+
+fn ast_program_new() -> ProgramAST {
+    return ProgramAST {
+        functions_count: 0,
+        structs_count: 0,
+        enums_count: 0
+    }
+}
