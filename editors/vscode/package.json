@@ -1,20 +1,21 @@
 {
-  "name": "sorayunara-language-support",
+  "name": "sorayunara",
   "displayName": "Sorayunara Language Support",
   "description": "Language Server, Syntax Highlighting, Formatting and Debugging for Sorayunara (.sora)",
   "version": "0.1.0",
-  "publisher": "sorayunara",
+  "publisher": "Sorayunara",
   "icon": "icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sorayunara/sorayunara"
+  },
   "engines": {
     "vscode": "^1.75.0"
   },
   "categories": [
-    "Programming Languages",
-    "Linters",
-    "Formatters",
-    "Debuggers"
+    "Programming Languages"
   ],
-  "main": "./out/extension.js",
+  "main": "./extension.js",
   "contributes": {
     "languages": [
       {
@@ -31,18 +32,10 @@
         "path": "./syntaxes/sorayunara.tmLanguage.json"
       }
     ],
-    "commands": [
+    "snippets": [
       {
-        "command": "sorayunara.restartServer",
-        "title": "Sorayunara: Restart Language Server"
-      },
-      {
-        "command": "sorayunara.runTests",
-        "title": "Sorayunara: Run All Tests"
-      },
-      {
-        "command": "sorayunara.formatDocument",
-        "title": "Sorayunara: Format Document"
+        "language": "sorayunara",
+        "path": "./snippets.json"
       }
     ]
   }

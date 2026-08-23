@@ -1,47 +1,108 @@
 {
-  "Function": {
-    "prefix": "fn",
+  "Sorayunara Function": {
+    "prefix": ["sora-fn", "fn"],
     "body": [
       "fn ${1:name}(${2:params}) -> ${3:Int} {",
       "    ${0}",
+      "    return 0",
       "}"
     ],
-    "description": "Create an Aether function"
+    "description": "Declare a typed Sorayunara function"
   },
-  "Async Function": {
-    "prefix": "asyncfn",
+  "Sorayunara Async Function": {
+    "prefix": ["sora-async", "asyncfn"],
     "body": [
-      "async fn ${1:name}(${2:params}) -> ${3:String} {",
+      "async fn ${1:name}(${2:params}) -> ${3:Result<String, String>} {",
       "    ${0}",
+      "    return Result::Ok(\"done\")",
       "}"
     ],
-    "description": "Create an async function"
+    "description": "Declare an asynchronous function in Sorayunara"
   },
-  "Main Function": {
-    "prefix": "main",
+  "Sorayunara Main Entrypoint": {
+    "prefix": ["sora-main", "main"],
     "body": [
-      "fn main() {",
+      "import std.io",
+      "",
+      "fn main() -> Int {",
+      "    print(\"🌌 Sorayunara runtime active.\")",
       "    ${0}",
+      "    return 0",
       "}"
     ],
-    "description": "Aether main entry point"
+    "description": "Sorayunara standard application entry point"
   },
-  "Struct": {
-    "prefix": "struct",
+  "Sorayunara Struct": {
+    "prefix": ["sora-struct", "struct"],
     "body": [
       "struct ${1:Name} {",
-      "    ${2:field}: ${3:Type},",
+      "    ${2:field_name}: ${3:String},",
+      "    ${4:is_active}: ${5:Bool}",
       "}"
     ],
-    "description": "Create a struct"
+    "description": "Declare a Sorayunara struct"
   },
-  "Match": {
-    "prefix": "match",
+  "Sorayunara Impl Block": {
+    "prefix": ["sora-impl", "impl"],
     "body": [
-      "match ${1:expr} {",
-      "    ${2:pattern} => ${3:result},",
+      "impl ${1:Name} {",
+      "    pub fn new(${2:params}) -> ${1:Name} {",
+      "        return ${1:Name} {",
+      "            ${0}",
+      "        }",
+      "    }",
       "}"
     ],
-    "description": "Pattern match"
+    "description": "Create a method implementation block for a struct"
+  },
+  "Sorayunara Enum": {
+    "prefix": ["sora-enum", "enum"],
+    "body": [
+      "enum ${1:Name} {",
+      "    ${2:VariantA},",
+      "    ${3:VariantB}(${4:Int})",
+      "}"
+    ],
+    "description": "Declare an algebraic data type (ADT) enum"
+  },
+  "Sorayunara Pattern Matching": {
+    "prefix": ["sora-match", "match"],
+    "body": [
+      "match ${1:expression} {",
+      "    ${2:Pattern} => {",
+      "        ${0}",
+      "    },",
+      "    _ => {",
+      "        // Default fallback",
+      "    }",
+      "}"
+    ],
+    "description": "Exhaustive pattern matching construct"
+  },
+  "Sorayunara Spawn Worker": {
+    "prefix": ["sora-spawn", "spawn"],
+    "body": [
+      "spawn async {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Spawn an asynchronous coroutine worker"
+  },
+  "Sorayunara Channel": {
+    "prefix": ["sora-channel", "channel"],
+    "body": [
+      "let ${1:ch}: Channel<${2:String}> = channel::new(${3:1024})"
+    ],
+    "description": "Create a high-performance concurrency channel"
+  },
+  "Sorayunara Unit Test": {
+    "prefix": ["sora-test", "test"],
+    "body": [
+      "fn test_${1:feature_name}() {",
+      "    let val = ${2:1 + 1}",
+      "    assert(val == ${3:2}, \"Test assertion failed\")",
+      "}"
+    ],
+    "description": "Create an assert-based unit test function"
   }
 }
