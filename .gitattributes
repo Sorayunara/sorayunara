@@ -3,6 +3,7 @@
 # ==============================================================================
 
 # 1. Primary Language: Sorayunara (.sora)
+*.sora linguist-language=Sorayunara
 *.sora linguist-detectable
 
 # 2. Exclude all Rust bootstrap files
