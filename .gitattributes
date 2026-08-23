@@ -1,20 +1,18 @@
 # ==============================================================================
-# GitHub Linguist Configuration for Sorayunara Repository
+# GitHub Linguist Configuration for Sorayunara
 # ==============================================================================
 
-# 1. Primary Sorayunara Language Sources (.sora)
-*.sora linguist-detectable=true
-compiler/*.sora linguist-detectable=true
-std/*.sora linguist-detectable=true
-runtime/*.sora linguist-detectable=true
-examples/*.sora linguist-detectable=true
-tools/*.sora linguist-detectable=true
+# 1. Primary Language: Sorayunara (.sora)
+*.sora linguist-detectable
 
-# 2. Mark Rust Bootstrap Toolchain as Vendored / Bootstrap Scaffolding
-# This excludes Rust from dominating the repository language statistics
-src/** linguist-vendored=true
-tests/** linguist-vendored=true
-Cargo.toml linguist-vendored=true
-Cargo.lock linguist-vendored=true
-target/** linguist-vendored=true
-output.* linguist-generated=true
+# 2. Exclude all Rust bootstrap files from language stats
+*.rs linguist-vendored
+*.rs linguist-generated
+*.toml linguist-vendored
+*.lock linguist-vendored
+Cargo.toml linguist-vendored
+Cargo.lock linguist-vendored
+src/** linguist-vendored
+tests/** linguist-vendored
+target/** linguist-vendored
+output.* linguist-generated
