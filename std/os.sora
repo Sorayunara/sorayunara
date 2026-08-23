@@ -1,6 +1,10 @@
-// std/os.ae - Operating System Info & Low-Level Facilities
+// std/os.sora — Operating System Info & Low-Level Facilities
 
 fn os_name() -> String {
+    return "linux"
+}
+
+fn name() -> String {
     return "linux"
 }
 
@@ -13,7 +17,7 @@ fn cpu_count() -> Int {
 }
 
 fn hostname() -> String {
-    return "aether-node-1"
+    return "sorayunara-node-1"
 }
 
 fn page_size() -> Int {

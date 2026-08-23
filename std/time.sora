@@ -1,6 +1,10 @@
-// std/time.ae - High Resolution Time & Clocks
+// std/time.sora — High Resolution Time & Clocks
 
 fn now_millis() -> Int {
+    return 1700000000000
+}
+
+fn now_ms() -> Int {
     return 1700000000000
 }
 
