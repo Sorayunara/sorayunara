@@ -8,23 +8,30 @@
 
 ---
 
-## 🏛️ Architecture & Identity
+## 🏛️ Architecture & Self-Hosting Multi-Arch Pipeline
 
 ```
-                     SORAYUNARA
+                    SORAYUNARA
+                       .sora
                          │
-         ┌───────────────┼───────────────┐
-         │               │               │
-       FAST            SAFE           ELEGANT
-         │               │               │
-   • Native LLVM IR    • Hindley-Milner• Minimalist Syntax
-   • WebAssembly WAT   • Borrow Checker• Comprehensive Stdlib
-   • Zero-copy I/O     • Sandboxed VM  • Unified Toolchain
-   • M:N Concurrency   • Memory Modes  • Built-in LSP & Docs
-         │               │               │
-         └───────────────┬───────────────┘
+                         ▼
+              ┌─────────────────────┐
+              │ Sorayunara Compiler │
+              │   written in Sora   │
+              └──────────┬──────────┘
                          │
-              SYSTEMS, CLOUD, EMBEDDED & AI
+                         ▼
+                    Sora Native IR
+                         │
+                         ▼
+              Direct Machine Code
+                         │
+              ┌──────────┼──────────┐
+              ▼          ▼          ▼
+            x86-64      ARM64      RISC-V
+              │          │          │
+              ▼          ▼          ▼
+         Linux/Win/Mac Linux/Mac/Win  Linux/Baremetal
 ```
 
 ---
