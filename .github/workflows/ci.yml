@@ -1,0 +1,55 @@
+name: Continuous Integration & Matrix Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    name: Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        rust: [stable]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ matrix.rust }}
+          components: clippy, rustfmt
+
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Check Code Compilation
+        run: cargo check --all-targets
+
+      - name: Run Full Test Suites (35+ Suites)
+        run: cargo test --all-targets --verbose
+
+      - name: Build Release Binary
+        run: cargo build --release
+
+      - name: Verify CLI Diagnostics (sorayunara doctor)
+        run: |
+          cargo run --release -- doctor
+
+      - name: Verify End-to-End Execution (sorayunara run examples/main.sora)
+        run: |
+          cargo run --release -- run examples/main.sora
+
+      - name: Verify Documentation Generation (sorayunara doc)
+        run: |
+          cargo run --release -- doc examples/main.sora

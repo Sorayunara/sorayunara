@@ -1,0 +1,32 @@
+name: Security & Lockfile Audit
+
+on:
+  schedule:
+    - cron: '0 0 * * 1' # Every Monday
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  audit:
+    name: Security & Lockfile Integrity Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Run Cargo Audit
+        uses: rustsec/audit-check@v1.4.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+
+      - name: Verify Reproducible Build Lockfile
+        run: |
+          cargo test --test reproducible_build_tests
+          cargo test --test security_tests

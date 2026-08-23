@@ -1,0 +1,68 @@
+name: Release Multi-Platform Binaries
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    name: Build Binary for ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            artifact_name: sorayunara-linux-x86_64
+            binary_path: target/x86_64-unknown-linux-gnu/release/sorayunara
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            artifact_name: sorayunara-windows-x86_64.exe
+            binary_path: target/x86_64-pc-windows-msvc/release/sorayunara.exe
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            artifact_name: sorayunara-macos-arm64
+            binary_path: target/aarch64-apple-darwin/release/sorayunara
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Build Target Binary
+        run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: ${{ matrix.binary_path }}
+
+  create-release:
+    name: Publish GitHub Release
+    needs: build-release
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./artifacts/**/*
+          generate_release_notes: true
