@@ -1,0 +1,14 @@
+// src/ir.sora — Mid-Level Bytecode Intermediate Representation in Sorayunara
+// Organization: Sorayunara
+
+struct IRBlock {
+    block_id: Int,
+    instructions: Int
+}
+
+fn emit_ir_block(id: Int, count: Int) -> IRBlock {
+    return IRBlock {
+        block_id: id,
+        instructions: count
+    }
+}

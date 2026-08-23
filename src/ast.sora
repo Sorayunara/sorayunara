@@ -1,0 +1,32 @@
+// src/ast.sora — Abstract Syntax Tree Node Specifications in Sorayunara
+// Organization: Sorayunara
+
+struct Span {
+    start: Int,
+    end: Int,
+    line: Int,
+    column: Int
+}
+
+struct FunctionAST {
+    name: String,
+    params_count: Int,
+    return_type: String,
+    is_async: Bool
+}
+
+struct StructAST {
+    name: String,
+    fields_count: Int
+}
+
+struct EnumAST {
+    name: String,
+    variants_count: Int
+}
+
+struct ProgramAST {
+    functions: Int,
+    structs: Int,
+    enums: Int
+}

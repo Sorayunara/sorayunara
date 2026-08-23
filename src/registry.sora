@@ -1,0 +1,6 @@
+// src/registry.sora — Package Registry Client in Sorayunara
+// Organization: Sorayunara
+
+struct RegistryClient {
+    endpoint: String
+}

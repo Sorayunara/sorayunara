@@ -1,0 +1,6 @@
+// src/lsp.sora — Language Server Protocol Daemon in Sorayunara
+// Organization: Sorayunara
+
+fn start_lsp_daemon() {
+    print("[Sorayunara LSP] Language Server Protocol daemon active on stdio.")
+}

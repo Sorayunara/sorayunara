@@ -7,10 +7,10 @@ description = "Sorayunara Programming Language — Elegant, Safe, High Performan
 
 [[bin]]
 name = "sorayunara"
-path = "src/main.rs"
+path = "bootstrap/src/main.rs"
 
 [lib]
 name = "sorayunara"
-path = "src/lib.rs"
+path = "bootstrap/src/lib.rs"
 
 [dependencies]

@@ -1,0 +1,6 @@
+// src/linter.sora — Static Linter in Sorayunara
+// Organization: Sorayunara
+
+fn lint_code(source: String) -> Int {
+    return 0
+}

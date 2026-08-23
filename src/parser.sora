@@ -1,0 +1,17 @@
+// src/parser.sora — Recursive Descent Parser in Sorayunara
+// Organization: Sorayunara
+
+struct Parser {
+    cursor: Int,
+    tokens_count: Int
+}
+
+fn parse(token_count: Int) -> Int {
+    let mut declarations: Int = 0
+    let mut c: Int = 0
+    while c < token_count {
+        declarations = declarations + 1
+        c = c + 5
+    }
+    return declarations
+}

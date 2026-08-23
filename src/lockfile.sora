@@ -1,0 +1,8 @@
+// src/lockfile.sora — Deterministic Lockfile Generator in Sorayunara
+// Organization: Sorayunara
+
+struct LockedPackage {
+    name: String,
+    version: String,
+    checksum: String
+}

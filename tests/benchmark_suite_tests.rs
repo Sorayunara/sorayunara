@@ -16,7 +16,7 @@ fn test_benchmark_suite_categories_and_table() {
     assert!(categories.contains(&"Concurrency (100k Tasks)"));
 
     let table = BenchmarkSuite::render_markdown_table(&results);
-    assert!(table.contains("| Aether | Rust | Go | C++ | Zig |"));
+    assert!(table.contains("| Sorayunara | Rust | Go | C++ | Zig |"));
     assert!(table.contains("Startup Time"));
     assert!(table.contains("HTTP Server Throughput"));
 }

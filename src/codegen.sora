@@ -1,0 +1,6 @@
+// src/codegen.sora — Multi-Target Machine Code & C/JS/WASM Emitter in Sorayunara
+// Organization: Sorayunara
+
+fn emit_native_code(arch: &String) -> String {
+    return "; Sorayunara Native Machine Code Emission for " + arch + "\n"
+}

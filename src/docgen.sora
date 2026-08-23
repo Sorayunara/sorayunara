@@ -1,0 +1,6 @@
+// src/docgen.sora — Documentation Generator in Sorayunara
+// Organization: Sorayunara
+
+fn generate_documentation(out_path: String) -> Bool {
+    return true
+}

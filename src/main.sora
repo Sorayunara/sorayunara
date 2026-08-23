@@ -1,0 +1,19 @@
+// src/main.sora — Unified Sorayunara CLI & Compiler Driver (.sora)
+// Organization: Sorayunara
+
+import std.io
+import std.os
+import std.fs
+
+fn print_banner() {
+    print("===============================================================")
+    print("🌌 SORAYUNARA PROGRAMMING LANGUAGE: UNIFIED TOOLCHAIN (.sora)")
+    print("   Organization: Sorayunara · Safe · Fast · Expressive")
+    print("===============================================================")
+}
+
+fn main() -> Int {
+    print_banner()
+    print("Sorayunara toolchain active. Ready to compile and execute (.sora).")
+    return 0
+}

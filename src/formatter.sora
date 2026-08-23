@@ -1,0 +1,6 @@
+// src/formatter.sora — Source Code Formatter in Sorayunara
+// Organization: Sorayunara
+
+fn format_code(source: String) -> String {
+    return source
+}

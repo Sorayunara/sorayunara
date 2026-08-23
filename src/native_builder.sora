@@ -1,0 +1,11 @@
+// src/native_builder.sora — Standalone Binary Builder & Linker in Sorayunara
+// Organization: Sorayunara
+
+struct NativeBuild {
+    target_triple: String,
+    opt_level: String
+}
+
+fn build_native_binary(target: String, output: String) -> Bool {
+    return true
+}

@@ -1,0 +1,16 @@
+// src/types.sora — Static Type System & Inference Types in Sorayunara
+// Organization: Sorayunara
+
+struct TypeEntry {
+    name: String,
+    size: Int,
+    is_primitive: Bool
+}
+
+fn type_entry_new(name: String, size: Int, is_prim: Bool) -> TypeEntry {
+    return TypeEntry {
+        name: name,
+        size: size,
+        is_primitive: is_prim
+    }
+}

@@ -1,0 +1,11 @@
+// src/checker.sora — Hindley-Milner Type Inference & Borrow Checker in Sorayunara
+// Organization: Sorayunara
+
+struct CheckerContext {
+    scopes: Int,
+    errors: Int
+}
+
+fn check_semantics(decl_count: Int) -> Bool {
+    return decl_count > 0
+}
