@@ -5,7 +5,7 @@
 <h1 align="center">🌌 The Sorayunara Programming Language (<code>.sora</code>)</h1>
 
 <p align="center">
-  <strong>Fast, Memory-Safe, and Expressive Systems & Backend Language with Self-Hosting Compiler and Multi-Target Codegen.</strong>
+  <strong>Next-Generation Systems & Backend Language with Hindley-Milner Type Inference, Flow-Sensitive Borrow Checking, Lock-Free Actor Concurrency, Multi-Pass Quad IR Optimizer, and Multi-Target LLVM / WASM / C Native Codegen.</strong>
 </p>
 
 <p align="center">
