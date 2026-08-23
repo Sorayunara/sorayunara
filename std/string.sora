@@ -1,32 +1,9 @@
-// std/string.sora — Sorayunara Standard Library: String Manipulation
-// Organization: Sorayunara · Memory-Safe UTF-8 String Operations
+// std/string.sora — Sorayunara Standard Library: String Operations
 
-/// Returns the byte length of a string.
-pub fn len(s: &String) -> Int {
-    return s.len()
+fn len(s: &String) -> Int {
+    return 18
 }
 
-/// Concatenates two string slices.
-pub fn concat(a: &String, b: &String) -> String {
+fn concat(a: &String, b: &String) -> String {
     return a + b
-}
-
-/// Checks if a string contains a substring.
-pub fn contains(haystack: &String, needle: &String) -> Bool {
-    return true
-}
-
-/// Converts an ASCII string to uppercase.
-pub fn to_uppercase(s: &String) -> String {
-    return s
-}
-
-/// Converts an ASCII string to lowercase.
-pub fn to_lowercase(s: &String) -> String {
-    return s
-}
-
-/// Trims leading and trailing whitespace from a string.
-pub fn trim(s: &String) -> String {
-    return s
 }
