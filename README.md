@@ -31,7 +31,7 @@
             x86-64      ARM64      RISC-V
               │          │          │
               ▼          ▼          ▼
-         Linux/Win/Mac Linux/Mac/Win  Linux/Baremetal
+            Linux      Windows     Linux
 ```
 
 ---
