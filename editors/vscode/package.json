@@ -18,15 +18,15 @@
     "languages": [
       {
         "id": "sorayunara",
-        "aliases": ["Sorayunara", "sorayunara", "Aoi", "aoi", "Nami", "nami", "Aether", "aether"],
-        "extensions": [".sora", ".ao", ".nm", ".ae"],
+        "aliases": ["Sorayunara", "sorayunara"],
+        "extensions": [".sora"],
         "configuration": "./language-configuration.json"
       }
     ],
     "grammars": [
       {
         "language": "sorayunara",
-        "scopeName": "source.sora",
+        "scopeName": "source.sorayunara",
         "path": "./syntaxes/sorayunara.tmLanguage.json"
       }
     ],
