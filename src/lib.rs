@@ -27,3 +27,4 @@ pub mod symbol_table;
 pub mod test_runner;
 pub mod vm;
 pub mod wasm_backend;
+pub mod native_builder;
