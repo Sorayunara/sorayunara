@@ -5,7 +5,7 @@
 # 1. Primary Language: Sorayunara (.sora)
 *.sora linguist-detectable
 
-# 2. Exclude all Rust bootstrap files from language stats
+# 2. Exclude all Rust bootstrap files
 *.rs linguist-vendored
 *.rs linguist-generated
 *.toml linguist-vendored
@@ -16,3 +16,9 @@ src/** linguist-vendored
 tests/** linguist-vendored
 target/** linguist-vendored
 output.* linguist-generated
+
+# 3. Exclude Web Playground, VS Code Tooling & Docs from language statistics
+playground/** linguist-vendored
+editors/** linguist-vendored
+docs/** linguist-documentation
+demo-service/** linguist-vendored
