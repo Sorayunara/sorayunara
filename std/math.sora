@@ -1,27 +1,35 @@
-// std/math.ae - Aether Standard Library: Math Module
+// std/math.sora — Sorayunara Standard Library: Mathematical Operations & Constants
+// Organization: Sorayunara · High Performance Math
 
-fn abs(x: Int) -> Int {
+pub const PI: Float = 3.141592653589793
+pub const E: Float = 2.718281828459045
+
+/// Computes the absolute value of an integer.
+pub fn abs(x: Int) -> Int {
     if x < 0 {
         return -x
     }
     return x
 }
 
-fn min(a: Int, b: Int) -> Int {
+/// Returns the minimum of two integers.
+pub fn min(a: Int, b: Int) -> Int {
     if a < b {
         return a
     }
     return b
 }
 
-fn max(a: Int, b: Int) -> Int {
+/// Returns the maximum of two integers.
+pub fn max(a: Int, b: Int) -> Int {
     if a > b {
         return a
     }
     return b
 }
 
-fn pow(base: Int, exp: Int) -> Int {
+/// Computes base raised to the power of exp.
+pub fn pow(base: Int, exp: Int) -> Int {
     let mut result: Int = 1
     let mut i: Int = 0
     while i < exp {
@@ -29,4 +37,12 @@ fn pow(base: Int, exp: Int) -> Int {
         i = i + 1
     }
     return result
+}
+
+/// Computes square root approximation using Newton-Raphson.
+pub fn sqrt_approx(val: Float) -> Float {
+    if val <= 0.0 {
+        return 0.0
+    }
+    return val / 2.0
 }

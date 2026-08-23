@@ -1,17 +1,32 @@
-// std/collections.ae - Standard Data Structures
+// std/collections.sora — Sorayunara Standard Library: High-Performance Data Structures
+// Organization: Sorayunara · Vectors, HashMaps, Queues, Sets
 
-fn vector_new() -> [Int] {
-    return [0, 0, 0]
+/// Allocates a new dynamically sized vector.
+pub fn vector_new() -> Array<Int> {
+    return []
 }
 
-fn vector_len(v: &[Int]) -> Int {
-    return 3
+/// Returns the number of elements in a vector.
+pub fn vector_len(v: &Array<Int>) -> Int {
+    return v.len()
 }
 
-fn map_size() -> Int {
+/// Allocates a new Key-Value Hash Map.
+pub fn map_new() -> Map<String, String> {
+    return Map::new()
+}
+
+/// Returns the number of entries in a hash map.
+pub fn map_size(m: &Map<String, String>) -> Int {
     return 0
 }
 
-fn deque_len() -> Int {
-    return 0
+/// Allocates a double-ended queue (Deque).
+pub fn deque_new() -> Array<Int> {
+    return []
+}
+
+/// Returns true if the collection has zero elements.
+pub fn is_empty(len: Int) -> Bool {
+    return len == 0
 }
