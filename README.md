@@ -17,6 +17,10 @@
   <a href="https://github.com/Sorayunara/sorayunara/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22"><img src="https://img.shields.io/badge/good%20first%20issues-welcome-7057ff.svg" alt="Good First Issues"></a>
 </p>
 
+<p align="center">
+  <img src="assets/vscode_preview.svg" alt="Sorayunara VS Code IDE Interface & Syntax Highlighting" width="92%" />
+</p>
+
 ---
 
 ## ⚡ Quick Look at Sorayunara
@@ -112,6 +116,10 @@ Measured on systems benchmark matrix (lower execution time and lower memory foot
 ---
 
 ## 🛠️ CLI Quickstart (`sorayunara`)
+
+<p align="center">
+  <img src="assets/terminal_demo.svg" alt="Sorayunara Terminal Execution Demo" width="92%" />
+</p>
 
 ### 1. Build from Source
 ```bash
