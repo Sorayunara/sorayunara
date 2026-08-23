@@ -1,0 +1,24 @@
+name: 💡 Feature Request
+description: Propose a new language feature, standard library addition, or compiler enhancement
+title: "[RFC]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting an enhancement to Sorayunara!
+  - type: textarea
+    id: problem
+    attributes:
+      label: Is your feature request related to a problem?
+      description: A clear and concise description of what the problem is.
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Describe the Solution You'd Like
+      description: Suggest syntax or APIs with `.sora` code examples if applicable.
+      render: sora
+    validations:
+      required: true
