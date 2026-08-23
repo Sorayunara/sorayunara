@@ -2,7 +2,7 @@
   <img src="assets/logo.png" alt="Sorayunara Programming Language Logo" width="220" />
 </p>
 
-<h1 align="center">🌌 The Sorayunara Programming Language (<code>.sora</code>)</h1>
+<h1 align="center">The Sorayunara Programming Language (<code>.sora</code>)</h1>
 
 <p align="center">
   <strong>Next-Generation Systems & Backend Language with Hindley-Milner Type Inference, Flow-Sensitive Borrow Checking, Lock-Free Actor Concurrency, Multi-Pass Quad IR Optimizer, and Multi-Target LLVM / WASM / C Native Codegen.</strong>
@@ -50,7 +50,7 @@ async fn worker_task(id: Int, ch: Channel<WorkerMessage>) -> Result<String, Stri
 }
 
 fn main() -> Int {
-    print("🌌 Welcome to Sorayunara (.sora) Runtime!")
+    print("Welcome to Sorayunara (.sora) Runtime!")
     let ch: Channel<WorkerMessage> = channel::new(1024)
     
     spawn async {
@@ -70,7 +70,7 @@ Measured on systems benchmark matrix (lower execution time and lower memory foot
 
 | Language | Benchmark Execution Time | Memory Overhead (RAM) | Type Safety & Concurrency | Native Codegen |
 | :--- | :---: | :---: | :---: | :---: |
-| **🌌 Sorayunara (`.sora`)** | **1.02x (Near-C Speed)** | **~4.2 MB** | **Static HM + Borrow Checker** | **LLVM / C / WASM** |
+| **Sorayunara (`.sora`)** | **1.02x (Near-C Speed)** | **~4.2 MB** | **Static HM + Borrow Checker** | **LLVM / C / WASM** |
 | **C (GCC -O3)** | 1.00x (Baseline) | ~3.8 MB | Manual (Unsafe) | Native Machine Code |
 | **Rust (rustc -O)** | 1.01x | ~4.5 MB | Static Ownership | LLVM Machine Code |
 | **Go (gc 1.22)** | 1.45x | ~18.5 MB | Garbage Collected | Native Machine Code |
@@ -188,5 +188,5 @@ sorayunara publish         # Publish package to official Sorayunara Registry
 ---
 
 <p align="center">
-  Made with 🌌 by the <strong>Sorayunara Core Team</strong> (sorayunara.org). Open source under the MIT License.
+  Developed by the <strong>Sorayunara Core Team</strong> (sorayunara.org). Open source under the MIT License.
 </p>
