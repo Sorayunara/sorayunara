@@ -1,0 +1,9 @@
+// src/lib.sora — Library utilities for Sorayunara
+
+pub fn add(a: Int, b: Int) -> Int {
+    return a + b
+}
+
+pub fn greet(name: String) -> String {
+    return "Hello, " + name + " from Sorayunara!"
+}

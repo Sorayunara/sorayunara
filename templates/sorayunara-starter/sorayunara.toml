@@ -1,0 +1,9 @@
+[package]
+name = "sorayunara-starter"
+version = "0.1.0"
+authors = ["Sorayunara Community <dev@sorayunara.org>"]
+description = "Starter Project Template for Sorayunara (.sora)"
+license = "MIT"
+
+[dependencies]
+# Add Sorayunara registry packages here

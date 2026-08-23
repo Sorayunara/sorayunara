@@ -1,0 +1,9 @@
+// src/main.sora — Entrypoint for Sorayunara Application
+import std.io
+import std.time
+
+fn main() -> Int {
+    print("🌌 Welcome to your new Sorayunara Project (.sora)!")
+    print("⚡ Fast, Memory-Safe, and Expressive Systems Programming.")
+    return 0
+}
