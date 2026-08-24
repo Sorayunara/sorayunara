@@ -815,9 +815,9 @@ fn main() {
             cmd_test(&test_args);
         }
         "debug" => {
-            let file = if args.len() > 2 { &args[2] } else { "main.ae" };
-            println!("🐞 Starting Aether Debugger on '{}'...", file);
-            if let Ok(content) = fs::read_to_string(file) {
+            let file = resolve_entry_file(&args, 2);
+            println!("🐞 Starting Sorayunara Debugger on '{}'...", file);
+            if let Ok(content) = fs::read_to_string(&file) {
                 if let Ok(tokens) = lexer::tokenize(&content) {
                     if let Ok(program) = parser::parse(tokens) {
                         let ir = ir::compile_to_ir(&program);
@@ -829,9 +829,9 @@ fn main() {
             }
         }
         "profile" => {
-            let file = if args.len() > 2 { &args[2] } else { "main.ae" };
-            println!("⏱️ Profiling Aether program execution for '{}'...\n", file);
-            if let Ok(content) = fs::read_to_string(file) {
+            let file = resolve_entry_file(&args, 2);
+            println!("⏱️ Profiling Sorayunara program execution for '{}'...\n", file);
+            if let Ok(content) = fs::read_to_string(&file) {
                 if let Ok(tokens) = lexer::tokenize(&content) {
                     if let Ok(program) = parser::parse(tokens) {
                         let ir = ir::compile_to_ir(&program);
@@ -844,9 +844,9 @@ fn main() {
             }
         }
         "trace" => {
-            let file = if args.len() > 2 { &args[2] } else { "main.ae" };
+            let file = resolve_entry_file(&args, 2);
             println!("📜 Generating execution trace for '{}'...", file);
-            if let Ok(content) = fs::read_to_string(file) {
+            if let Ok(content) = fs::read_to_string(&file) {
                 if let Ok(tokens) = lexer::tokenize(&content) {
                     if let Ok(program) = parser::parse(tokens) {
                         let ir = ir::compile_to_ir(&program);
@@ -864,7 +864,7 @@ fn main() {
             if args.len() > 2 {
                 cmd_add(&args[2]);
             } else {
-                eprintln!("Error: Missing package name. Usage: aether add <package_name>");
+                eprintln!("Error: Missing package name. Usage: sorayunara add <package_name>");
             }
         }
         "search" => {
@@ -884,15 +884,15 @@ fn main() {
             if args.len() > 2 {
                 cmd_remove(&args[2]);
             } else {
-                eprintln!("Error: Missing package name. Usage: aether remove <package_name>");
+                eprintln!("Error: Missing package name. Usage: sorayunara remove <package_name>");
             }
         }
         "update" => {
-            println!("🔄 Updating package dependencies from aether.toml...");
+            println!("🔄 Updating package dependencies from sorayunara.toml...");
             println!("  ✅ All packages are up to date.");
         }
         other => {
-            if other.ends_with(".ae") {
+            if other.ends_with(".sora") || other.ends_with(".ao") || other.ends_with(".nm") || other.ends_with(".ae") {
                 let _ = execute_pipeline(other);
             } else {
                 print_usage();

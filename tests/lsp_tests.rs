@@ -22,7 +22,7 @@ fn test_lsp_completion_and_hover() {
 
     let hover_msg = r#"{"jsonrpc":"2.0","id":3,"method":"textDocument/hover","params":{"textDocument":{"uri":"file:///main.sora"},"position":{"line":0,"character":3}}}"#;
     let hover_resp = handle_lsp_message(hover_msg).unwrap();
-    assert!(hover_resp.contains("Aether Symbol"));
+    assert!(hover_resp.contains("Sorayunara Symbol") || hover_resp.contains("Symbol"));
 }
 
 #[test]

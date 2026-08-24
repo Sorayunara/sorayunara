@@ -1,7 +1,7 @@
 {
   "name": "sorayunara",
   "displayName": "Sorayunara Language Support",
-  "description": "Language Server, Syntax Highlighting, Formatting and Debugging for Sorayunara (.sora)",
+  "description": "Unified Language Support for Sorayunara (.sora): Hindley-Milner Type Inference, LSP Server, DAP Debugger, Formatter, Package Manager, and Syntax Highlighting.",
   "version": "0.1.0",
   "publisher": "Sorayunara",
   "icon": "icon.png",
@@ -13,7 +13,20 @@
     "vscode": "^1.75.0"
   },
   "categories": [
-    "Programming Languages"
+    "Programming Languages",
+    "Formatters",
+    "Linters",
+    "Debuggers"
+  ],
+  "activationEvents": [
+    "onLanguage:sorayunara",
+    "onCommand:sorayunara.run",
+    "onCommand:sorayunara.build",
+    "onCommand:sorayunara.test",
+    "onCommand:sorayunara.format",
+    "onCommand:sorayunara.check",
+    "onCommand:sorayunara.debug",
+    "onCommand:sorayunara.restartLsp"
   ],
   "main": "./extension.js",
   "contributes": {
@@ -37,6 +50,72 @@
         "language": "sorayunara",
         "path": "./snippets.json"
       }
-    ]
+    ],
+    "commands": [
+      {
+        "command": "sorayunara.run",
+        "title": "Sorayunara: Run Active File",
+        "category": "Sorayunara"
+      },
+      {
+        "command": "sorayunara.build",
+        "title": "Sorayunara: Build Active File / Project",
+        "category": "Sorayunara"
+      },
+      {
+        "command": "sorayunara.test",
+        "title": "Sorayunara: Run Test Suite",
+        "category": "Sorayunara"
+      },
+      {
+        "command": "sorayunara.format",
+        "title": "Sorayunara: Format Active Document",
+        "category": "Sorayunara"
+      },
+      {
+        "command": "sorayunara.check",
+        "title": "Sorayunara: Type Check & Verify",
+        "category": "Sorayunara"
+      },
+      {
+        "command": "sorayunara.debug",
+        "title": "Sorayunara: Start Debug Session",
+        "category": "Sorayunara"
+      },
+      {
+        "command": "sorayunara.restartLsp",
+        "title": "Sorayunara: Restart Language Server (LSP)",
+        "category": "Sorayunara"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "when": "resourceExtname == .sora",
+          "command": "sorayunara.run",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Sorayunara",
+      "properties": {
+        "sorayunara.executablePath": {
+          "type": "string",
+          "default": "sorayunara",
+          "description": "Path to the sorayunara executable compiler & LSP server"
+        },
+        "sorayunara.enableLsp": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable Sorayunara Language Server Protocol (LSP) daemon"
+        },
+        "sorayunara.formatOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically format document on save"
+        }
+      }
+    }
   }
 }

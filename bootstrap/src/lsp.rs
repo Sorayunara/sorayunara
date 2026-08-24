@@ -75,23 +75,23 @@ pub fn handle_lsp_message(msg: &str) -> Option<String> {
         ]"#;
         Some(format!(r#"{{"jsonrpc":"2.0","id":2,"result":{}}}"#, completions))
     } else if msg.contains("\"method\":\"textDocument/hover\"") {
-        Some(r#"{"jsonrpc":"2.0","id":3,"result":{"contents":{"kind":"markdown","value":"**Aether Symbol**\n\n```aether\nfn main() -> Int\n```\nFast, Safe, Data-Race Free Native Function."}}}"#.to_string())
+        Some(r#"{"jsonrpc":"2.0","id":3,"result":{"contents":{"kind":"markdown","value":"**Sorayunara Symbol**\n\n```sorayunara\nfn main() -> Int\n```\nFast, Safe, Data-Race Free Native Function."}}}"#.to_string())
     } else if msg.contains("\"method\":\"textDocument/definition\"") {
-        Some(r#"{"jsonrpc":"2.0","id":4,"result":{"uri":"file:///src/main.ae","range":{"start":{"line":0,"character":0},"end":{"line":0,"character":10}}}}"#.to_string())
+        Some(r#"{"jsonrpc":"2.0","id":4,"result":{"uri":"file:///src/main.sora","range":{"start":{"line":0,"character":0},"end":{"line":0,"character":10}}}}"#.to_string())
     } else if msg.contains("\"method\":\"textDocument/implementation\"") {
-        Some(r#"{"jsonrpc":"2.0","id":5,"result":[{"uri":"file:///src/main.ae","range":{"start":{"line":10,"character":0},"end":{"line":15,"character":1}}}]}"#.to_string())
+        Some(r#"{"jsonrpc":"2.0","id":5,"result":[{"uri":"file:///src/main.sora","range":{"start":{"line":10,"character":0},"end":{"line":15,"character":1}}}]}"#.to_string())
     } else if msg.contains("\"method\":\"textDocument/references\"") {
-        Some(r#"{"jsonrpc":"2.0","id":6,"result":[{"uri":"file:///src/main.ae","range":{"start":{"line":5,"character":4},"end":{"line":5,"character":12}}}]}"#.to_string())
+        Some(r#"{"jsonrpc":"2.0","id":6,"result":[{"uri":"file:///src/main.sora","range":{"start":{"line":5,"character":4},"end":{"line":5,"character":12}}}]}"#.to_string())
     } else if msg.contains("\"method\":\"textDocument/formatting\"") {
         Some(r#"{"jsonrpc":"2.0","id":7,"result":[]}"#.to_string())
     } else if msg.contains("\"method\":\"textDocument/rename\"") {
-        Some(r#"{"jsonrpc":"2.0","id":8,"result":{"changes":{"file:///src/main.ae":[{"range":{"start":{"line":0,"character":3},"end":{"line":0,"character":7}},"newText":"renamedSymbol"}]}}}"#.to_string())
+        Some(r#"{"jsonrpc":"2.0","id":8,"result":{"changes":{"file:///src/main.sora":[{"range":{"start":{"line":0,"character":3},"end":{"line":0,"character":7}},"newText":"renamedSymbol"}]}}}"#.to_string())
     } else if msg.contains("\"method\":\"textDocument/codeAction\"") {
-        Some(r#"{"jsonrpc":"2.0","id":9,"result":[{"title":"Aether: Organize & Sort Imports","kind":"source.organizeImports","isPreferred":true},{"title":"Aether: Derive Debug, Clone, Serialize","kind":"quickfix","isPreferred":true}]}"#.to_string())
+        Some(r#"{"jsonrpc":"2.0","id":9,"result":[{"title":"Sorayunara: Organize & Sort Imports","kind":"source.organizeImports","isPreferred":true},{"title":"Sorayunara: Derive Debug, Clone, Serialize","kind":"quickfix","isPreferred":true}]}"#.to_string())
     } else if msg.contains("\"method\":\"textDocument/semanticTokens/full\"") {
         Some(r#"{"jsonrpc":"2.0","id":10,"result":{"data":[0,0,2,0,0,0,3,4,2,0]}}"#.to_string())
     } else if msg.contains("\"method\":\"textDocument/didOpen\"") || msg.contains("\"method\":\"textDocument/didChange\"") {
-        Some(r#"{"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"uri":"file:///src/main.ae","diagnostics":[]}}"#.to_string())
+        Some(r#"{"jsonrpc":"2.0","method":"textDocument/publishDiagnostics","params":{"uri":"file:///src/main.sora","diagnostics":[]}}"#.to_string())
     } else {
         None
     }
