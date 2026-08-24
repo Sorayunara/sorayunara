@@ -2,15 +2,15 @@
   <img src="assets/logo.png" alt="Sorayunara Programming Language Logo" width="220" />
 </p>
 
-<h1 align="center">The Sorayunara Programming Language (`.sora`)</h1>
+<h1 align="center">সোরায়ুনারা প্রোগ্রামিং ভাষা (`.sora`)</h1>
 
 <p align="center">
-  **English** | [简体中文](README.zh-CN.md) | [हिन्दी](README.hi.md) | [Español](README.es.md) | [Français](README.fr.md) | [العربية](README.ar.md) | [বাংলা](README.bn.md) | [Português](README.pt-BR.md) | [Русский](README.ru.md) | [اردو](README.ur.md) | [Bahasa Indonesia](README.id.md) | [Deutsch](README.de.md) | [日本語](README.ja.md) | [मराठी](README.mr.md) | [Türkçe](README.tr.md)
+  [English](README.md) | [简体中文](README.zh-CN.md) | [हिन्दी](README.hi.md) | [Español](README.es.md) | [Français](README.fr.md) | [العربية](README.ar.md) | **বাংলা** | [Português](README.pt-BR.md) | [Русский](README.ru.md) | [اردو](README.ur.md) | [Bahasa Indonesia](README.id.md) | [Deutsch](README.de.md) | [日本語](README.ja.md) | [मराठी](README.mr.md) | [Türkçe](README.tr.md)
 </p>
 
 
 <p align="center">
-  <strong>Next-Generation Systems & Backend Language with Hindley-Milner Type Inference, Flow-Sensitive Borrow Checking, Lock-Free Actor Concurrency, Multi-Pass Quad IR Optimizer, and Multi-Target LLVM / WASM / C Native Codegen.</strong>
+  <strong>হিন্ডলে-মিলনার টাইপ ইনফারেন্স, মেমরি-নিরাপদ বরো চেকিং, লক-মুক্ত অ্যাক্টর কনকারেন্সি, মাল্টি-পাস কোয়াড IR অপ্টিমাইজার এবং LLVM / WASM / C নেটিভ কোডজেন সহ পরবর্তী প্রজন্মের সিস্টেম ও ব্যাকএন্ড ভাষা।</strong>
 </p>
 
 <p align="center">
@@ -28,7 +28,7 @@
 
 ---
 
-## ⚡ Quick Look at Sorayunara
+## ⚡ সোরায়ুনারার এক ঝলক
 
 ```sora
 // High-performance actor concurrency & algebraic pattern matching
@@ -69,13 +69,13 @@ fn main() -> Int {
 
 ---
 
-## 📊 Performance Benchmarks
+## 📊 কর্মক্ষমতা বেঞ্চমার্ক
 
-Measured on systems benchmark matrix (lower execution time and lower memory footprint is better):
+সিস্টেম বেঞ্চমার্কে পরিমাপ করা হয়েছে (কম এক্সিকিউশন টাইম এবং কম মেমোরি ব্যবহার ভালো):
 
-| Language | Benchmark Execution Time | Memory Overhead (RAM) | Type Safety & Concurrency | Native Codegen |
+| ভাষা | বেঞ্চমার্ক এক্সিকিউশন সময় | মেমরি ওভারহেড (RAM) | টাইপ সুরক্ষা ও কনকারেন্সি | নেটিভ কোডজেন |
 | :--- | :---: | :---: | :---: | :---: |
-| **Sorayunara (`.sora`)** | **1.02x (Near-C Speed)** | **~4.2 MB** | **Static HM + Borrow Checker** | **LLVM / C / WASM** |
+| **Sorayunara (`.sora`)** | **1.02x (C এর কাছাকাছি গতি)** | **~4.2 MB** | **স্ট্যাটিক HM + বরো চেকার** | **LLVM / C / WASM** |
 | **C (GCC -O3)** | 1.00x (Baseline) | ~3.8 MB | Manual (Unsafe) | Native Machine Code |
 | **Rust (rustc -O)** | 1.01x | ~4.5 MB | Static Ownership | LLVM Machine Code |
 | **Go (gc 1.22)** | 1.45x | ~18.5 MB | Garbage Collected | Native Machine Code |
@@ -83,7 +83,7 @@ Measured on systems benchmark matrix (lower execution time and lower memory foot
 
 ---
 
-## 🏛️ Multi-Target Compiler Pipeline
+## 🏛️ মাল্টি-টার্গেট কম্পাইলার পাইপলাইন
 
 ```
                     SORAYUNARA SOURCE (.sora)
@@ -111,29 +111,29 @@ Measured on systems benchmark matrix (lower execution time and lower memory foot
 
 ---
 
-## 🚀 Key Value Propositions
+## 🚀 প্রধান বৈশিষ্ট্যাবলী
 
-- **⚡ Blazing Fast**: Zero-cost generic monomorphization, constant folding, dead code elimination, and direct LLVM native emission.
-- **🛡️ Memory Safe**: Hindley-Milner type inference, flow-sensitive borrow checking without mandatory garbage collection overhead.
-- **🧵 Modern Concurrency**: Lightweight coroutines (`spawn async`), MPSC channels (`Channel<T>`), and actor models built into the standard library.
-- **🧰 Unified Toolchain**: Everything in a single binary: compiler, VM runtime, test runner, benchmark suite, formatter, linter, doc generator, package manager, and LSP server.
+- **⚡ অত্যন্ত দ্রুত**: জিরো-কস্ট জেনেরিক মনোমরফাইজেশন, কনস্ট্যান্ট ফোল্ডিং, ডেড কোড এলিমিনেশন এবং সরাসরি LLVM কোডজেন।
+- **🛡️ মেমরি নিরাপদ**: বাধ্যতামূলক GC ওভারহেড ছাড়াই হিন্ডলে-মিলনার টাইপ ইনফারেন্স ও ফ্লো-সেনসিটিভ বরো চেকিং।
+- **🧵 আধুনিক কনকারেন্সি**: লাইটওয়েট কোরুটিন (`spawn async`), MPSC চ্যানেল (`Channel<T>`), এবং স্ট্যান্ডার্ড লাইব্রেরিতে নির্মিত অ্যাক্টর মডেল।
+- **🧰 একীভূত টুলচেন**: একটি একক বাইনারিতে সবকিছু: কম্পাইলার, VM রানটাইম, টেস্ট রানার, বেঞ্চমার্ক স্যুট, ফরম্যাটার, লিন্টার, ডক জেনারেটর, প্যাকেজ ম্যানেজার এবং LSP সার্ভার।
 
 ---
 
-## 🛠️ CLI Quickstart (`sorayunara`)
+## 🛠️ সিএলআই দ্রুত শুরু (`sorayunara`)
 
 <p align="center">
   <img src="assets/terminal_demo.svg" alt="Sorayunara Terminal Execution Demo" width="92%" />
 </p>
 
-### 1. Build from Source
+### 1. সোর্স কোড থেকে বিল্ড করুন
 ```bash
 git clone https://github.com/Sorayunara/sorayunara.git
 cd sorayunara
 cargo build --release
 ```
 
-### 2. Run Example Programs
+### 2. উদাহরণ প্রোগ্রাম চালান
 ```bash
 # Execute instantly using VM / JIT
 cargo run -- run examples/main.sora
@@ -145,7 +145,7 @@ cargo run -- run examples/matrix.sora
 cargo run -- run examples/primes.sora
 ```
 
-### 3. Run Automated Quality & Test Suite
+### 3. স্বয়ংক্রিয় কোয়ালিটি এবং টেস্ট স্যুট চালান
 ```bash
 # Run all test suites
 cargo test --all-targets
@@ -156,7 +156,7 @@ cargo run -- doctor
 
 ---
 
-## 📦 Project Ecosystem & CLI Commands
+## 📦 প্রজেক্ট ইকোসিস্টেম এবং সিএলআই কমান্ডসমূহ
 
 ```bash
 # Project Lifecycle
@@ -181,17 +181,17 @@ sorayunara publish         # Publish package to official Sorayunara Registry
 
 ---
 
-## 📄 Documentation & Resources
+## 📄 ডকুমেন্টেশন ও রিসোর্স
 
-- 📖 **Language Specification**: [SPECIFICATION.md](SPECIFICATION.md)
-- 🤝 **Contributing Guide**: [CONTRIBUTING.md](CONTRIBUTING.md)
-- 🌟 **Good First Issues**: [GitHub Issues](https://github.com/Sorayunara/sorayunara/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
-- 🧩 **VS Code Extension**: [editors/vscode/](editors/vscode/)
-- 📦 **Starter Template**: [sorayunara-starter-template](https://github.com/Sorayunara/sorayunara-starter-template)
-- 🌐 **WebAssembly Playground**: [playground/](playground/)
+- 📖 **ভাষা স্পেসিফিকেশন**: [SPECIFICATION.md](SPECIFICATION.md)
+- 🤝 **কন্ট্রিবিউশন গাইড**: [CONTRIBUTING.md](CONTRIBUTING.md)
+- 🌟 **নতুনদের জন্য উপযুক্ত ইস্যু**: [GitHub Issues](https://github.com/Sorayunara/sorayunara/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
+- 🧩 **VS Code এক্সটেনশন**: [editors/vscode/](editors/vscode/)
+- 📦 **স্টার্টার টেমপ্লেট**: [sorayunara-starter-template](https://github.com/Sorayunara/sorayunara-starter-template)
+- 🌐 **WebAssembly প্লেগ্রাউন্ড**: [playground/](playground/)
 
 ---
 
 <p align="center">
-  Developed by the **Sorayunara Core Team** (sorayunara.org). Open source under the MIT License.
+  **সোরায়ুনারা কোর টিম** (sorayunara.org) দ্বারা তৈরি। MIT লাইসেন্সের অধীনে ওপেন সোর্স।
 </p>

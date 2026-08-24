@@ -1,16 +1,16 @@
 <p align="center">
-  <img src="assets/logo.png" alt="Sorayunara Programming Language Logo" width="220" />
+  <img src="../../assets/logo.png" alt="Sorayunara Programming Language Logo" width="220" />
 </p>
 
-<h1 align="center">The Sorayunara Programming Language (`.sora`)</h1>
+<h1 align="center">Язык программирования Sorayunara (`.sora`)</h1>
 
 <p align="center">
-  **English** | [简体中文](README.zh-CN.md) | [हिन्दी](README.hi.md) | [Español](README.es.md) | [Français](README.fr.md) | [العربية](README.ar.md) | [বাংলা](README.bn.md) | [Português](README.pt-BR.md) | [Русский](README.ru.md) | [اردو](README.ur.md) | [Bahasa Indonesia](README.id.md) | [Deutsch](README.de.md) | [日本語](README.ja.md) | [मराठी](README.mr.md) | [Türkçe](README.tr.md)
+  [English](../en/README.md) | [简体中文](../zh-CN/README.md) | [हिन्दी](../hi/README.md) | [Español](../es/README.md) | [Français](../fr/README.md) | [العربية](../ar/README.md) | [বাংলা](../bn/README.md) | [Português](../pt-BR/README.md) | **Русский** | [اردو](../ur/README.md) | [Bahasa Indonesia](../id/README.md) | [Deutsch](../de/README.md) | [日本語](../ja/README.md) | [मराठी](../mr/README.md) | [Türkçe](../tr/README.md)
 </p>
 
 
 <p align="center">
-  <strong>Next-Generation Systems & Backend Language with Hindley-Milner Type Inference, Flow-Sensitive Borrow Checking, Lock-Free Actor Concurrency, Multi-Pass Quad IR Optimizer, and Multi-Target LLVM / WASM / C Native Codegen.</strong>
+  <strong>Системный и бэкенд язык следующего поколения с выводом типов Хиндли-Милнера, потоко-чувствительным borrow checker, акторной многозадачностью без блокировок, многопроходным оптимизатором Quad IR и генерацией нативного кода LLVM / WASM / C.</strong>
 </p>
 
 <p align="center">
@@ -23,12 +23,12 @@
 </p>
 
 <p align="center">
-  <img src="assets/vscode_preview.svg" alt="Sorayunara VS Code IDE Interface & Syntax Highlighting" width="92%" />
+  <img src="../../assets/vscode_preview.svg" alt="Sorayunara VS Code IDE Interface & Syntax Highlighting" width="92%" />
 </p>
 
 ---
 
-## ⚡ Quick Look at Sorayunara
+## ⚡ Краткий обзор Sorayunara
 
 ```sora
 // High-performance actor concurrency & algebraic pattern matching
@@ -69,13 +69,13 @@ fn main() -> Int {
 
 ---
 
-## 📊 Performance Benchmarks
+## 📊 Тесты производительности (Бенчмарки)
 
-Measured on systems benchmark matrix (lower execution time and lower memory footprint is better):
+Измерено на матрице системных бенчмарков (меньшее время выполнения и меньший объем памяти лучше):
 
-| Language | Benchmark Execution Time | Memory Overhead (RAM) | Type Safety & Concurrency | Native Codegen |
+| Язык | Время выполнения | Потребление памяти (RAM) | Типобезопасность и параллелизм | Нативный кодогенератор |
 | :--- | :---: | :---: | :---: | :---: |
-| **Sorayunara (`.sora`)** | **1.02x (Near-C Speed)** | **~4.2 MB** | **Static HM + Borrow Checker** | **LLVM / C / WASM** |
+| **Sorayunara (`.sora`)** | **1.02x (Скорость близкая к C)** | **~4.2 MB** | **Статический HM + Borrow Checker** | **LLVM / C / WASM** |
 | **C (GCC -O3)** | 1.00x (Baseline) | ~3.8 MB | Manual (Unsafe) | Native Machine Code |
 | **Rust (rustc -O)** | 1.01x | ~4.5 MB | Static Ownership | LLVM Machine Code |
 | **Go (gc 1.22)** | 1.45x | ~18.5 MB | Garbage Collected | Native Machine Code |
@@ -83,7 +83,7 @@ Measured on systems benchmark matrix (lower execution time and lower memory foot
 
 ---
 
-## 🏛️ Multi-Target Compiler Pipeline
+## 🏛️ Мультиплатформенный конвейер компилятора
 
 ```
                     SORAYUNARA SOURCE (.sora)
@@ -111,29 +111,29 @@ Measured on systems benchmark matrix (lower execution time and lower memory foot
 
 ---
 
-## 🚀 Key Value Propositions
+## 🚀 Ключевые преимущества
 
-- **⚡ Blazing Fast**: Zero-cost generic monomorphization, constant folding, dead code elimination, and direct LLVM native emission.
-- **🛡️ Memory Safe**: Hindley-Milner type inference, flow-sensitive borrow checking without mandatory garbage collection overhead.
-- **🧵 Modern Concurrency**: Lightweight coroutines (`spawn async`), MPSC channels (`Channel<T>`), and actor models built into the standard library.
-- **🧰 Unified Toolchain**: Everything in a single binary: compiler, VM runtime, test runner, benchmark suite, formatter, linter, doc generator, package manager, and LSP server.
+- **⚡ Невероятная скорость**: Мономорфизация дженериков с нулевой стоимостью, свертка констант, удаление мертвого кода и прямая генерация LLVM.
+- **🛡️ Безопасность памяти**: Вывод типов Хиндли-Милнера и потоко-чувствительный borrow checker без накладных расходов сборщика мусора.
+- **🧵 Современный параллелизм**: Легковесные корутины (`spawn async`), каналы MPSC (`Channel<T>`) и модель акторов в стандартной библиотеке.
+- **🧰 Единый инструментарий**: Все в одном бинарнике: компилятор, VM, раннер тестов, бенчмарки, форматтер, линтер, генератор документации, менеджер пакетов и LSP сервер.
 
 ---
 
-## 🛠️ CLI Quickstart (`sorayunara`)
+## 🛠️ Быстрый старт с CLI (`sorayunara`)
 
 <p align="center">
-  <img src="assets/terminal_demo.svg" alt="Sorayunara Terminal Execution Demo" width="92%" />
+  <img src="../../assets/terminal_demo.svg" alt="Sorayunara Terminal Execution Demo" width="92%" />
 </p>
 
-### 1. Build from Source
+### 1. Сборка из исходного кода
 ```bash
 git clone https://github.com/Sorayunara/sorayunara.git
 cd sorayunara
 cargo build --release
 ```
 
-### 2. Run Example Programs
+### 2. Запуск примеров программ
 ```bash
 # Execute instantly using VM / JIT
 cargo run -- run examples/main.sora
@@ -145,7 +145,7 @@ cargo run -- run examples/matrix.sora
 cargo run -- run examples/primes.sora
 ```
 
-### 3. Run Automated Quality & Test Suite
+### 3. Запуск автоматических тестов и проверки качества
 ```bash
 # Run all test suites
 cargo test --all-targets
@@ -156,7 +156,7 @@ cargo run -- doctor
 
 ---
 
-## 📦 Project Ecosystem & CLI Commands
+## 📦 Экосистема проекта и команды CLI
 
 ```bash
 # Project Lifecycle
@@ -181,17 +181,17 @@ sorayunara publish         # Publish package to official Sorayunara Registry
 
 ---
 
-## 📄 Documentation & Resources
+## 📄 Документация и ресурсы
 
-- 📖 **Language Specification**: [SPECIFICATION.md](SPECIFICATION.md)
-- 🤝 **Contributing Guide**: [CONTRIBUTING.md](CONTRIBUTING.md)
-- 🌟 **Good First Issues**: [GitHub Issues](https://github.com/Sorayunara/sorayunara/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
-- 🧩 **VS Code Extension**: [editors/vscode/](editors/vscode/)
-- 📦 **Starter Template**: [sorayunara-starter-template](https://github.com/Sorayunara/sorayunara-starter-template)
-- 🌐 **WebAssembly Playground**: [playground/](playground/)
+- 📖 **Спецификация языка**: [../../SPECIFICATION.md](../../SPECIFICATION.md)
+- 🤝 **Руководство по участию**: [../../CONTRIBUTING.md](../../CONTRIBUTING.md)
+- 🌟 **Задачи для новичков**: [GitHub Issues](https://github.com/Sorayunara/sorayunara/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
+- 🧩 **Расширение для VS Code**: [../../editors/vscode/](../../editors/vscode/)
+- 📦 **Стартовый шаблон**: [sorayunara-starter-template](https://github.com/Sorayunara/sorayunara-starter-template)
+- 🌐 **WebAssembly Песочница**: [../../playground/](../../playground/)
 
 ---
 
 <p align="center">
-  Developed by the **Sorayunara Core Team** (sorayunara.org). Open source under the MIT License.
+  Разработано **командой Sorayunara Core** (sorayunara.org). Открытый исходный код под лицензией MIT.
 </p>

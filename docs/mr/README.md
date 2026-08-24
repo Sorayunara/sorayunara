@@ -1,16 +1,16 @@
 <p align="center">
-  <img src="assets/logo.png" alt="Sorayunara Programming Language Logo" width="220" />
+  <img src="../../assets/logo.png" alt="Sorayunara Programming Language Logo" width="220" />
 </p>
 
-<h1 align="center">The Sorayunara Programming Language (`.sora`)</h1>
+<h1 align="center">सोरायुनारा प्रोग्रामिंग भाषा (`.sora`)</h1>
 
 <p align="center">
-  **English** | [简体中文](README.zh-CN.md) | [हिन्दी](README.hi.md) | [Español](README.es.md) | [Français](README.fr.md) | [العربية](README.ar.md) | [বাংলা](README.bn.md) | [Português](README.pt-BR.md) | [Русский](README.ru.md) | [اردو](README.ur.md) | [Bahasa Indonesia](README.id.md) | [Deutsch](README.de.md) | [日本語](README.ja.md) | [मराठी](README.mr.md) | [Türkçe](README.tr.md)
+  [English](../en/README.md) | [简体中文](../zh-CN/README.md) | [हिन्दी](../hi/README.md) | [Español](../es/README.md) | [Français](../fr/README.md) | [العربية](../ar/README.md) | [বাংলা](../bn/README.md) | [Português](../pt-BR/README.md) | [Русский](../ru/README.md) | [اردو](../ur/README.md) | [Bahasa Indonesia](../id/README.md) | [Deutsch](../de/README.md) | [日本語](../ja/README.md) | **मराठी** | [Türkçe](../tr/README.md)
 </p>
 
 
 <p align="center">
-  <strong>Next-Generation Systems & Backend Language with Hindley-Milner Type Inference, Flow-Sensitive Borrow Checking, Lock-Free Actor Concurrency, Multi-Pass Quad IR Optimizer, and Multi-Target LLVM / WASM / C Native Codegen.</strong>
+  <strong>हिंडले-मिलनर टाईप इन्फरन्स, फ्लो-सेन्सिटिव्ह बॉरो चेकिंग, लॉक-फ्री अ‍ॅक्टर समवर्तीता, मल्टी-पास क्वाड IR ऑप्टिमाइझर आणि मल्टी-टार्गेट LLVM / WASM / C कोड जनरेशनसह पुढील पिढीची सिस्टीम आणि बॅकएंड भाषा.</strong>
 </p>
 
 <p align="center">
@@ -23,12 +23,12 @@
 </p>
 
 <p align="center">
-  <img src="assets/vscode_preview.svg" alt="Sorayunara VS Code IDE Interface & Syntax Highlighting" width="92%" />
+  <img src="../../assets/vscode_preview.svg" alt="Sorayunara VS Code IDE Interface & Syntax Highlighting" width="92%" />
 </p>
 
 ---
 
-## ⚡ Quick Look at Sorayunara
+## ⚡ सोरायुनाराचा संक्षिप्त परिचय
 
 ```sora
 // High-performance actor concurrency & algebraic pattern matching
@@ -69,13 +69,13 @@ fn main() -> Int {
 
 ---
 
-## 📊 Performance Benchmarks
+## 📊 कार्यक्षमता बेंचमार्क
 
-Measured on systems benchmark matrix (lower execution time and lower memory footprint is better):
+सिस्टीम बेंचमार्क मॅट्रिक्सवर मोजले गेले (कमी कार्यान्वयन वेळ आणि कमी मेमरी वापर उत्तम मानला जातो):
 
-| Language | Benchmark Execution Time | Memory Overhead (RAM) | Type Safety & Concurrency | Native Codegen |
+| भाषा | बेंचमार्क वेळ | मेमरी वापर (RAM) | टाईप सुरक्षितता आणि समवर्तीता | नेटिव्ह कोडजन |
 | :--- | :---: | :---: | :---: | :---: |
-| **Sorayunara (`.sora`)** | **1.02x (Near-C Speed)** | **~4.2 MB** | **Static HM + Borrow Checker** | **LLVM / C / WASM** |
+| **Sorayunara (`.sora`)** | **1.02x (C च्या जवळपास गती)** | **~4.2 MB** | **स्टॅटिक HM + बॉरो चेकर** | **LLVM / C / WASM** |
 | **C (GCC -O3)** | 1.00x (Baseline) | ~3.8 MB | Manual (Unsafe) | Native Machine Code |
 | **Rust (rustc -O)** | 1.01x | ~4.5 MB | Static Ownership | LLVM Machine Code |
 | **Go (gc 1.22)** | 1.45x | ~18.5 MB | Garbage Collected | Native Machine Code |
@@ -83,7 +83,7 @@ Measured on systems benchmark matrix (lower execution time and lower memory foot
 
 ---
 
-## 🏛️ Multi-Target Compiler Pipeline
+## 🏛️ मल्टी-टार्गेट कंपाइलर पाइपलाइन
 
 ```
                     SORAYUNARA SOURCE (.sora)
@@ -111,29 +111,29 @@ Measured on systems benchmark matrix (lower execution time and lower memory foot
 
 ---
 
-## 🚀 Key Value Propositions
+## 🚀 प्रमुख वैशिष्ट्ये
 
-- **⚡ Blazing Fast**: Zero-cost generic monomorphization, constant folding, dead code elimination, and direct LLVM native emission.
-- **🛡️ Memory Safe**: Hindley-Milner type inference, flow-sensitive borrow checking without mandatory garbage collection overhead.
-- **🧵 Modern Concurrency**: Lightweight coroutines (`spawn async`), MPSC channels (`Channel<T>`), and actor models built into the standard library.
-- **🧰 Unified Toolchain**: Everything in a single binary: compiler, VM runtime, test runner, benchmark suite, formatter, linter, doc generator, package manager, and LSP server.
+- **⚡ अत्यंत वेगवान**: शून्य-किंमत जेनेरिक मोनोमॉर्फिझम, कॉन्स्टंट फोल्डिंग, डेड कोड निर्मूलन आणि थेट LLVM कोड जनरेशन.
+- **🛡️ मेमरी सुरक्षा**: सक्तीच्या GC ओव्हरहेडशिवाय हिंडले-मिलनर टाईप इन्फरन्स आणि फ्लो-सेन्सिटिव्ह बॉरो चेकिंग.
+- **🧵 आधुनिक समवर्तीता**: हलके कोरूटिन्स (`spawn async`), MPSC चॅनेल्स (`Channel<T>`), आणि स्टँडर्ड लायब्ररीमध्ये अ‍ॅक्टर मॉडेल्स.
+- **🧰 एकात्मिक टूलचेन**: एकाच बायनरीमध्ये सर्वकाही: कंपाइलर, VM रनटाइम, टेस्ट रनर, बेंचमार्क संच, फॉरमॅटर, लिंटर, डॉक जनरेटर, पॅकेज मॅनेजर आणि LSP सर्व्हर.
 
 ---
 
-## 🛠️ CLI Quickstart (`sorayunara`)
+## 🛠️ सीएलआय द्रुत सुरुवात (`sorayunara`)
 
 <p align="center">
-  <img src="assets/terminal_demo.svg" alt="Sorayunara Terminal Execution Demo" width="92%" />
+  <img src="../../assets/terminal_demo.svg" alt="Sorayunara Terminal Execution Demo" width="92%" />
 </p>
 
-### 1. Build from Source
+### 1. सोर्स कोडमधून बिल्ड करा
 ```bash
 git clone https://github.com/Sorayunara/sorayunara.git
 cd sorayunara
 cargo build --release
 ```
 
-### 2. Run Example Programs
+### 2. उदाहरण प्रोग्राम चालवा
 ```bash
 # Execute instantly using VM / JIT
 cargo run -- run examples/main.sora
@@ -145,7 +145,7 @@ cargo run -- run examples/matrix.sora
 cargo run -- run examples/primes.sora
 ```
 
-### 3. Run Automated Quality & Test Suite
+### 3. स्वयंचलित गुणवत्ता आणि चाचणी संच चालवा
 ```bash
 # Run all test suites
 cargo test --all-targets
@@ -156,7 +156,7 @@ cargo run -- doctor
 
 ---
 
-## 📦 Project Ecosystem & CLI Commands
+## 📦 प्रकल्प इकोसिस्टम आणि सीएलआय कमांड्स
 
 ```bash
 # Project Lifecycle
@@ -181,17 +181,17 @@ sorayunara publish         # Publish package to official Sorayunara Registry
 
 ---
 
-## 📄 Documentation & Resources
+## 📄 दस्तऐवजीकरण आणि संसाधने
 
-- 📖 **Language Specification**: [SPECIFICATION.md](SPECIFICATION.md)
-- 🤝 **Contributing Guide**: [CONTRIBUTING.md](CONTRIBUTING.md)
-- 🌟 **Good First Issues**: [GitHub Issues](https://github.com/Sorayunara/sorayunara/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
-- 🧩 **VS Code Extension**: [editors/vscode/](editors/vscode/)
-- 📦 **Starter Template**: [sorayunara-starter-template](https://github.com/Sorayunara/sorayunara-starter-template)
-- 🌐 **WebAssembly Playground**: [playground/](playground/)
+- 📖 **भाषा तपशील**: [../../SPECIFICATION.md](../../SPECIFICATION.md)
+- 🤝 **योगदान मार्गदर्शक**: [../../CONTRIBUTING.md](../../CONTRIBUTING.md)
+- 🌟 **नवशिक्यांसाठी उपयुक्त समस्या**: [GitHub Issues](https://github.com/Sorayunara/sorayunara/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
+- 🧩 **VS Code एक्स्टेंशन**: [../../editors/vscode/](../../editors/vscode/)
+- 📦 **स्टार्टर टेम्पलेट**: [sorayunara-starter-template](https://github.com/Sorayunara/sorayunara-starter-template)
+- 🌐 **WebAssembly प्लेग्राउंड**: [../../playground/](../../playground/)
 
 ---
 
 <p align="center">
-  Developed by the **Sorayunara Core Team** (sorayunara.org). Open source under the MIT License.
+  **सोरायुनारा कोर टीम** (sorayunara.org) द्वारे विकसित. MIT परवान्याअंतर्गत मुक्त स्रोत.
 </p>

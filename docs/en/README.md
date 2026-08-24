@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="assets/logo.png" alt="Sorayunara Programming Language Logo" width="220" />
+  <img src="../../assets/logo.png" alt="Sorayunara Programming Language Logo" width="220" />
 </p>
 
 <h1 align="center">The Sorayunara Programming Language (`.sora`)</h1>
 
 <p align="center">
-  **English** | [简体中文](README.zh-CN.md) | [हिन्दी](README.hi.md) | [Español](README.es.md) | [Français](README.fr.md) | [العربية](README.ar.md) | [বাংলা](README.bn.md) | [Português](README.pt-BR.md) | [Русский](README.ru.md) | [اردو](README.ur.md) | [Bahasa Indonesia](README.id.md) | [Deutsch](README.de.md) | [日本語](README.ja.md) | [मराठी](README.mr.md) | [Türkçe](README.tr.md)
+  **English** | [简体中文](../zh-CN/README.md) | [हिन्दी](../hi/README.md) | [Español](../es/README.md) | [Français](../fr/README.md) | [العربية](../ar/README.md) | [বাংলা](../bn/README.md) | [Português](../pt-BR/README.md) | [Русский](../ru/README.md) | [اردو](../ur/README.md) | [Bahasa Indonesia](../id/README.md) | [Deutsch](../de/README.md) | [日本語](../ja/README.md) | [मराठी](../mr/README.md) | [Türkçe](../tr/README.md)
 </p>
 
 
@@ -23,7 +23,7 @@
 </p>
 
 <p align="center">
-  <img src="assets/vscode_preview.svg" alt="Sorayunara VS Code IDE Interface & Syntax Highlighting" width="92%" />
+  <img src="../../assets/vscode_preview.svg" alt="Sorayunara VS Code IDE Interface & Syntax Highlighting" width="92%" />
 </p>
 
 ---
@@ -123,7 +123,7 @@ Measured on systems benchmark matrix (lower execution time and lower memory foot
 ## 🛠️ CLI Quickstart (`sorayunara`)
 
 <p align="center">
-  <img src="assets/terminal_demo.svg" alt="Sorayunara Terminal Execution Demo" width="92%" />
+  <img src="../../assets/terminal_demo.svg" alt="Sorayunara Terminal Execution Demo" width="92%" />
 </p>
 
 ### 1. Build from Source
@@ -183,12 +183,12 @@ sorayunara publish         # Publish package to official Sorayunara Registry
 
 ## 📄 Documentation & Resources
 
-- 📖 **Language Specification**: [SPECIFICATION.md](SPECIFICATION.md)
-- 🤝 **Contributing Guide**: [CONTRIBUTING.md](CONTRIBUTING.md)
+- 📖 **Language Specification**: [../../SPECIFICATION.md](../../SPECIFICATION.md)
+- 🤝 **Contributing Guide**: [../../CONTRIBUTING.md](../../CONTRIBUTING.md)
 - 🌟 **Good First Issues**: [GitHub Issues](https://github.com/Sorayunara/sorayunara/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
-- 🧩 **VS Code Extension**: [editors/vscode/](editors/vscode/)
+- 🧩 **VS Code Extension**: [../../editors/vscode/](../../editors/vscode/)
 - 📦 **Starter Template**: [sorayunara-starter-template](https://github.com/Sorayunara/sorayunara-starter-template)
-- 🌐 **WebAssembly Playground**: [playground/](playground/)
+- 🌐 **WebAssembly Playground**: [../../playground/](../../playground/)
 
 ---
 

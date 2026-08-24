@@ -2,16 +2,20 @@
   <img src="assets/logo.png" alt="Sorayunara Programming Language Logo" width="220" />
 </p>
 
-<h1 align="center">The Sorayunara Programming Language (`.sora`)</h1>
+<h1 align="center">لغة البرمجة سورا يونارا Sorayunara (`.sora`)</h1>
 
 <p align="center">
-  **English** | [简体中文](README.zh-CN.md) | [हिन्दी](README.hi.md) | [Español](README.es.md) | [Français](README.fr.md) | [العربية](README.ar.md) | [বাংলা](README.bn.md) | [Português](README.pt-BR.md) | [Русский](README.ru.md) | [اردو](README.ur.md) | [Bahasa Indonesia](README.id.md) | [Deutsch](README.de.md) | [日本語](README.ja.md) | [मराठी](README.mr.md) | [Türkçe](README.tr.md)
+  [English](README.md) | [简体中文](README.zh-CN.md) | [हिन्दी](README.hi.md) | [Español](README.es.md) | [Français](README.fr.md) | **العربية** | [বাংলা](README.bn.md) | [Português](README.pt-BR.md) | [Русский](README.ru.md) | [اردو](README.ur.md) | [Bahasa Indonesia](README.id.md) | [Deutsch](README.de.md) | [日本語](README.ja.md) | [मराठी](README.mr.md) | [Türkçe](README.tr.md)
 </p>
 
 
+<div dir="rtl">
+
 <p align="center">
-  <strong>Next-Generation Systems & Backend Language with Hindley-Milner Type Inference, Flow-Sensitive Borrow Checking, Lock-Free Actor Concurrency, Multi-Pass Quad IR Optimizer, and Multi-Target LLVM / WASM / C Native Codegen.</strong>
+  <strong>لغة برمجية للأنظمة والخدمات الخلفية من الجيل القادم تتميز بنظام استنتاج الأنواع Hindley-Milner، وفحص الاستعارة الحساس للتدفق، وتزامن الممثلين بدون أقفال، ومحسن Quad IR متعدد المراحل، وتوليد كود أصلي عبر LLVM / WASM / C.</strong>
 </p>
+
+</div>
 
 <p align="center">
   <a href="https://github.com/Sorayunara/sorayunara/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/Sorayunara/sorayunara/ci.yml?branch=main&label=CI%20Matrix&logo=github" alt="CI Matrix"></a>
@@ -28,7 +32,7 @@
 
 ---
 
-## ⚡ Quick Look at Sorayunara
+## ⚡ نظرة سريعة على Sorayunara
 
 ```sora
 // High-performance actor concurrency & algebraic pattern matching
@@ -69,13 +73,13 @@ fn main() -> Int {
 
 ---
 
-## 📊 Performance Benchmarks
+## 📊 اختبارات الأداء القياسية
 
-Measured on systems benchmark matrix (lower execution time and lower memory footprint is better):
+تم القياس وفق مصفوفة الأنظمة القياسية (انخفاض وقت التنفيذ واستهلاك الذاكرة هو الأفضل):
 
-| Language | Benchmark Execution Time | Memory Overhead (RAM) | Type Safety & Concurrency | Native Codegen |
+| اللغة | وقت التنفيذ | استهلاك الذاكرة (RAM) | سلامة الأنواع والتزامن | توليد كود أصلي |
 | :--- | :---: | :---: | :---: | :---: |
-| **Sorayunara (`.sora`)** | **1.02x (Near-C Speed)** | **~4.2 MB** | **Static HM + Borrow Checker** | **LLVM / C / WASM** |
+| **Sorayunara (`.sora`)** | **1.02x (سرعة تماثل C)** | **~4.2 MB** | **HM ثابت + فاحص الاستعارة** | **LLVM / C / WASM** |
 | **C (GCC -O3)** | 1.00x (Baseline) | ~3.8 MB | Manual (Unsafe) | Native Machine Code |
 | **Rust (rustc -O)** | 1.01x | ~4.5 MB | Static Ownership | LLVM Machine Code |
 | **Go (gc 1.22)** | 1.45x | ~18.5 MB | Garbage Collected | Native Machine Code |
@@ -83,7 +87,7 @@ Measured on systems benchmark matrix (lower execution time and lower memory foot
 
 ---
 
-## 🏛️ Multi-Target Compiler Pipeline
+## 🏛️ مسار مترجم المنصات المتعددة
 
 ```
                     SORAYUNARA SOURCE (.sora)
@@ -111,29 +115,29 @@ Measured on systems benchmark matrix (lower execution time and lower memory foot
 
 ---
 
-## 🚀 Key Value Propositions
+## 🚀 المزايا والخصائص الأساسية
 
-- **⚡ Blazing Fast**: Zero-cost generic monomorphization, constant folding, dead code elimination, and direct LLVM native emission.
-- **🛡️ Memory Safe**: Hindley-Milner type inference, flow-sensitive borrow checking without mandatory garbage collection overhead.
-- **🧵 Modern Concurrency**: Lightweight coroutines (`spawn async`), MPSC channels (`Channel<T>`), and actor models built into the standard library.
-- **🧰 Unified Toolchain**: Everything in a single binary: compiler, VM runtime, test runner, benchmark suite, formatter, linter, doc generator, package manager, and LSP server.
+- **⚡ سرعة فائقة**: توحيد قوالب بدون كلفة، وتبسيط الثوابت، وحذف الكود الميت، وتوليد مباشر للغة الآلة عبر LLVM.
+- **🛡️ أمان الذاكرة**: استنتاج أنواع هندلي-ميلنر، وفحص استعارة دقيق دون عبء جامع النفايات الإجباري.
+- **🧵 تزامن حديث**: روتينات فرعية خفيفة (`spawn async`)، وقنوات MPSC (`Channel<T>`)، ونماذج الفاعلين في المكتبة القياسية.
+- **🧰 حزمة أدوات موحدة**: كل شيء في ملف تنفيذي واحد: المترجم، وبيئة التشغيل، ومشغل الاختبارات، ومنسق الكود، ومدير الحزم، وخادم LSP.
 
 ---
 
-## 🛠️ CLI Quickstart (`sorayunara`)
+## 🛠️ البدء السريع عبر سطر الأوامر (`sorayunara`)
 
 <p align="center">
   <img src="assets/terminal_demo.svg" alt="Sorayunara Terminal Execution Demo" width="92%" />
 </p>
 
-### 1. Build from Source
+### 1. البناء من المصدر
 ```bash
 git clone https://github.com/Sorayunara/sorayunara.git
 cd sorayunara
 cargo build --release
 ```
 
-### 2. Run Example Programs
+### 2. تشغيل البرامج التجريبية
 ```bash
 # Execute instantly using VM / JIT
 cargo run -- run examples/main.sora
@@ -145,7 +149,7 @@ cargo run -- run examples/matrix.sora
 cargo run -- run examples/primes.sora
 ```
 
-### 3. Run Automated Quality & Test Suite
+### 3. تشغيل حزمة الاختبارات وفحص الجودة
 ```bash
 # Run all test suites
 cargo test --all-targets
@@ -156,7 +160,7 @@ cargo run -- doctor
 
 ---
 
-## 📦 Project Ecosystem & CLI Commands
+## 📦 بيئة المشروع وأوامر CLI
 
 ```bash
 # Project Lifecycle
@@ -181,17 +185,17 @@ sorayunara publish         # Publish package to official Sorayunara Registry
 
 ---
 
-## 📄 Documentation & Resources
+## 📄 التوثيق والمصادر
 
-- 📖 **Language Specification**: [SPECIFICATION.md](SPECIFICATION.md)
-- 🤝 **Contributing Guide**: [CONTRIBUTING.md](CONTRIBUTING.md)
-- 🌟 **Good First Issues**: [GitHub Issues](https://github.com/Sorayunara/sorayunara/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
-- 🧩 **VS Code Extension**: [editors/vscode/](editors/vscode/)
-- 📦 **Starter Template**: [sorayunara-starter-template](https://github.com/Sorayunara/sorayunara-starter-template)
-- 🌐 **WebAssembly Playground**: [playground/](playground/)
+- 📖 **مواصفات اللغة**: [SPECIFICATION.md](SPECIFICATION.md)
+- 🤝 **دليل المساهمة**: [CONTRIBUTING.md](CONTRIBUTING.md)
+- 🌟 **مهام مناسبة للمبتدئين**: [GitHub Issues](https://github.com/Sorayunara/sorayunara/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
+- 🧩 **إضافة VS Code**: [editors/vscode/](editors/vscode/)
+- 📦 **قالب البداية**: [sorayunara-starter-template](https://github.com/Sorayunara/sorayunara-starter-template)
+- 🌐 **منصة WebAssembly التفاعلية**: [playground/](playground/)
 
 ---
 
 <p align="center">
-  Developed by the **Sorayunara Core Team** (sorayunara.org). Open source under the MIT License.
+  تم التطوير بواسطة **فريق Sorayunara الأساسي** (sorayunara.org). مفتوحة المصدر تحت رخصة MIT.
 </p>
