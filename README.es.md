@@ -5,7 +5,21 @@
 <h1 align="center">El Lenguaje de Programación Sorayunara (`.sora`)</h1>
 
 <p align="center">
-  [English](README.md) | [简体中文](README.zh-CN.md) | [हिन्दी](README.hi.md) | **Español** | [Français](README.fr.md) | [العربية](README.ar.md) | [বাংলা](README.bn.md) | [Português](README.pt-BR.md) | [Русский](README.ru.md) | [اردو](README.ur.md) | [Bahasa Indonesia](README.id.md) | [Deutsch](README.de.md) | [日本語](README.ja.md) | [मराठी](README.mr.md) | [Türkçe](README.tr.md)
+  <a href="README.md">English</a> &bull;
+  <a href="README.zh-CN.md">简体中文</a> &bull;
+  <a href="README.hi.md">हिन्दी</a> &bull;
+  <b>Español</b> &bull;
+  <a href="README.fr.md">Français</a> &bull;
+  <a href="README.ar.md">العربية</a> &bull;
+  <a href="README.bn.md">বাংলা</a> &bull;
+  <a href="README.pt-BR.md">Português</a> &bull;
+  <a href="README.ru.md">Русский</a> &bull;
+  <a href="README.ur.md">اردو</a> &bull;
+  <a href="README.id.md">Bahasa Indonesia</a> &bull;
+  <a href="README.de.md">Deutsch</a> &bull;
+  <a href="README.ja.md">日本語</a> &bull;
+  <a href="README.mr.md">मराठी</a> &bull;
+  <a href="README.tr.md">Türkçe</a>
 </p>
 
 
