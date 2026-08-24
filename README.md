@@ -4,6 +4,27 @@
 
 <h1 align="center">The Sorayunara Programming Language (<code>.sora</code>)</h1>
 
+<!-- i18n-navbar -->
+<p align="center">
+  **English** •
+  [简体中文](docs/i18n/zh.md) •
+  [हिन्दी](docs/i18n/hi.md) •
+  [Español](docs/i18n/es.md) •
+  [Français](docs/i18n/fr.md) •
+  [العربية](docs/i18n/ar.md) •
+  [বাংলা](docs/i18n/bn.md) •
+  [Português](docs/i18n/pt.md) •
+  [Русский](docs/i18n/ru.md) •
+  [اردو](docs/i18n/ur.md) •
+  [Bahasa Indonesia](docs/i18n/id.md) •
+  [Deutsch](docs/i18n/de.md) •
+  [日本語](docs/i18n/ja.md) •
+  [Nigerian Pidgin](docs/i18n/pcm.md) •
+  [मराठी](docs/i18n/mr.md)
+</p>
+<!-- /i18n-navbar -->
+
+
 <p align="center">
   <strong>Next-Generation Systems & Backend Language with Hindley-Milner Type Inference, Flow-Sensitive Borrow Checking, Lock-Free Actor Concurrency, Multi-Pass Quad IR Optimizer, and Multi-Target LLVM / WASM / C Native Codegen.</strong>
 </p>
