@@ -8,6 +8,8 @@ on:
 
 permissions:
   contents: write
+  id-token: write
+  attestations: write
 
 jobs:
   build-release:
@@ -21,22 +23,37 @@ jobs:
             target: x86_64-unknown-linux-gnu
             bin_name: sorayunara
             archive_ext: tar.gz
+            use_qemu: false
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            bin_name: sorayunara
+            archive_ext: tar.gz
+            use_qemu: true
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             bin_name: sorayunara.exe
             archive_ext: zip
+            use_qemu: false
           - os: macos-latest
             target: aarch64-apple-darwin
             bin_name: sorayunara
             archive_ext: tar.gz
+            use_qemu: false
           - os: macos-13
             target: x86_64-apple-darwin
             bin_name: sorayunara
             archive_ext: tar.gz
+            use_qemu: false
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Install ARM64 Cross Linker & QEMU
+        if: matrix.target == 'aarch64-unknown-linux-gnu'
+        run: |
+          sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu qemu-user
+          echo "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc" >> $GITHUB_ENV
 
       - name: Set up Rust Toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -46,21 +63,32 @@ jobs:
       - name: Build Target Release Binary
         run: cargo build --release --target ${{ matrix.target }}
 
-      - name: Smoke Test Binary
+      - name: End-to-End Compiler Smoke Test
+        if: matrix.use_qemu == false
         shell: bash
         run: |
-          BIN="target/${{ matrix.target }}/release/${{ matrix.bin_name }}"
-          echo "=== Smoke Testing Built Binary ==="
-          $BIN --help || true
-          mkdir -p smoke_test_dir
-          cd smoke_test_dir
-          ../$BIN new test_app || true
-          echo "Smoke test passed successfully."
+          BIN="$(pwd)/target/${{ matrix.target }}/release/${{ matrix.bin_name }}"
+          echo "=== 1. Smoke Testing CLI Help & Version ==="
+          "$BIN" --help
+          echo "=== 2. Creating New Project ==="
+          mkdir -p smoke_test_workspace
+          cd smoke_test_workspace
+          "$BIN" new canonical_hello
+          cd canonical_hello
+          echo "=== 3. Executing sora check ==="
+          "$BIN" check
+          echo "=== 4. Executing sora build ==="
+          "$BIN" build
+          echo "=== 5. Executing sora test ==="
+          "$BIN" test
+          echo "=== 6. Executing sora run ==="
+          "$BIN" run
+          echo "=== End-to-end smoke test passed successfully ==="
 
       - name: Package Archive
         shell: bash
         run: |
-          VERSION=${GITHUB_REF_NAME:-v0.1.0}
+          VERSION=${GITHUB_REF_NAME:-v0.1.1}
           PKG_NAME="sora-${VERSION}-${{ matrix.target }}"
           mkdir -p dist/"$PKG_NAME"
           
@@ -99,7 +127,7 @@ jobs:
         working-directory: release_assets
         run: |
           sha256sum * > SHA256SUMS.txt
-          echo "=== Generated Checksums ==="
+          echo "=== Generated SHA-256 Integrity Checksums ==="
           cat SHA256SUMS.txt
 
       - name: Create Official GitHub Release
@@ -107,6 +135,32 @@ jobs:
         with:
           files: |
             release_assets/*
+          name: Sorayunara ${{ github.ref_name }} — Production-Ready Toolchain Distribution
+          body: |
+            ## 🌸 Sorayunara Release ${{ github.ref_name }}
+
+            Official release of the **Sorayunara** systems & AI programming language toolchain.
+
+            ### 📦 Multi-Platform Artifacts
+            - **Linux (x86_64)**: `sora-${{ github.ref_name }}-x86_64-unknown-linux-gnu.tar.gz`
+            - **Linux (ARM64 / aarch64)**: `sora-${{ github.ref_name }}-aarch64-unknown-linux-gnu.tar.gz`
+            - **Windows (x86_64)**: `sora-${{ github.ref_name }}-x86_64-pc-windows-msvc.zip`
+            - **macOS (Apple Silicon M-series)**: `sora-${{ github.ref_name }}-aarch64-apple-darwin.tar.gz`
+            - **macOS (Intel x86_64)**: `sora-${{ github.ref_name }}-x86_64-apple-darwin.tar.gz`
+
+            ### 🔒 Integrity Verification
+            Verify the integrity of downloaded binaries against `SHA256SUMS.txt`:
+            ```bash
+            sha256sum -c SHA256SUMS.txt
+            ```
+
+            ### 🚀 Quick Start
+            ```bash
+            # Create a new canonical project
+            sora new hello
+            cd hello
+            sora run
+            ```
           generate_release_notes: true
           draft: false
           prerelease: false
