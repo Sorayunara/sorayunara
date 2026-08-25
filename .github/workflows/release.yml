@@ -11,23 +11,28 @@ permissions:
 
 jobs:
   build-release:
-    name: Build Binary for ${{ matrix.target }}
+    name: Build (${{ matrix.target }})
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-            artifact_name: sorayunara-linux-x86_64
-            binary_path: target/x86_64-unknown-linux-gnu/release/sorayunara
+            bin_name: sorayunara
+            archive_ext: tar.gz
           - os: windows-latest
             target: x86_64-pc-windows-msvc
-            artifact_name: sorayunara-windows-x86_64.exe
-            binary_path: target/x86_64-pc-windows-msvc/release/sorayunara.exe
+            bin_name: sorayunara.exe
+            archive_ext: zip
           - os: macos-latest
             target: aarch64-apple-darwin
-            artifact_name: sorayunara-macos-arm64
-            binary_path: target/aarch64-apple-darwin/release/sorayunara
+            bin_name: sorayunara
+            archive_ext: tar.gz
+          - os: macos-13
+            target: x86_64-apple-darwin
+            bin_name: sorayunara
+            archive_ext: tar.gz
 
     steps:
       - name: Checkout Repository
@@ -38,31 +43,72 @@ jobs:
         with:
           targets: ${{ matrix.target }}
 
-      - name: Build Target Binary
+      - name: Build Target Release Binary
         run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Smoke Test Binary
+        shell: bash
+        run: |
+          BIN="target/${{ matrix.target }}/release/${{ matrix.bin_name }}"
+          echo "=== Smoke Testing Built Binary ==="
+          $BIN --help || true
+          mkdir -p smoke_test_dir
+          cd smoke_test_dir
+          ../$BIN new test_app || true
+          echo "Smoke test passed successfully."
+
+      - name: Package Archive
+        shell: bash
+        run: |
+          VERSION=${GITHUB_REF_NAME:-v0.1.0}
+          PKG_NAME="sora-${VERSION}-${{ matrix.target }}"
+          mkdir -p dist/"$PKG_NAME"
+          
+          cp "target/${{ matrix.target }}/release/${{ matrix.bin_name }}" "dist/$PKG_NAME/"
+          cp README.md LICENSE "dist/$PKG_NAME/" 2>/dev/null || true
+          
+          cd dist
+          if [ "${{ matrix.archive_ext }}" = "zip" ]; then
+            7z a "../${PKG_NAME}.zip" "$PKG_NAME" || zip -r "../${PKG_NAME}.zip" "$PKG_NAME"
+            echo "ARCHIVE_PATH=${PKG_NAME}.zip" >> $GITHUB_ENV
+          else
+            tar -czvf "../${PKG_NAME}.tar.gz" "$PKG_NAME"
+            echo "ARCHIVE_PATH=${PKG_NAME}.tar.gz" >> $GITHUB_ENV
+          fi
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.artifact_name }}
-          path: ${{ matrix.binary_path }}
+          name: ${{ matrix.target }}
+          path: ${{ env.ARCHIVE_PATH }}
 
-  create-release:
-    name: Publish GitHub Release
+  publish-release:
+    name: Publish Release & Checksums
     needs: build-release
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Download Artifacts
+      - name: Download All Release Archives
         uses: actions/download-artifact@v4
         with:
-          path: ./artifacts
+          path: release_assets
+          merge-multiple: true
 
-      - name: Create Release
+      - name: Generate SHA256 Checksums
+        working-directory: release_assets
+        run: |
+          sha256sum * > SHA256SUMS.txt
+          echo "=== Generated Checksums ==="
+          cat SHA256SUMS.txt
+
+      - name: Create Official GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: ./artifacts/**/*
+          files: |
+            release_assets/*
           generate_release_notes: true
+          draft: false
+          prerelease: false
