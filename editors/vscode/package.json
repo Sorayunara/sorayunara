@@ -18,16 +18,7 @@
     "Linters",
     "Debuggers"
   ],
-  "activationEvents": [
-    "onLanguage:sorayunara",
-    "onCommand:sorayunara.run",
-    "onCommand:sorayunara.build",
-    "onCommand:sorayunara.test",
-    "onCommand:sorayunara.format",
-    "onCommand:sorayunara.check",
-    "onCommand:sorayunara.debug",
-    "onCommand:sorayunara.restartLsp"
-  ],
+  "activationEvents": [],
   "main": "./extension.js",
   "contributes": {
     "languages": [

@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    "CODEOWNERS": "ignore",
+    "*.sora": "sorayunara",
+    "sora.lock": "toml"
+  }
+}
