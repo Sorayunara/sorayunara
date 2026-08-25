@@ -1,0 +1,21 @@
+# Sorayunara Code Ownership
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global default owners
+* @Sorayunara/core-maintainers @MuhammadLutfiMuzakiiVY
+
+# Compiler, Parser & AST
+/compiler/ @Sorayunara/core-maintainers
+/bootstrap/ @Sorayunara/core-maintainers
+/src/ @Sorayunara/core-maintainers
+
+# Standard Library
+/std/ @Sorayunara/core-maintainers
+
+# Tooling, Editors & LSP
+/editors/ @Sorayunara/core-maintainers
+/tools/ @Sorayunara/core-maintainers
+
+# Documentation & Specifications
+/docs/ @Sorayunara/core-maintainers
+*.md @Sorayunara/core-maintainers
