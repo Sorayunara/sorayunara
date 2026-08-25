@@ -67,20 +67,18 @@ jobs:
           cp "target/${{ matrix.target }}/release/${{ matrix.bin_name }}" "dist/$PKG_NAME/"
           cp README.md LICENSE "dist/$PKG_NAME/" 2>/dev/null || true
           
-          cd dist
+          mkdir -p archives
           if [ "${{ matrix.archive_ext }}" = "zip" ]; then
-            7z a "../${PKG_NAME}.zip" "$PKG_NAME" || zip -r "../${PKG_NAME}.zip" "$PKG_NAME"
-            echo "ARCHIVE_PATH=${PKG_NAME}.zip" >> $GITHUB_ENV
+            7z a "archives/${PKG_NAME}.zip" "./dist/${PKG_NAME}" || zip -r "archives/${PKG_NAME}.zip" "./dist/${PKG_NAME}"
           else
-            tar -czvf "../${PKG_NAME}.tar.gz" "$PKG_NAME"
-            echo "ARCHIVE_PATH=${PKG_NAME}.tar.gz" >> $GITHUB_ENV
+            tar -czvf "archives/${PKG_NAME}.tar.gz" -C dist "$PKG_NAME"
           fi
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.target }}
-          path: ${{ env.ARCHIVE_PATH }}
+          path: archives/*
 
   publish-release:
     name: Publish Release & Checksums
