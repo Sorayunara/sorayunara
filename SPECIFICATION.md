@@ -1,347 +1,218 @@
-# 🌌 Sorayunara Language Specification (v1.0)
+# 🌌 Sorayunara Core Language Specification (v1.0)
 
 **Organization**: Sorayunara  
-**Institution/Business**: Sorayunara  
-**Programming Language**: Sorayunara  
-**Compiler**: `sorayunara`  
-**Source File Extension**: `.sora`  
-
-*Formally specified for systems, application, embedded, AI/ML, and cloud-scale programming.*
+**Language**: Sorayunara (`.sora`)  
+**Design Philosophy**: **"Python simplicity + Rust safety + Zero boilerplate"**  
+**Compiler**: `sora` / `sorayunara`  
 
 ---
 
-## 📑 Table of Contents
-1. [Lexical Structure](#1-lexical-structure)
-2. [Keywords & Identifiers](#2-keywords--identifiers)
-3. [Operators & Expressions](#3-operators--expressions)
-4. [Variables & Mutability](#4-variables--mutability)
-5. [Functions & Signatures](#5-functions--signatures)
-6. [Type System](#6-type-system)
-7. [Generics & Type Parameters](#7-generics--type-parameters)
-8. [Structs & Aggregate Types](#8-structs--aggregate-types)
-9. [Enums & Algebraic Data Types (ADT)](#9-enums--algebraic-data-types-adt)
-10. [Traits & Interfaces](#10-traits--interfaces)
-11. [Module & Package System](#11-module--package-system)
-12. [Error Handling (`Result` & `Option`)](#12-error-handling-result--option)
-13. [Memory Model & Ownership/Borrowing](#13-memory-model--ownershipborrowing)
-14. [Built-in Concurrency & Async Runtime](#14-built-in-concurrency--async-runtime)
-15. [Compile-time Evaluation & Optimizations](#15-compile-time-evaluation--optimizations)
-16. [Application Binary Interface (ABI) & Foreign Function Interface (FFI)](#16-application-binary-interface-abi--foreign-function-interface-ffi)
+## 🎯 The "Syntax Budget" Philosophy
+
+Sorayunara adheres to an official design principle:
+> **"If a concept can be written shorter without sacrificing readability or type safety, use the shorter syntax."**
+
+| Feature | Python | Rust | Sorayunara (`.sora`) |
+| :--- | :--- | :--- | :--- |
+| **Variable** | `x = 10` | `let x = 10;` | `x = 10` (immutable by default) |
+| **Mutable Variable** | `x = 10` | `let mut x = 10;` | `mut x = 10` |
+| **Constant** | `PI = 3.14` | `const PI: f64 = 3.14;` | `const PI = 3.14` |
+| **Simple Function** | `def add(a, b): return a + b` | `fn add(a: i64, b: i64) -> i64 { a + b }` | `fn add(a, b) = a + b` |
+| **Function Block** | `def add(a, b):` | `fn add(a: i64, b: i64) -> i64 {` | `fn add(a, b) { a + b }` (implicit return) |
+| **If Expression** | `status = "adult" if age >= 18 else "child"` | `let status = if age >= 18 { "adult" } else { "child" };` | `status = if age >= 18 "adult" else "child"` |
+| **Loop** | `for item in items:` | `for item in items {` | `for item in items { print(item) }` |
+| **Comprehension** | `[x*2 for x in nums if x>10]` | `nums.iter().filter(...).map(...)` | `[x * 2 for x in nums if x > 10]` |
+| **Pipeline Chaining** | `map(filter(...))` | `nums.into_iter().filter().map()` | `nums.filter(x > 10).map(x * 2)` |
+| **Safe Navigation** | `user.name if user else None` | `user.as_ref().map(\|u\| &u.name)` | `user?.name` |
+| **Null/Option Fallback**| `user.name if user else "Anon"` | `user.map(\|u\| u.name).unwrap_or("Anon")` | `user?.name ?? "Anon"` |
+| **Error Propagation** | `try / except` | `divide(10, 2)?` | `divide(10, 2)?` |
+| **Struct Creation** | `User(name="Lutfi", age=21)` | `User { name: "Lutfi".into(), age: 21 }` | `user = User(name: "Lutfi", age: 21)` |
 
 ---
 
-## 1. Lexical Structure
+## 📑 Core Syntax Breakdown
 
-### 1.1 Source Text & Encoding
-Sorayunara source files must be encoded in **UTF-8** with the primary file extension **`.sora`** (legacy extensions `.ao`, `.nm`, and `.ae` are supported for backward compatibility).
+### 1. Variables & Mutability
+By default, variables are immutable and inferred:
+```sora
+// Immutable (no 'let' required)
+name = "Lutfi"
+age = 21
 
-### 1.2 Comments
-- **Line comments**: Starts with `//` and continues until the end of line (`\n`).
-- **Block comments**: Starts with `/*` and ends with `*/`. Nested block comments are supported.
-- **Documentation comments**: Starts with `///` and attaches markdown docstrings to declarations for `sorayunara doc`.
+// Mutable
+mut counter = 0
+counter = counter + 1
 
-```sorayunara
-/// Computes energy calculation.
-// This is a standard line comment
-/* This is a 
-   block comment */
-```
+// Compile-Time Constant
+const PI = 3.14159265359
 
-### 1.3 Whitespace
-Whitespace characters (Space `\x20`, Horizontal Tab `\t`, Line Feed `\n`, Carriage Return `\r`) separate tokens and are otherwise discarded except inside string and character literals.
-
----
-
-## 2. Keywords & Identifiers
-
-### 2.1 Reserved Keywords
-| Category | Keywords |
-| :--- | :--- |
-| **Declarations** | `fn`, `let`, `mut`, `const`, `struct`, `enum`, `type`, `trait`, `impl` |
-| **Control Flow** | `if`, `else`, `while`, `for`, `in`, `loop`, `break`, `continue`, `return`, `match` |
-| **Memory Model** | `move`, `unsafe` |
-| **Concurrency** | `async`, `await`, `task`, `spawn`, `chan` |
-| **Modules** | `import`, `mod`, `pub` |
-| **Literals** | `true`, `false`, `null` |
-
-### 2.2 Identifiers
-Identifiers must start with an ASCII letter (`a-z`, `A-Z`) or underscore (`_`), followed by any combination of letters, digits (`0-9`), or underscores.
-
----
-
-## 3. Operators & Expressions
-
-### 3.1 Operator Precedence (Highest to Lowest)
-1. **Primary & Postfix**: Call `()`, Field `.`, Index `[]`
-2. **Unary**: Negative `-`, Logical Not `!`, Reference `&`, Mutable Reference `&mut`
-3. **Multiplicative**: `*`, `/`, `%`
-4. **Additive**: `+`, `-`
-5. **Relational**: `<`, `<=`, `>`, `>=`
-6. **Equality**: `==`, `!=`
-7. **Logical AND**: `&&`
-8. **Logical OR**: `||`
-9. **Assignment**: `=`
-
----
-
-## 4. Variables & Mutability
-
-Variables are **immutable by default**. Mutable variables require the `mut` qualifier.
-
-```sorayunara
-let x: Int = 10         // Immutable
-// x = 20               // Compile Error: cannot mutate immutable variable
-
-let mut count: Int = 0  // Mutable
-count = count + 1       // OK
+// Explicit Type Annotations (optional)
+port: Int = 8080
+title: String = "Sorayunara Core"
 ```
 
 ---
 
-## 5. Functions & Signatures
+### 2. Functions & Expressions
+Functions support single-line `=` expressions and multi-line blocks with implicit last-expression returns:
+```sora
+// Single-line expression function
+fn add(a, b) = a + b
+fn double(x: Int) -> Int = x * 2
 
-Functions are declared using `fn`. Functions that perform asynchronous work are declared using `async fn`.
-
-```sorayunara
-fn calculate_sum(a: Int, b: Int) -> Int {
-    return a + b
-}
-
-async fn fetch_status(endpoint: &String) -> String {
-    return http_get(endpoint)
+// Multi-line function (last expression is returned automatically)
+fn compute_metrics(base: Int, multiplier: Int) -> Int {
+    normalized = base * 10
+    normalized * multiplier
 }
 ```
 
 ---
 
-## 6. Type System
+### 3. Control Flow as Expressions
+`if`/`else` and `match` are always first-class expressions:
+```sora
+// Single-line if-expression
+status = if age >= 18 "adult" else "child"
 
-Sorayunara possesses a sound, strong, static type system with static type inference.
-
-### 6.1 Primitive Types
-- `Int`: 64-bit signed integer (`i64`).
-- `Float`: 64-bit IEEE-754 double precision float (`f64`).
-- `Bool`: Boolean value (`true` or `false`).
-- `String`: UTF-8 dynamic string.
-- `Char`: Unicode scalar value (32-bit `char`).
-- `Void`: Empty return type.
-
-### 6.2 Compound & Reference Types
-- `[T; N]`: Fixed-size Array.
-- `&T`: Shared Immutable Reference (Borrow).
-- `&mut T`: Exclusive Mutable Reference (Mutable Borrow).
-- `Task<T>`: Concurrent asynchronous computation token.
-- `Chan<T>`: Synchronous/Asynchronous typed communication channel.
-
----
-
-## 7. Generics & Type Parameters
-
-Generic functions and types parameterize over concrete types using angle brackets `<T>`.
-
-```sorayunara
-struct Pair<T, U> {
-    first: T,
-    second: U,
+// Multi-line block if-expression
+access_level = if role == "admin" {
+    "full_access"
+} else if role == "editor" {
+    "write_access"
+} else {
+    "read_only"
 }
 
-fn identity<T>(value: T) -> T {
-    return value
+// Expression pattern matching
+grade = match score {
+    90..=100 => "A"
+    80..=89  => "B"
+    70..=79  => "C"
+    _        => "F"
 }
 ```
 
 ---
 
-## 8. Structs & Aggregate Types
-
-Structs represent named heterogeneous record types.
-
-```sorayunara
-struct ServerConfig {
-    host: String,
-    port: Int,
-    is_tls: Bool,
+### 4. Loops & Comprehensions
+Clean, colon-free iteration and collection comprehensions:
+```sora
+// For loop
+for user in users {
+    print("Hello " + user.name)
 }
 
-let cfg: ServerConfig = ServerConfig {
-    host: "127.0.0.1",
-    port: 8080,
-    is_tls: true,
+// While loop
+while counter > 0 {
+    counter = counter - 1
 }
+
+// List Comprehension
+even_squares = [x * x for x in numbers if x % 2 == 0]
+
+// Pipeline Method Chaining
+top_scores = scores
+    .filter(x => x >= 80)
+    .map(x => x + 5)
 ```
 
 ---
 
-## 9. Enums & Algebraic Data Types (ADT)
-
-Enums define sum types with optional data payloads per variant.
-
-```sorayunara
-enum ConnectionState {
-    Disconnected,
-    Connecting,
-    Connected(Int),
-}
-
-let state: ConnectionState = ConnectionState.Connecting
-```
-
----
-
-## 10. Traits & Interfaces
-
-Traits specify behavioral contracts that concrete types implement.
-
-```sorayunara
-trait Printable {
-    fn format(&self) -> String
-}
-```
-
----
-
-## 11. Module & Package System
-
-Modules encapsulate symbols. Modules are imported via dot notation: `import <path>.<module>`.
-
-```sorayunara
-import std.http
-import std.math
-import std.time
-
-fn main() {
-    let result = math.pow(2, 8)
-    println(result)
-}
-```
-
-### Package Layout (`sorayunara.toml`):
-```toml
-[package]
-name = "my-service"
-version = "0.1.0"
-
-[dependencies]
-http = "1.2.0"
-```
-
----
-
-## 12. Error Handling (`Result` & `Option`)
-
-Sorayunara explicitly rejects unchecked exceptions. Errors are handled using `Option<T>` and `Result<T, E>`.
-
-```sorayunara
-fn divide(a: Int, b: Int) -> Result<Int, String> {
-    if b == 0 {
-        return Err("Division by zero")
-    }
-    return Ok(a / b)
-}
-
-fn handle_opt(opt: Option<Int>) -> Int {
-    return match opt {
-        Some(val) => val,
-        None => 0,
-    }
-}
-```
-
----
-
-## 13. Memory Model & Ownership/Borrowing
-
-Sorayunara exposes **three explicit memory modes**: Managed (GC default), Owned (`move` semantics zero-cost), and Unsafe (`unsafe { ... }` raw pointers).
-
-### 13.0 The Three Modes
-
-| Mode | Keyword | Semantics | Use Case |
-|:---|:---|:---|:---|
-| **Managed** | *(default `let`)* | GC-managed immutable value; no ownership tracking required | Backend, business logic, rapid development |
-| **Owned** | `move` | Single-owner, move semantics, `is_moved` tracked at compile time, no GC | CLI, systems, high-performance computing |
-| **Unsafe** | `unsafe { ... }` | Raw pointer access (`*const T` / `*mut T`), unchecked operations | Embedded, FFI glue, low-level networking |
-
-### 13.1 Syntax
-
-```sorayunara
+### 5. Structs & Object Instantiation
+Concise aggregate data types without boilerplate:
+```sora
 struct User {
     name: String,
+    age: Int,
+    is_active: Bool = true // default value
 }
 
-// Managed mode (default)
-let user = User::new()
+// Instantiate with clean constructor syntax
+user = User(name: "Lutfi", age: 21)
+print(user.name)
+```
 
-// Owned mode — explicit ownership transfer
-let owner = move user
-// let again = user      // Compile Error: use of moved value
+---
 
-// Unsafe mode — access raw pointers
-unsafe {
-    let ptr: *mut Void = malloc(1024)
-    ptr.write(value)     // unchecked low-level write
+### 6. Safe Navigation (`?.`), Fallback (`??`), and Error Propagation (`?`)
+Eliminate null-pointer exceptions and deep try-catch nesting:
+```sora
+// Safe field access
+company_name = employee?.company?.name
+
+// Safe fallback / coalescing
+display_name = user?.name ?? "Guest"
+
+// Error propagation (returns early if Err/None)
+fn load_config(path: String) -> Result<Config, IOError> {
+    file = fs::open(path)?
+    content = file.read_all()?
+    config = json::parse(content)?
+    Ok(config)
 }
 ```
 
 ---
 
-## 14. Built-in Concurrency & Async Runtime
-
-Sorayunara includes native primitives for non-blocking concurrent execution:
-
-- `spawn`: Dispatches a background task.
-- `await`: Suspends until a task completes and retrieves the resolved value.
-- `chan<T>()`: Creates a thread-safe message passing channel.
-
-```sorayunara
-async fn worker(id: Int) -> String {
-    return "Task completed"
+### 7. Algebraic Enums & Pattern Matching
+Type-safe tagged unions with zero memory overhead:
+```sora
+enum Option<T> {
+    Some(T),
+    None
 }
 
-fn main() {
-    let t: Task<String> = spawn worker(1)
-    let res: String = await t
-    println(res)
+enum Result<T, E> {
+    Ok(T),
+    Err(E)
+}
+
+value = match result {
+    Result::Ok(val) => val
+    Result::Err(err) => {
+        print("Encountered error: " + err)
+        0
+    }
+}
+```
+
+---
+
+### 8. Concurrency: Coroutines & Lock-Free Channels
+Lightweight actors and asynchronous pipelines built into the standard library:
+```sora
+struct TaskMessage {
+    id: Int,
+    payload: String
+}
+
+async fn worker(ch: Channel<TaskMessage>) {
+    let msg = ch.recv()
+    match msg {
+        Option::Some(data) => print("Processed: " + data.payload),
+        Option::None => print("Channel closed")
+    }
+}
+
+fn main() -> Int {
+    ch: Channel<TaskMessage> = channel::new(1024)
+    
+    spawn async {
+        worker(ch)
+    }
+
+    ch.send(TaskMessage(id: 1, payload: "Run LLVM Pipeline"))
+    return 0
 }
 ```
 
 ---
 
-## 15. Compile-time Evaluation & Optimizations
+## 🏛️ Summary of Syntax Rules
 
-The Sorayunara compiler applies multi-pass transformations:
-- **Constant Folding**: Precomputes arithmetic and logical operations at compile time.
-- **Dead Code Elimination (DCE)**: Prunes unreachable basic blocks after unconditional returns and jumps.
-- **Peephole Optimization**: Eliminates identity operations (`x + 0`, `x * 1`).
-- **HIR / MIR Lowering**: Linearizes control flow into structured basic blocks for register allocation.
-
----
-
-## 16. Application Binary Interface (ABI) & FFI
-
-### 16.0 Foreign Function Interface
-
-Sorayunara dapat memanggil fungsi native dari C, C++, Rust (`extern "C"`), Python extension, dan system libraries melalui blok `extern`:
-
-```sorayunara
-// libm (math.h) — link dengan -lm
-@link("m")
-extern "C" {
-    fn sqrt(x: Float) -> Float
-    fn pow(base: Float, exp: Float) -> Float
-}
-
-// libc (string.h)
-extern "C" {
-    fn strlen(s: String) -> Int
-    fn strcmp(a: String, b: String) -> Int
-    fn malloc(size: Int) -> *mut Void
-}
-
-fn main() {
-    let root: Float = sqrt(144.0)
-    print(root)
-}
-```
-
----
-*Official specification maintained by the Sorayunara Organization Core Development Team (sorayunara.org).*
+1. **Clean Declarations**: No mandatory `let` keyword for declarations (`x = 10`, `mut y = 20`, `const Z = 30`).
+2. **Expression First**: Blocks and control structures resolve to their trailing expression.
+3. **Smart Inferred Types**: Write types only when annotating public APIs or resolving ambiguity.
+4. **Safety by Default**: Immutable by default, safe navigation `?.`, fallback `??`, and `?` error propagation.
+5. **No Colon/Semicolon Noise**: Semicolons are optional and colons are only used for explicit type annotations.
