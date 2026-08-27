@@ -19,6 +19,6 @@ body:
     attributes:
       label: Describe the Solution You'd Like
       description: Suggest syntax or APIs with `.sora` code examples if applicable.
-      render: sora
+      render: text
     validations:
       required: true

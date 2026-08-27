@@ -20,7 +20,7 @@ body:
     attributes:
       label: Minimal Reproducible Example (.sora code)
       description: Provide a minimal `.sora` code snippet that triggers the issue.
-      render: sora
+      render: text
     validations:
       required: true
   - type: textarea

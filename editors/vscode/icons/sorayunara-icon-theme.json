@@ -1,0 +1,16 @@
+{
+  "iconDefinitions": {
+    "_sora": {
+      "iconPath": "./sora-128.png"
+    },
+    "_file": {
+      "iconPath": "./sora-128.png"
+    }
+  },
+  "fileExtensions": {
+    "sora": "_sora"
+  },
+  "languageIds": {
+    "sorayunara": "_sora"
+  }
+}

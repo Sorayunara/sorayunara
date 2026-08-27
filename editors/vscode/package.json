@@ -2,8 +2,8 @@
   "name": "sorayunara",
   "displayName": "Sorayunara Language Support",
   "description": "Unified Language Support for Sorayunara (.sora): Hindley-Milner Type Inference, LSP Server, DAP Debugger, Formatter, Package Manager, and Syntax Highlighting.",
-  "version": "0.1.0",
-  "publisher": "Sorayunara",
+  "version": "0.2.2",
+  "publisher": "muhammadlutfimuzaki",
   "icon": "icon.png",
   "repository": {
     "type": "git",
@@ -26,7 +26,18 @@
         "id": "sorayunara",
         "aliases": ["Sorayunara", "sorayunara"],
         "extensions": [".sora"],
-        "configuration": "./language-configuration.json"
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icons/sora-light.png",
+          "dark": "./icons/sora-dark.png"
+        }
+      }
+    ],
+    "iconThemes": [
+      {
+        "id": "sorayunara-icons",
+        "label": "Sorayunara File Icons",
+        "path": "./icons/sorayunara-icon-theme.json"
       }
     ],
     "grammars": [
