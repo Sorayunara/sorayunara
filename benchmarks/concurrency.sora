@@ -1,0 +1,45 @@
+// Concurrency & Channel benchmark in Sorayunara (.sora)
+import std.io
+import std.channel
+import std.time
+
+struct PingPongMessage {
+    seq: Int,
+    payload: String
+}
+
+async fn worker(ch: Channel<PingPongMessage>, rounds: Int) {
+    let mut i: Int = 0
+    while i < rounds {
+        ch.send(PingPongMessage { seq: i, payload: "PING" })
+        i = i + 1
+    }
+}
+
+fn main() -> Int {
+    let rounds: Int = 50000
+    print("⚡ Running Concurrency & Lock-Free Channel benchmark (" + rounds.to_string() + " messages)...")
+    let start = time::now_ms()
+    let ch: Channel<PingPongMessage> = channel::new(1024)
+
+    spawn async {
+        worker(ch, rounds)
+    }
+
+    let mut received: Int = 0
+    while received < rounds {
+        let msg = ch.recv()
+        match msg {
+            Option::Some(_) => {
+                received = received + 1
+            },
+            Option::None => {
+                break
+            }
+        }
+    }
+
+    let elapsed = time::now_ms() - start
+    print("Messages Processed: " + received.to_string() + " | Time: " + elapsed.to_string() + "ms")
+    return 0
+}
