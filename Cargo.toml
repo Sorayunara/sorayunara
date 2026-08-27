@@ -9,8 +9,13 @@ description = "Sorayunara (.sora) — Next-Generation Systems & Backend Language
 name = "sorayunara"
 path = "bootstrap/src/main.rs"
 
+[[bin]]
+name = "sora"
+path = "bootstrap/src/main.rs"
+
 [lib]
 name = "sorayunara"
 path = "bootstrap/src/lib.rs"
 
 [dependencies]
+

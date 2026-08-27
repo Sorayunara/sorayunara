@@ -1,0 +1,28 @@
+// Recursive and iterative Fibonacci benchmark in Sorayunara (.sora)
+import std.io
+import std.time
+
+fn fib_iterative(n: Int) -> Int {
+    if n <= 1 {
+        return n
+    }
+    let mut a: Int = 0
+    let mut b: Int = 1
+    let mut i: Int = 2
+    while i <= n {
+        let temp: Int = a + b
+        a = b
+        b = temp
+        i = i + 1
+    }
+    return b
+}
+
+fn main() -> Int {
+    print("⚡ Running Fibonacci(40) benchmark in Sorayunara...")
+    let start = time::now_ms()
+    let result = fib_iterative(40)
+    let elapsed = time::now_ms() - start
+    print("Result: " + result.to_string() + " | Time: " + elapsed.to_string() + "ms")
+    return 0
+}

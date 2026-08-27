@@ -1,0 +1,34 @@
+// Prime number sieve benchmark in Sorayunara (.sora)
+import std.io
+import std.time
+
+fn count_primes(limit: Int) -> Int {
+    let mut count: Int = 0
+    let mut num: Int = 2
+    while num <= limit {
+        let mut is_prime: Bool = true
+        let mut divisor: Int = 2
+        while divisor * divisor <= num {
+            if num % divisor == 0 {
+                is_prime = false
+                break
+            }
+            divisor = divisor + 1
+        }
+        if is_prime {
+            count = count + 1
+        }
+        num = num + 1
+    }
+    return count
+}
+
+fn main() -> Int {
+    let max_n: Int = 100000
+    print("⚡ Running Prime Sieve up to " + max_n.to_string() + "...")
+    let start = time::now_ms()
+    let total = count_primes(max_n)
+    let elapsed = time::now_ms() - start
+    print("Primes Found: " + total.to_string() + " | Time: " + elapsed.to_string() + "ms")
+    return 0
+}

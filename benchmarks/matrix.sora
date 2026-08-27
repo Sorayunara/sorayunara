@@ -1,0 +1,31 @@
+// Matrix multiplication benchmark in Sorayunara (.sora)
+import std.io
+import std.time
+
+fn compute_matrix_product(n: Int) -> Int {
+    let mut checksum: Int = 0
+    let mut i: Int = 0
+    while i < n {
+        let mut j: Int = 0
+        while j < n {
+            let mut k: Int = 0
+            while k < n {
+                checksum = checksum + (i * k + k * j)
+                k = k + 1
+            }
+            j = j + 1
+        }
+        i = i + 1
+    }
+    return checksum
+}
+
+fn main() -> Int {
+    let size: Int = 128
+    print("⚡ Running Matrix Multiplication (N=" + size.to_string() + ") benchmark...")
+    let start = time::now_ms()
+    let sum = compute_matrix_product(size)
+    let elapsed = time::now_ms() - start
+    print("Matrix Checksum: " + sum.to_string() + " | Time: " + elapsed.to_string() + "ms")
+    return 0
+}
