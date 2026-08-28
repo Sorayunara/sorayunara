@@ -4,18 +4,24 @@
 # Global default owners
 * @Sorayunara/core-maintainers @MuhammadLutfiMuzakiiVY
 
-# Compiler, Parser & AST
-/compiler/ @Sorayunara/core-maintainers
-/bootstrap/ @Sorayunara/core-maintainers
-/src/ @Sorayunara/core-maintainers
+# Compiler, Type System & IR Engine
+/compiler/ @Sorayunara/compiler-team
+/bootstrap/ @Sorayunara/compiler-team
+/specs/ @Sorayunara/compiler-team
+/src/ @Sorayunara/compiler-team
 
-# Standard Library
-/std/ @Sorayunara/core-maintainers
+# Standard Library & Runtime
+/std/ @Sorayunara/stdlib-team
+/runtime/ @Sorayunara/stdlib-team
 
-# Tooling, Editors & LSP
-/editors/ @Sorayunara/core-maintainers
-/tools/ @Sorayunara/core-maintainers
+# Tooling, Editors & LSP Ecosystem
+/editors/ @Sorayunara/tooling-team
+/tools/ @Sorayunara/tooling-team
+/playground/ @Sorayunara/tooling-team
 
-# Documentation & Specifications
-/docs/ @Sorayunara/core-maintainers
-*.md @Sorayunara/core-maintainers
+# Documentation, Tutorials & Specs
+/docs/ @Sorayunara/docs-team
+*.md @Sorayunara/docs-team
+
+# CI/CD & Security Infrastructure
+/.github/ @Sorayunara/core-maintainers
