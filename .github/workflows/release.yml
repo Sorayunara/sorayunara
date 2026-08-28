@@ -39,7 +39,7 @@ jobs:
             bin_name: sorayunara
             archive_ext: tar.gz
             use_qemu: false
-          - os: macos-13
+          - os: macos-latest
             target: x86_64-apple-darwin
             bin_name: sorayunara
             archive_ext: tar.gz
