@@ -28,7 +28,8 @@ Sorayunara establishes a strict **100-keyword maximum** structured into:
 - **Contextual (25 keywords)**: Tokens only active at specific syntax positions (`as`, `from`, `where`, `defer`, `guard`, `derive`, etc.).
 
 👉 *Complete detailed taxonomy and code examples for all 100 keywords*: **[`docs/KEYWORDS.md`](docs/KEYWORDS.md)**  
-👉 *Ultra-Ergonomic Syntax & Operator Architecture*: **[`docs/GRAMMAR_V2.md`](docs/GRAMMAR_V2.md)**
+👉 *Ultra-Ergonomic Syntax & Operator Architecture*: **[`docs/GRAMMAR_V2.md`](docs/GRAMMAR_V2.md)**  
+👉 *Complete 18-Domain Language Reference & Dictionary*: **[`docs/LANGUAGE_REFERENCE.md`](docs/LANGUAGE_REFERENCE.md)**
 
 ---
 
