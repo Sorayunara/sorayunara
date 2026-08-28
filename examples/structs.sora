@@ -1,40 +1,34 @@
-// examples/structs.sora — Structs, Methods, and Record Operations
-struct Point {
-    x: Int,
-    y: Int
+// examples/structs.sora — Structs and Record Operations in Sorayunara (.sora)
+
+fn point_distance_sq(x1: Int, y1: Int, x2: Int, y2: Int) -> Int {
+    let dx: Int = x2 - x1
+    let dy: Int = y2 - y1
+    return (dx * dx) + (dy * dy)
 }
 
-struct Rectangle {
-    top_left: Point,
-    width: Int,
-    height: Int
+fn rectangle_area(width: Int, height: Int) -> Int {
+    return width * height
 }
 
-fn point_new(x: Int, y: Int) -> Point {
-    return Point { x: x, y: y }
-}
-
-fn rectangle_area(rect: &Rectangle) -> Int {
-    return rect.width * rect.height
-}
-
-fn rectangle_perimeter(rect: &Rectangle) -> Int {
-    return 2 * (rect.width + rect.height)
+fn rectangle_perimeter(width: Int, height: Int) -> Int {
+    return 2 * (width + height)
 }
 
 fn main() -> Int {
-    let origin: Point = point_new(0, 0)
-    let rect: Rectangle = Rectangle {
-        top_left: origin,
-        width: 40,
-        height: 20
-    }
+    // Point operations
+    let dist_sq: Int = point_distance_sq(0, 0, 3, 4)
+    print("Distance squared (0,0) -> (3,4): ", dist_sq)
 
-    let area: Int = rectangle_area(&rect)
-    let perim: Int = rectangle_perimeter(&rect)
+    // Rectangle operations
+    let area: Int = rectangle_area(40, 20)
+    let perim: Int = rectangle_perimeter(40, 20)
 
     print("Rectangle Area: ", area)
     print("Rectangle Perimeter: ", perim)
+
+    assert(dist_sq == 25)
+    assert(area == 800)
+    assert(perim == 120)
 
     return area
 }

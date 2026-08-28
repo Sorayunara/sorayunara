@@ -1,0 +1,4 @@
+// tests/lexer/tokens.sora — Lexer tokenization test fixture
+let x: Int = 100
+let msg: String = "Sorayunara Lexer"
+let flag: Bool = true

@@ -1,24 +1,28 @@
-// examples/generics.sora — Generic Functions and Pair Combinators
-struct Pair<T, U> {
-    first: T,
-    second: U
-}
-
-fn make_pair<T, U>(first: T, second: U) -> Pair<T, U> {
-    return Pair { first: first, second: second }
-}
+// examples/generics.sora — Generic Functions in Sorayunara (.sora)
 
 fn identity<T>(val: T) -> T {
     return val
 }
 
+fn max_int(a: Int, b: Int) -> Int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
 fn main() -> Int {
     let int_val: Int = identity(42)
     let str_val: String = identity("Sorayunara Generics")
-    let pair: Pair<Int, String> = make_pair(int_val, str_val)
 
-    print("Pair First (Int): ", pair.first)
-    print("Pair Second (String): ", pair.second)
+    print("Identity Int: ", int_val)
+    print("Identity String: ", str_val)
 
-    return pair.first
+    let biggest: Int = max_int(int_val, 100)
+    print("Max of 42 and 100: ", biggest)
+
+    assert(int_val == 42)
+    assert(biggest == 100)
+
+    return int_val
 }

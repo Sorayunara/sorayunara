@@ -1,0 +1,17 @@
+name: Benchmarks
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  bench:
+    name: Run Benchmark Suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Run Benchmarks
+        run: cargo test --test benchmark_suite_tests -- --nocapture

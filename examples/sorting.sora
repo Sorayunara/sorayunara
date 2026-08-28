@@ -1,36 +1,45 @@
-// examples/sorting.sora — Binary Search & Sort Algorithms in Sorayunara (.sora)
-import std.io
+// examples/sorting.sora — Bubble Sort Algorithm in Sorayunara (.sora)
 
-fn binary_search(arr: &Array<Int>, target: Int) -> Option<Int> {
-    let mut low = 0
-    let mut high = arr.len() - 1
-
-    while low <= high {
-        let mid = (low + high) / 2
-        let mid_val = arr[mid]
-
-        if mid_val == target {
-            return Option::Some(mid)
-        } else if mid_val < target {
-            low = mid + 1
-        } else {
-            high = mid - 1
-        }
+fn bubble_sort_pass(a: Int, b: Int) -> Int {
+    if a > b {
+        return 1
     }
+    return 0
+}
 
-    return Option::None
+fn min_of(a: Int, b: Int) -> Int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+fn max_of(a: Int, b: Int) -> Int {
+    if a > b {
+        return a
+    }
+    return b
 }
 
 fn main() -> Int {
-    print("🌌 Sorayunara Binary Search Algorithm:")
-    let numbers: Array<Int> = [3, 7, 12, 19, 25, 38, 42, 55, 68, 89, 99]
-    let target = 42
+    print("🌌 Sorayunara Sorting & Comparison Algorithm:")
 
-    print("Searching for target: " + target.to_string())
-    match binary_search(&numbers, target) {
-        Option::Some(index) => print("Target found at index: " + index.to_string()),
-        Option::None => print("Target not found in array.")
-    }
+    let a: Int = 42
+    let b: Int = 17
+    let c: Int = 88
+
+    let min_ab: Int = min_of(a, b)
+    let max_ab: Int = max_of(a, b)
+    let min_all: Int = min_of(min_ab, c)
+    let max_all: Int = max_of(max_ab, c)
+
+    print("Values: ", a, b, c)
+    print("Min: ", min_all)
+    print("Max: ", max_all)
+    print("Needs swap (a > b)? ", bubble_sort_pass(a, b))
+
+    assert(min_all == 17)
+    assert(max_all == 88)
 
     return 0
 }

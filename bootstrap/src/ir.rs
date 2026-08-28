@@ -159,7 +159,14 @@ impl IrCompiler {
                     fn_compiler.compile_stmt(s);
                 }
 
+                // Safety net: always append PushNull + Return at the end of every
+                // function body. If all code paths already return explicitly, these
+                // instructions are unreachable dead code. But if any branch falls
+                // through (e.g. else-if chains where the last instruction is a Jump),
+                // this ensures the function still returns Null instead of causing a
+                // stack underflow in the caller.
                 if fn_compiler.current_instructions.last() != Some(&OpCode::Return) {
+                    fn_compiler.current_instructions.push(OpCode::PushNull);
                     fn_compiler.current_instructions.push(OpCode::Return);
                 }
 

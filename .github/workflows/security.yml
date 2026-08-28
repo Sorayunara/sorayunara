@@ -1,0 +1,18 @@
+name: Security & Audit
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * 0' # Weekly
+
+jobs:
+  audit:
+    name: Security & Vulnerability Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Security Tests
+        run: cargo test --test security_tests -- --nocapture

@@ -1,0 +1,7 @@
+// tests/parser/syntax.sora — Parser test fixture
+fn test_parse(a: Int, b: Int) -> Int {
+    if a > b {
+        return a
+    }
+    return b
+}

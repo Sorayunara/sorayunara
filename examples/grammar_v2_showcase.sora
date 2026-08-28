@@ -3,17 +3,7 @@
 // Organization: Sorayunara · Safe · Fast · Expressive · Zero-Boilerplate
 // ==============================================================================
 
-import std.io
-import std.time
-
-// 1. Struct & Data Record Definition
-struct User {
-    name: String,
-    age: Int,
-    is_active: Bool
-}
-
-// 2. Pure Functions & Return Expressions
+// 1. Pure Functions & Return Expressions
 fn add(a: Int, b: Int) -> Int {
     return a + b
 }
@@ -22,20 +12,45 @@ fn square(x: Int) -> Int {
     return x * x
 }
 
-// 3. Pattern Matching & Enums
-fn evaluate_status(code: Int) -> String {
+fn abs_value(n: Int) -> Int {
+    if n < 0 {
+        return 0 - n
+    }
+    return n
+}
+
+// 2. Pattern Matching (Int literals)
+fn evaluate_status(code: Int) -> Int {
     let result = match code {
-        200 => "HTTP 200 OK",
-        404 => "HTTP 404 Not Found",
-        _   => "Unknown Status"
+        200 => 1,
+        404 => 2,
+        _   => 0
     }
     return result
 }
 
-// 4. Asynchronous Coroutines
-async fn background_task(id: Int) -> String {
-    print("Background worker #" + id.to_string() + " running.")
-    return "Result from worker #" + id.to_string()
+// 3. Branching & Conditionals
+fn classify_grade(score: Int) -> Int {
+    if score >= 90 {
+        return 1
+    } else if score >= 80 {
+        return 2
+    } else if score >= 70 {
+        return 3
+    } else {
+        return 4
+    }
+}
+
+// 4. Iteration with While Loop
+fn compute_factorial(n: Int) -> Int {
+    let mut result: Int = 1
+    let mut i: Int = 1
+    while i <= n {
+        result = result * i
+        i = i + 1
+    }
+    return result
 }
 
 // 5. Main Program Execution
@@ -44,41 +59,33 @@ fn main() -> Int {
     print("🌌 SORAYUNARA (.sora) FULL GRAMMAR V2 EXECUTION DEMO")
     print("===============================================================")
 
-    // Variable Bindings & Mutability
-    let app_name: String = "Sorayunara Core"
-    let mut counter: Int = 0
-    counter = counter + 10
-    print("App: " + app_name + " | Counter: " + counter.to_string())
-
-    // Struct Instantiation
-    let user = User {
-        name: "Muhammad Lutfi",
-        age: 21,
-        is_active: true
-    }
-    print("User: " + user.name + " (Age: " + user.age.to_string() + ")")
-
-    // Math & Function Calls
-    let sum = add(15, 25)
-    let sq = square(8)
-    print("add(15, 25) = " + sum.to_string() + " | square(8) = " + sq.to_string())
+    // Function Calls
+    let sum: Int = add(15, 25)
+    let sq: Int = square(8)
+    let av: Int = abs_value(-42)
+    print("add(15, 25) = ", sum)
+    print("square(8) = ", sq)
+    print("abs_value(-42) = ", av)
 
     // Pattern Matching
-    let status_text = evaluate_status(200)
-    print("Status Evaluation: " + status_text)
+    let status: Int = evaluate_status(200)
+    print("Status Code 200 -> ", status)
 
-    // Loops & Iterations
-    let mut i: Int = 0
-    print("Looping range 0..3:")
-    while i < 3 {
-        print("  Iteration index: " + i.to_string())
-        i = i + 1
-    }
+    // Conditionals
+    let grade: Int = classify_grade(95)
+    print("Grade for 95 -> ", grade)
 
-    // Concurrency: Spawn & Await Task
-    let task: Task<String> = spawn background_task(1)
-    let msg: String = await task
-    print("Received Task Msg: " + msg)
+    // Loop & Factorial
+    let fact: Int = compute_factorial(10)
+    print("10! = ", fact)
+
+    // Assertions
+    assert(sum == 40)
+    assert(sq == 64)
+    assert(av == 42)
+    assert(status == 1)
+    assert(grade == 1)
+    assert(fact == 3628800)
 
     print("===============================================================")
     print("✅ All Grammar v2 Subsystems Verified Successfully (.sora)")

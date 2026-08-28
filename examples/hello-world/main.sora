@@ -1,0 +1,5 @@
+// examples/hello-world/main.sora
+fn main() -> Int {
+    print("🌌 Hello from Sorayunara! Safe, Fast, Expressive (.sora)")
+    return 0
+}

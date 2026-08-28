@@ -1,0 +1,10 @@
+// tests/runtime/vm_exec.sora — Virtual machine execution fixture
+fn compute(n: Int) -> Int {
+    return n * 2
+}
+
+fn main() -> Int {
+    let result: Int = compute(21)
+    assert(result == 42)
+    return result
+}

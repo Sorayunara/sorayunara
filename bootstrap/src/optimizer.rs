@@ -204,17 +204,35 @@ impl Optimizer {
     }
 
     // Pass 2: Dead Code Elimination (DCE)
+    // Only removes trailing unreachable code AFTER verifying no jump targets
+    // point into the region being removed.
     pub fn pass_dead_code_elimination(&mut self, func: &mut IrFunction) -> bool {
+        // Collect every jump destination so we never delete a reachable target.
+        let mut jump_targets = std::collections::HashSet::new();
+        for op in &func.instructions {
+            match op {
+                OpCode::Jump(dest) | OpCode::JumpIfFalse(dest) => {
+                    jump_targets.insert(*dest);
+                }
+                _ => {}
+            }
+        }
+
         let mut changed = false;
         let mut i = 0;
 
         while i < func.instructions.len() {
             if matches!(func.instructions[i], OpCode::Return) && i + 1 < func.instructions.len() {
-                let len = func.instructions.len();
-                func.instructions.truncate(i + 1);
-                self.optimizations_count += len - (i + 1);
-                changed = true;
-                break;
+                // Check if ANY jump target points at or beyond i+1.
+                // If so, the code after this Return is reachable — don't touch it.
+                let any_reachable = jump_targets.iter().any(|&t| t > i);
+                if !any_reachable {
+                    let len = func.instructions.len();
+                    func.instructions.truncate(i + 1);
+                    self.optimizations_count += len - (i + 1);
+                    changed = true;
+                    break;
+                }
             }
             i += 1;
         }
@@ -226,7 +244,7 @@ impl Optimizer {
     pub fn pass_inlining(&mut self, program: &mut IrProgram) -> bool {
         let mut small_functions = HashMap::new();
         for (name, func) in &program.functions {
-            if func.instructions.len() <= 3 && name != "main" {
+            if func.params.is_empty() && func.instructions.len() <= 3 && name != "main" {
                 small_functions.insert(name.clone(), func.instructions.clone());
             }
         }

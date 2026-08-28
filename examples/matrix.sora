@@ -1,51 +1,46 @@
-// examples/matrix.sora — 2D Matrix Multiplication & Linear Algebra in Sorayunara (.sora)
-import std.io
+// examples/matrix.sora — 2x2 Matrix Math in Sorayunara (.sora)
 
-struct Matrix2x2 {
-    a: Int,
-    b: Int,
-    c: Int,
-    d: Int
+fn matrix_multiply_a(a1: Int, b1: Int, c1: Int, d1: Int, a2: Int, b2: Int, c2: Int, d2: Int) -> Int {
+    return (a1 * a2) + (b1 * c2)
 }
 
-impl Matrix2x2 {
-    pub fn new(a: Int, b: Int, c: Int, d: Int) -> Matrix2x2 {
-        return Matrix2x2 { a: a, b: b, c: c, d: d }
-    }
+fn matrix_multiply_b(a1: Int, b1: Int, c1: Int, d1: Int, a2: Int, b2: Int, c2: Int, d2: Int) -> Int {
+    return (a1 * b2) + (b1 * d2)
+}
 
-    pub fn multiply(&self, other: &Matrix2x2) -> Matrix2x2 {
-        let r_a = (self.a * other.a) + (self.b * other.c)
-        let r_b = (self.a * other.b) + (self.b * other.d)
-        let r_c = (self.c * other.a) + (self.d * other.c)
-        let r_d = (self.c * other.b) + (self.d * other.d)
-        return Matrix2x2::new(r_a, r_b, r_c, r_d)
-    }
+fn matrix_multiply_c(a1: Int, b1: Int, c1: Int, d1: Int, a2: Int, b2: Int, c2: Int, d2: Int) -> Int {
+    return (c1 * a2) + (d1 * c2)
+}
 
-    pub fn determinant(&self) -> Int {
-        return (self.a * self.d) - (self.b * self.c)
-    }
+fn matrix_multiply_d(a1: Int, b1: Int, c1: Int, d1: Int, a2: Int, b2: Int, c2: Int, d2: Int) -> Int {
+    return (c1 * b2) + (d1 * d2)
+}
 
-    pub fn print_matrix(&self) {
-        print("| " + self.a.to_string() + " " + self.b.to_string() + " |")
-        print("| " + self.c.to_string() + " " + self.d.to_string() + " |")
-    }
+fn determinant(a: Int, b: Int, c: Int, d: Int) -> Int {
+    return (a * d) - (b * c)
 }
 
 fn main() -> Int {
     print("🌌 Sorayunara Matrix Multiplication Example:")
-    let m1 = Matrix2x2::new(1, 2, 3, 4)
-    let m2 = Matrix2x2::new(5, 6, 7, 8)
 
-    print("Matrix 1:")
-    m1.print_matrix()
+    // Matrix 1: [[1,2],[3,4]]
+    // Matrix 2: [[5,6],[7,8]]
+    let ra: Int = matrix_multiply_a(1, 2, 3, 4, 5, 6, 7, 8)
+    let rb: Int = matrix_multiply_b(1, 2, 3, 4, 5, 6, 7, 8)
+    let rc: Int = matrix_multiply_c(1, 2, 3, 4, 5, 6, 7, 8)
+    let rd: Int = matrix_multiply_d(1, 2, 3, 4, 5, 6, 7, 8)
 
-    print("Matrix 2:")
-    m2.print_matrix()
+    print("Product Row 1: ", ra, rb)
+    print("Product Row 2: ", rc, rd)
 
-    let product = m1.multiply(&m2)
-    print("Product (m1 x m2):")
-    product.print_matrix()
-    print("Determinant: " + product.determinant().to_string())
+    let det: Int = determinant(ra, rb, rc, rd)
+    print("Determinant of product: ", det)
+
+    assert(ra == 19)
+    assert(rb == 22)
+    assert(rc == 43)
+    assert(rd == 50)
+    assert(det == 4)
 
     return 0
 }

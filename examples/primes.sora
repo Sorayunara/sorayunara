@@ -1,5 +1,4 @@
 // examples/primes.sora — Prime Number Sieve & Generator in Sorayunara (.sora)
-import std.io
 
 fn is_prime(n: Int) -> Bool {
     if n <= 1 {
@@ -22,12 +21,11 @@ fn is_prime(n: Int) -> Bool {
     return true
 }
 
-fn generate_primes(limit: Int) -> Int {
+fn count_primes(limit: Int) -> Int {
     let mut count = 0
     let mut num = 2
     while num <= limit {
         if is_prime(num) {
-            print("Found Prime: " + num.to_string())
             count = count + 1
         }
         num = num + 1
@@ -37,7 +35,8 @@ fn generate_primes(limit: Int) -> Int {
 
 fn main() -> Int {
     print("🌌 Sorayunara Prime Generator (Limit: 50):")
-    let total = generate_primes(50)
-    print("Total Primes Found: " + total.to_string())
-    return 0
+    let total: Int = count_primes(50)
+    print("Total Primes Found: ", total)
+    assert(total == 15)
+    return total
 }

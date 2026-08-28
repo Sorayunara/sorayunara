@@ -463,6 +463,7 @@ impl VirtualMachine {
                             self.stack.push(Value::Int(res));
                         }
                         (Value::Float(x), Value::Float(y)) => self.stack.push(Value::Float(x + y)),
+                        (Value::Bool(x), Value::Bool(y)) => self.stack.push(Value::Bool(x || y)),
                         (Value::Str(x), Value::Str(y)) => self.stack.push(Value::Str(format!("{}{}", x, y))),
                         (Value::Str(x), other) => self.stack.push(Value::Str(format!("{}{}", x, other))),
                         (other, Value::Str(y)) => self.stack.push(Value::Str(format!("{}{}", other, y))),

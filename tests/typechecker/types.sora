@@ -1,0 +1,4 @@
+// tests/typechecker/types.sora — Hindley-Milner type inference test fixture
+fn add_typed(x: Int, y: Int) -> Int {
+    return x + y
+}

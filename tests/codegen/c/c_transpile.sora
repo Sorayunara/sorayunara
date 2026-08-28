@@ -1,0 +1,5 @@
+// tests/codegen/c/c_transpile.sora — C transpilation test fixture
+fn main() -> Int {
+    let status: Int = 0
+    return status
+}

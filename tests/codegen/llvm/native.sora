@@ -1,0 +1,4 @@
+// tests/codegen/llvm/native.sora — LLVM native compilation test fixture
+fn main() -> Int {
+    return 42
+}

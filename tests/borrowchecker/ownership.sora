@@ -1,0 +1,4 @@
+// tests/borrowchecker/ownership.sora — Borrowchecker affine ownership test fixture
+fn take_borrow(s: &String) -> Int {
+    return 1
+}

@@ -1,0 +1,34 @@
+// src/cli/main.sora — Official Sorayunara Command-Line Interface
+import std.io
+import std.os
+import std.process
+
+fn print_banner() {
+    print("===============================================================")
+    print("🌌 SORAYUNARA CLI: Unified Developer Toolchain (.sora)")
+    print("   Version: 0.2.2 · Safe · Fast · Zero-Boilerplate")
+    print("===============================================================")
+}
+
+fn print_help() {
+    print_banner()
+    print("Usage: sora <command> [options] [arguments]")
+    print("")
+    print("Commands:")
+    print("  run <file.sora>       Compile and execute program in VM")
+    print("  build <file.sora>     Compile ahead-of-time to native / wasm / C")
+    print("  check <file.sora>     Typecheck and borrowcheck without execution")
+    print("  test                  Run test suite across *.sora tests")
+    print("  bench                 Execute performance benchmarks")
+    print("  fmt <file.sora>       Format source code")
+    print("  lint <file.sora>      Lint and analyze code quality")
+    print("  pkg                   Package manager (install, add, update)")
+    print("  doctor                Environment and toolchain health check")
+    print("")
+}
+
+fn main() -> Int {
+    print_banner()
+    print("Sorayunara CLI initialized. Ready.")
+    return 0
+}
