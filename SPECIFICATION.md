@@ -27,7 +27,8 @@ Sorayunara establishes a strict **100-keyword maximum** structured into:
 - **Feature Reserved (30 keywords)**: Reserved in typings, concurrency & memory (`async`, `await`, `actor`, `spawn`, `channel`, etc.).
 - **Contextual (25 keywords)**: Tokens only active at specific syntax positions (`as`, `from`, `where`, `defer`, `guard`, `derive`, etc.).
 
-👉 *Complete detailed taxonomy and code examples for all 100 keywords*: **[`docs/KEYWORDS.md`](docs/KEYWORDS.md)**
+👉 *Complete detailed taxonomy and code examples for all 100 keywords*: **[`docs/KEYWORDS.md`](docs/KEYWORDS.md)**  
+👉 *Ultra-Ergonomic Syntax & Operator Architecture*: **[`docs/GRAMMAR_V2.md`](docs/GRAMMAR_V2.md)**
 
 ---
 
