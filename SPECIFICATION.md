@@ -20,7 +20,18 @@
 
 ---
 
-## 📑 2. Variables & Mutability
+## 📑 2. The 100-Keyword Architecture & Taxonomy
+
+Sorayunara establishes a strict **100-keyword maximum** structured into:
+- **Core Reserved (45 keywords)**: Always reserved (`fn`, `if`, `else`, `match`, `struct`, `enum`, `mut`, `const`, etc.).
+- **Feature Reserved (30 keywords)**: Reserved in typings, concurrency & memory (`async`, `await`, `actor`, `spawn`, `channel`, etc.).
+- **Contextual (25 keywords)**: Tokens only active at specific syntax positions (`as`, `from`, `where`, `defer`, `guard`, `derive`, etc.).
+
+👉 *Complete detailed taxonomy and code examples for all 100 keywords*: **[`docs/KEYWORDS.md`](docs/KEYWORDS.md)**
+
+---
+
+## 📑 3. Variables & Mutability
 
 ```sora
 // Immutable variable (inferred, no 'let' required)
