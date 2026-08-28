@@ -1,0 +1,32 @@
+// ==============================================================================
+// 🌌 Sorayunara Standard Library: std.math.geometry
+// Organization: Sorayunara · Pure Geometric Computations (.sora)
+// ==============================================================================
+
+struct Point2D {
+    x: Int,
+    y: Int
+}
+
+struct Rectangle {
+    width: Int,
+    height: Int
+}
+
+fn point_new(x: Int, y: Int) -> Point2D {
+    return Point2D { x: x, y: y }
+}
+
+fn rect_area(r: &Rectangle) -> Int {
+    return r.width * r.height
+}
+
+fn rect_perimeter(r: &Rectangle) -> Int {
+    return (r.width + r.height) * 2
+}
+
+fn distance_squared(p1: &Point2D, p2: &Point2D) -> Int {
+    let dx = p1.x - p2.x
+    let dy = p1.y - p2.y
+    return (dx * dx) + (dy * dy)
+}

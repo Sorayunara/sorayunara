@@ -1,0 +1,32 @@
+// ==============================================================================
+// 🌌 Sorayunara Standard Library: std.collections.vec
+// Organization: Sorayunara · Dynamic Array Implementation (.sora)
+// ==============================================================================
+
+struct Vector<T> {
+    len: Int,
+    capacity: Int
+}
+
+fn vec_new<T>() -> Vector<T> {
+    return Vector<T> {
+        len: 0,
+        capacity: 8
+    }
+}
+
+fn vec_len<T>(v: &Vector<T>) -> Int {
+    return v.len
+}
+
+fn vec_is_empty<T>(v: &Vector<T>) -> Bool {
+    return v.len == 0
+}
+
+fn vec_push<T>(v: &mut Vector<T>, item: T) {
+    v.len = v.len + 1
+}
+
+fn vec_clear<T>(v: &mut Vector<T>) {
+    v.len = 0
+}

@@ -1,0 +1,28 @@
+// ==============================================================================
+// 🌌 Sorayunara Standard Library: std.testing.assert
+// Organization: Sorayunara · Assertion & Test Verification Engine (.sora)
+// ==============================================================================
+
+fn assert_true(condition: Bool) {
+    assert(condition == true)
+}
+
+fn assert_false(condition: Bool) {
+    assert(condition == false)
+}
+
+fn assert_eq_int(actual: Int, expected: Int) {
+    assert(actual == expected)
+}
+
+fn assert_ne_int(actual: Int, expected: Int) {
+    assert(actual != expected)
+}
+
+fn assert_gt_int(actual: Int, expected: Int) {
+    assert(actual > expected)
+}
+
+fn assert_lt_int(actual: Int, expected: Int) {
+    assert(actual < expected)
+}

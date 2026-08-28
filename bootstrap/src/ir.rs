@@ -91,6 +91,15 @@ pub struct IrProgram {
     pub externs: HashMap<String, IrExternFn>,
 }
 
+impl IrProgram {
+    pub fn new() -> Self {
+        Self {
+            functions: HashMap::new(),
+            externs: HashMap::new(),
+        }
+    }
+}
+
 pub struct IrCompiler {
     functions: HashMap<String, IrFunction>,
     externs: HashMap<String, IrExternFn>,
