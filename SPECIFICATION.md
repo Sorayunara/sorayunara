@@ -29,7 +29,8 @@ Sorayunara establishes a strict **100-keyword maximum** structured into:
 
 👉 *Complete detailed taxonomy and code examples for all 100 keywords*: **[`docs/KEYWORDS.md`](docs/KEYWORDS.md)**  
 👉 *Ultra-Ergonomic Syntax & Operator Architecture*: **[`docs/GRAMMAR_V2.md`](docs/GRAMMAR_V2.md)**  
-👉 *Complete 18-Domain Language Reference & Dictionary*: **[`docs/LANGUAGE_REFERENCE.md`](docs/LANGUAGE_REFERENCE.md)**
+👉 *Complete 18-Domain Language Reference & Dictionary*: **[`docs/LANGUAGE_REFERENCE.md`](docs/LANGUAGE_REFERENCE.md)**  
+👉 *Universal Platform Target Matrix & PDF*: **[`docs/PLATFORM_MATRIX.md`](docs/PLATFORM_MATRIX.md)** & **[`Sorayunara_Sora_Universal_Platform_Target_Matrix.pdf`](Sorayunara_Sora_Universal_Platform_Target_Matrix.pdf)**
 
 ---
 
