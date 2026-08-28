@@ -28,3 +28,6 @@ pub mod test_runner;
 pub mod vm;
 pub mod wasm_backend;
 pub mod native_builder;
+pub mod main_cli;
+
+pub use main_cli::run_cli;

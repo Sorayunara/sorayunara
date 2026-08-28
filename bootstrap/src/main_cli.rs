@@ -3,33 +3,29 @@ use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-mod ast;
-mod benchmark_suite;
-mod codegen;
-mod debugger;
-mod diagnostic;
-mod docgen;
-mod formatter;
-mod hir;
-mod ir;
-mod lexer;
-mod llvm_backend;
-mod lockfile;
-mod lsp;
-mod macro_expander;
-mod mir;
-mod monomorphizer;
-mod optimizer;
-mod parser;
-mod profiler;
-mod registry;
-mod semantics;
-mod symbol_table;
-mod test_runner;
-mod vm;
-mod wasm_backend;
-
-use diagnostic::DiagnosticEngine;
+use crate::ast;
+use crate::benchmark_suite;
+use crate::codegen;
+use crate::debugger;
+use crate::diagnostic::{self, DiagnosticEngine};
+use crate::docgen;
+use crate::formatter;
+use crate::hir;
+use crate::ir;
+use crate::lexer;
+use crate::llvm_backend;
+use crate::lsp;
+use crate::macro_expander;
+use crate::mir;
+use crate::monomorphizer;
+use crate::optimizer;
+use crate::parser;
+use crate::profiler;
+use crate::registry;
+use crate::semantics;
+use crate::test_runner;
+use crate::vm;
+use crate::wasm_backend;
 
 fn print_banner() {
     println!("===============================================================");
@@ -689,7 +685,7 @@ fn cmd_test(args: &[String]) {
     }
 }
 
-fn main() {
+pub fn run_cli() {
     let args: Vec<String> = env::args().collect();
 
     if args.len() < 2 {
