@@ -2,8 +2,10 @@
 name = "sorayunara"
 version = "0.1.0"
 edition = "2024"
+default-run = "sora"
 authors = ["Sorayunara <dev@sorayunara.org>"]
 description = "Sorayunara (.sora) — Next-Generation Systems & Backend Language with Hindley-Milner Type Inference, Flow-Sensitive Borrow Checking, Actor Concurrency, and Multi-Target LLVM/WASM/C Native Codegen."
+
 
 [[bin]]
 name = "sorayunara"
