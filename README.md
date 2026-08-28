@@ -195,13 +195,41 @@ sorayunara publish         # Publish package to official Sorayunara Registry
 
 ---
 
+---
+
+## ⚖️ Why Sorayunara? (Comparison Matrix)
+
+| Feature / Metric | **Sorayunara (.sora)** | Python | Rust | Go | C++ |
+|---|---|---|---|---|---|
+| **Learning Curve** | 🟢 **Ultra-Simple** | 🟢 Simple | 🔴 Steep | 🟡 Moderate | 🔴 Steep |
+| **Type Safety** | 🛡️ **Hindley-Milner (Static)** | 🟡 Dynamic / Type hints | 🛡️ Static | 🛡️ Static | 🛡️ Static |
+| **Memory Model** | 🔒 **Borrow Checking (Zero GC)** | 🔴 Heavy GC | 🔒 Borrow Checking | 🔴 Tracing GC | 🔴 Manual (unsafe) |
+| **Keyword Budget** | ⚡ **<100 Keywords (Clean)** | 🟡 ~35 | 🔴 ~50+ | 🟢 25 | 🔴 ~100+ complex |
+| **Concurrency** | 🧵 **M:N Actors & Channels** | 🔴 GIL / Asyncio | 🟡 OS Threads / Tokio | 🟢 Goroutines | 🔴 Pthreads / std::thread |
+| **Execution Targets** | 🌐 **Native / WASM / C / VM** | 🟡 CPython VM | 🟢 Native / WASM | 🟢 Native | 🟢 Native |
+| **Syntax Boilerplate** | ✨ **Minimal (`:=`, `=>`, `\|>`)** | 🟢 Minimal | 🔴 High | 🟡 Moderate | 🔴 Very High |
+
+---
+
+## 🤝 Contributing & Community
+
+Sorayunara is an open, global community effort. We welcome contributors of all experience levels!
+
+- 🌟 **First-Time Contributors**: Browse **[Good First Issues](https://github.com/Sorayunara/sorayunara/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)**.
+- 📖 **Contributing Guide**: Read our step-by-step **[CONTRIBUTING.md](CONTRIBUTING.md)**.
+- 🏛️ **Governance & Teams**: Learn how decisions are made in **[GOVERNANCE.md](GOVERNANCE.md)**.
+- 💬 **Community Hub**: Join the conversation in **[COMMUNITY.md](COMMUNITY.md)** and **[GitHub Discussions](https://github.com/Sorayunara/sorayunara/discussions)**.
+
+---
+
 ## 📄 Documentation & Resources
 
 - 📖 **Language Specification**: [SPECIFICATION.md](SPECIFICATION.md)
+- 🏛️ **System Architecture**: [ARCHITECTURE.md](ARCHITECTURE.md)
+- 🌐 **16-Language Interoperability**: [docs/LANGUAGE_INTEROP_MATRIX.md](docs/LANGUAGE_INTEROP_MATRIX.md)
 - 🤝 **Contributing Guide**: [CONTRIBUTING.md](CONTRIBUTING.md)
 - 🌟 **Good First Issues**: [GitHub Issues](https://github.com/Sorayunara/sorayunara/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
 - 🧩 **VS Code Extension**: [editors/vscode/](editors/vscode/)
-- 📦 **Starter Template**: [sorayunara-starter-template](https://github.com/Sorayunara/sorayunara-starter-template)
 - 🌐 **WebAssembly Playground**: [playground/](playground/)
 
 ---
