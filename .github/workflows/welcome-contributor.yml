@@ -1,0 +1,46 @@
+name: Welcome First-Time Contributors
+
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  welcome:
+    name: Greet First-Time Contributor
+    runs-on: ubuntu-latest
+    steps:
+      - name: Welcome Issue Creator
+        if: github.event_name == 'issues'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            if (issue.author_association === 'FIRST_TIME_CONTRIBUTOR' || issue.author_association === 'NONE') {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: `👋 Welcome @${issue.user.login} to the **Sorayunara** community!\n\nThank you for opening this issue. A maintainer from the relevant team will review your report shortly.\n\n📚 Useful Links:\n- [Language Specification](https://github.com/Sorayunara/sorayunara/blob/main/SPECIFICATION.md)\n- [Architecture Overview](https://github.com/Sorayunara/sorayunara/blob/main/ARCHITECTURE.md)\n- [Contributing Guidelines](https://github.com/Sorayunara/sorayunara/blob/main/CONTRIBUTING.md)`
+              });
+            }
+
+      - name: Welcome PR Author
+        if: github.event_name == 'pull_request_target'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            if (pr.author_association === 'FIRST_TIME_CONTRIBUTOR' || pr.author_association === 'NONE') {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                body: `🎉 Congratulations on submitting your first Pull Request to **Sorayunara**, @${pr.user.login}!\n\nOur automated test matrix is running now. Once checks pass, the designated code owner from \`.github/CODEOWNERS\` will review your changes.\n\nThank you for contributing to the future of the Sorayunara language ecosystem! 🌌`
+              });
+            }

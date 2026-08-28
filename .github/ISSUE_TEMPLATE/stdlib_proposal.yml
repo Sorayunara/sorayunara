@@ -1,0 +1,33 @@
+name: "📦 Standard Library Module Proposal"
+description: Propose a new function, type, or module for the Sorayunara standard library (std/*).
+title: "[Stdlib]: "
+labels: ["area:stdlib", "type:feature"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Propose a new standard library API or module. Standard library code lives strictly in `std/` and must be cross-platform.
+  - type: input
+    id: module-name
+    attributes:
+      label: Target Module
+      description: e.g., std.string, std.net, std.collections, std.math, or a new module name.
+      placeholder: std.collections
+    validations:
+      required: true
+  - type: textarea
+    id: api-signature
+    attributes:
+      label: Proposed API Signature
+      description: Functions, structs, traits, or enums to add.
+      placeholder: |
+        fn chunk<T>(list: Vec<T>, size: Int) -> Vec<Vec<T>>
+    validations:
+      required: true
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Rationale & Use Case
+      description: Why is this beneficial in the standard library instead of an external package?
+    validations:
+      required: true

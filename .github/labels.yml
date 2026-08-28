@@ -1,0 +1,53 @@
+# .github/labels.yml — Standard GitHub Label Taxonomy for Sorayunara
+
+- name: "good first issue"
+  color: "7057ff"
+  description: "Good for newcomers / first-time open source contributors"
+
+- name: "help wanted"
+  color: "008672"
+  description: "Extra attention or community contribution needed"
+
+- name: "type:bug"
+  color: "d73a4a"
+  description: "Something isn't working as intended"
+
+- name: "type:feature"
+  color: "a2eeef"
+  description: "New feature, standard library addition, or improvement"
+
+- name: "type:rfc"
+  color: "d4c5f9"
+  description: "Language RFC or major design proposal"
+
+- name: "type:performance"
+  color: "fbca04"
+  description: "Optimization or benchmarking enhancement"
+
+- name: "type:security"
+  color: "b60205"
+  description: "Security fix or vulnerability mitigation"
+
+- name: "area:compiler"
+  color: "1d76db"
+  description: "Lexer, parser, typechecker, borrowchecker, IR, codegen"
+
+- name: "area:stdlib"
+  color: "0e8a16"
+  description: "Sorayunara Standard Library (std/*)"
+
+- name: "area:runtime"
+  color: "f9d0c4"
+  description: "VM bytecode runtime, scheduler, memory allocators"
+
+- name: "area:tooling"
+  color: "bfdadc"
+  description: "LSP, VS Code extension, formatting, linting, packaging"
+
+- name: "area:docs"
+  color: "c2e0c6"
+  description: "Documentation, specifications, tutorials, translations"
+
+- name: "area:ci"
+  color: "5319e7"
+  description: "GitHub Actions, release pipelines, build scripts"

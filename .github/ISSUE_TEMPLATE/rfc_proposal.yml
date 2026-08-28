@@ -1,0 +1,42 @@
+name: "💡 RFC: Language & Syntax Proposal"
+description: Propose a new language feature, syntax addition, or compiler change.
+title: "[RFC]: "
+labels: ["type:rfc", "help wanted"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for proposing an RFC to improve the Sorayunara language! Please describe your motivation, proposed syntax, and compatibility considerations.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary / Abstract
+      description: A concise 1-3 sentence summary of the proposed feature.
+      placeholder: Brief explanation of what you are proposing.
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why should this be in Sorayunara? What problem does it solve?
+      placeholder: Real-world use case or developer ergonomics pain point.
+    validations:
+      required: true
+  - type: textarea
+    id: syntax-example
+    attributes:
+      label: Proposed Syntax & Code Examples
+      description: Show example `.sora` code using the proposed feature.
+      placeholder: |
+        // Example syntax
+        fn example() { ... }
+    validations:
+      required: true
+  - type: textarea
+    id: tradeoffs
+    attributes:
+      label: Tradeoffs & Alternatives
+      description: What are the drawbacks or alternative designs considered?
+    validations:
+      required: false

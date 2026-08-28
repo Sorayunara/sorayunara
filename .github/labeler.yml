@@ -1,0 +1,45 @@
+# .github/labeler.yml - Automatic PR labeler configuration
+
+"area:compiler":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "compiler/**"
+          - "bootstrap/**"
+          - "specs/**"
+
+"area:stdlib":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "std/**"
+
+"area:runtime":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "runtime/**"
+
+"area:tooling":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "tools/**"
+          - "editors/**"
+          - "playground/**"
+
+"area:docs":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "docs/**"
+          - "*.md"
+
+"area:tests":
+  - changed-files:
+      - any-glob-to-any-file:
+          - "tests/**"
+          - "benchmarks/**"
+          - "examples/**"
+
+"area:ci":
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/**"
+          - "scripts/**"
+          - "Cargo.toml"
