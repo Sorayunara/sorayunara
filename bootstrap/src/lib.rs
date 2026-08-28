@@ -29,5 +29,7 @@ pub mod vm;
 pub mod wasm_backend;
 pub mod native_builder;
 pub mod main_cli;
+#[path = "../../runtime/windows/mod.rs"]
+pub mod windows;
 
 pub use main_cli::run_cli;

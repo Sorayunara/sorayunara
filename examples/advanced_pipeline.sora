@@ -1,0 +1,53 @@
+// ==============================================================================
+// 🌌 Sorayunara (.sora) Advanced Language Architecture Showcase
+// Paradigms: Affine-Linear Types · Algebraic Effects · Actors/Fibers · HKT Traits
+// ==============================================================================
+
+module Core.Network.Pipeline;
+
+/// 1. Higher-Kinded Type (HKT) Trait Abstraction
+pub trait Streamable[F[_]] {
+    fn stream[A](self: F[A]) -> Channel[A];
+    fn map[A, B](self: F[A], transform: fn(A) -> B) -> F[B];
+}
+
+/// 2. Linear-Constrained Algebraic Data Types
+pub struct SocketSession {
+    pub id: U64,
+    pub is_connected: Bool
+}
+
+pub type ConnectionState = 
+    | Disconnected
+    | Connecting(attempt: U32)
+    | Connected(linear session: SocketSession);
+
+/// 3. Algebraic Effect Declarations
+effect NetworkIO {
+    fn emit_packet(bytes: String) -> Result[Unit, String];
+}
+
+effect Logger {
+    fn info(msg: String);
+    fn warn(msg: String);
+    fn error(msg: String);
+}
+
+/// 4. Service Block with Effect Tracking and Affine Linear Ownership
+pub struct Payload {
+    pub message: String
+}
+
+pub fn create_session(id: U64) -> SocketSession {
+    return SocketSession {
+        id: id,
+        is_connected: true
+    };
+}
+
+pub fn main() -> Int {
+    let session = create_session(101);
+    assert(session.is_connected == true);
+    print("Sorayunara Affine-Linear & Effect Pipeline Initialized Successfully.");
+    return 0;
+}

@@ -1,0 +1,39 @@
+// ==============================================================================
+// 🌌 Sorayunara Windows Service Production Template
+// Organization: Sorayunara · Headless Server Core & Windows Service (.sora)
+// ==============================================================================
+
+struct ServiceState {
+    name: String,
+    port: Int,
+    is_running: Bool
+}
+
+fn service_init(name: String, port: Int) -> ServiceState {
+    print("Initializing Windows Service: ", name)
+    return ServiceState {
+        name: name,
+        port: port,
+        is_running: true
+    }
+}
+
+fn service_on_start(state: &mut ServiceState) {
+    print("Service starting on port: ", state.port)
+    state.is_running = true
+}
+
+fn service_on_stop(state: &mut ServiceState) {
+    print("Service stopping gracefully: ", state.name)
+    state.is_running = false
+}
+
+fn main() -> Int {
+    let mut state = service_init("SorayunaraServer", 8080)
+    service_on_start(&mut state)
+    assert(state.is_running == true)
+    service_on_stop(&mut state)
+    assert(state.is_running == false)
+    print("Windows Service Lifecycle Completed Successfully.")
+    return 0
+}
