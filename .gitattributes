@@ -3,7 +3,8 @@
 # ==============================================================================
 
 # 1. Primary Language: Sorayunara (.sora)
-*.sora linguist-language=Sorayunara
+# Map syntax highlighting to Rust for GitHub web interface rendering
+*.sora linguist-language=Rust
 *.sora linguist-detectable=true
 
 # 2. Build outputs & generated caches
