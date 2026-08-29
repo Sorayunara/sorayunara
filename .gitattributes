@@ -1,17 +1,31 @@
 # ==============================================================================
-# GitHub Linguist Configuration for Sorayunara
+# GitHub Linguist Configuration for Sorayunara Programming Language (.sora)
 # ==============================================================================
 
-# 1. Primary Language: Sorayunara (.sora)
-# Map syntax highlighting to Rust for GitHub web interface rendering
-*.sora linguist-language=Rust
+# 1. Primary Programming Language: Sorayunara
+*.sora linguist-language=Sorayunara
 *.sora linguist-detectable=true
+*.sora -linguist-vendored
+*.sora -linguist-generated
 
-# 2. Build outputs & generated caches
+# 2. Mark Rust bootstrap compiler, toolchain scripts & package manifests as vendored
+# This ensures that Sorayunara (.sora) is recognized as the language of this repository
+bootstrap/** linguist-vendored
+src/**/*.rs linguist-vendored
+tests/**/*.rs linguist-vendored
+tools/**/*.rs linguist-vendored
+*.rs linguist-vendored
+*.toml linguist-vendored
+*.lock linguist-generated
+*.ps1 linguist-vendored
+*.sh linguist-vendored
+*.bat linguist-vendored
+
+# 3. Build outputs, IDE plugins & documentation
 target/** linguist-vendored
 output.* linguist-generated
-*.lock linguist-generated
-
-# 3. Documentation
+playground/** linguist-vendored
+editors/** linguist-vendored
+assets/** linguist-vendored
 docs/** linguist-documentation
 *.md linguist-documentation
