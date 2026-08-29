@@ -1,0 +1,109 @@
+// ==============================================================================
+// 🌌 Sorayunara (.sora) Syntax v2.1 Complete Language Showcase
+// Based on: Sorayunara_Syntax_Tambahan_v2_1.pdf
+// Principles: Short to write, clear to read, powerful underneath.
+// ==============================================================================
+
+use std.{io, channel}
+
+// A & D. Types, Structs, and Short Construction
+type User {
+    id: Int,
+    name: String,
+    age: Int
+}
+
+enum Event {
+    Join(User),
+    Leave(Int)
+}
+
+// S. Actor Ergonomics with 'on' Handlers
+actor UsersManager {
+    var count = 0
+
+    on Add(user: User) => {
+        count = count + 1
+    }
+
+    on GetCount(reply) => {
+        reply(count)
+    }
+}
+
+// B. Default Parameter and Named Argument
+fn connect(host = "localhost", port = 8080, secure = true) -> String {
+    return "Connected to " + host
+}
+
+// C. One-line Expression Functions
+fn square(x: Int) => x * x
+
+// I. Guard Clauses and Early Returns
+fn withdraw(balance: Int, amount: Int) -> Result<Int, String> {
+    guard amount > 0 else err "amount must be positive"
+    guard balance >= amount else err "insufficient balance"
+    return balance - amount
+}
+
+// K. Async and Consistent Error Handling
+async fn load_user(id: Int) -> Result<User, String> {
+    if id <= 0 {
+        return err "Invalid user ID"
+    }
+    return User {
+        id: id,
+        name: "Lutfi",
+        age: 21
+    }
+}
+
+// Main Program Entry Point
+pub fn main() -> Int {
+    say "=== 🌌 Sorayunara Syntax v2.1 Comprehensive Demo ==="
+
+    // A. Inferred Constant & Mutable Variable
+    let name = "Lutfi"
+    var count = 0
+    count += 1
+
+    // D. Short Struct Construction
+    let age = 21
+    let id = 1
+    let user = User { id, name, age }
+
+    // E. Tuple & Destructuring
+    let point = (10, 20)
+    let (x, y) = point
+    assert(x == 10)
+    assert(y == 20)
+
+    // G. Range and Loops
+    var sum = 0
+    for i in 1..=5 {
+        sum += i
+    }
+    assert(sum == 15)
+
+    // J. Option & Nil Coalescing
+    let display_name = user.name ?? "Anonymous"
+    assert(display_name == "Lutfi")
+
+    // Function calls with named arguments
+    let conn_str = connect(port: 3000)
+    assert(conn_str == "Connected to localhost")
+
+    // Method and expression verification
+    let sq = square(8)
+    assert(sq == 64)
+
+    // Pattern Matching with Shorthand
+    let event = Event::Join(user)
+    match event {
+        Event::Join(u) => say "User joined: {u.name}",
+        Event::Leave(uid) => say "User left: {uid}"
+    }
+
+    say "🎉 Sorayunara Syntax v2.1 Subsystems Verified."
+    return 0
+}

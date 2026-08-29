@@ -1,0 +1,31 @@
+// Package: sora-math
+// Standard Mathematical Utilities written in Sorayunara (.sora)
+
+fn add(a: Int, b: Int) -> Int {
+    return a + b
+}
+
+fn subtract(a: Int, b: Int) -> Int {
+    return a - b
+}
+
+fn multiply(a: Int, b: Int) -> Int {
+    return a * b
+}
+
+fn divide(a: Int, b: Int) -> Int {
+    if (b == 0) {
+        return 0
+    }
+    return a / b
+}
+
+fn clamp(val: Int, min_val: Int, max_val: Int) -> Int {
+    if (val < min_val) {
+        return min_val
+    }
+    if (val > max_val) {
+        return max_val
+    }
+    return val
+}

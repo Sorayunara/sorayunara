@@ -1,0 +1,56 @@
+// Unit tests for sora-math package
+
+fn add(a: Int, b: Int) -> Int {
+    return a + b
+}
+
+fn subtract(a: Int, b: Int) -> Int {
+    return a - b
+}
+
+fn multiply(a: Int, b: Int) -> Int {
+    return a * b
+}
+
+fn divide(a: Int, b: Int) -> Int {
+    if (b == 0) {
+        return 0
+    }
+    return a / b
+}
+
+fn clamp(val: Int, min_val: Int, max_val: Int) -> Int {
+    if (val < min_val) {
+        return min_val
+    }
+    if (val > max_val) {
+        return max_val
+    }
+    return val
+}
+
+fn main() -> Int {
+    let sum: Int = add(10, 20)
+    let diff: Int = subtract(50, 20)
+    let prod: Int = multiply(5, 6)
+    let quot: Int = divide(90, 3)
+    let clamped_high: Int = clamp(150, 0, 100)
+    let clamped_low: Int = clamp(-50, 0, 100)
+
+    print("Sum: ", sum)
+    print("Diff: ", diff)
+    print("Prod: ", prod)
+    print("Quot: ", quot)
+    print("Clamped High: ", clamped_high)
+    print("Clamped Low: ", clamped_low)
+
+    assert(sum == 30)
+    assert(diff == 30)
+    assert(prod == 30)
+    assert(quot == 30)
+    assert(clamped_high == 100)
+    assert(clamped_low == 0)
+
+    print("[PASS] All sora-math package unit tests passed successfully!")
+    return 0
+}

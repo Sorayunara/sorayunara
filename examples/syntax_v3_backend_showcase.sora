@@ -1,0 +1,117 @@
+// ==============================================================================
+// 🌌 Sorayunara Syntax v3 Backend Showcase
+// Based on: Sorayunara_Syntax_Architecture_Proposal_v3.pdf
+// Principles: Ownership-aware, Expression-oriented, Let-Else, Where Clause, Rich Enums
+// ==============================================================================
+
+use std.{io, channel}
+
+// 1. Newtypes & Type Aliases
+type UserId = Int
+type Email = String
+
+// 2. Struct Definitions
+type User {
+    id: UserId,
+    name: String,
+    email: Email,
+    age: Int
+}
+
+// 3. Rich Algebraic Data Types (Struct-like Enum Cases)
+enum HttpEvent {
+    Request { method: String, path: String },
+    Response { status: Int, body: String },
+    Closed
+}
+
+enum ApiError {
+    NotFound,
+    Unauthorized,
+    Invalid(String),
+    Internal(String)
+}
+
+// 4. Generic Functions with Where Clauses
+fn max_val<T>(a: T, b: T) -> T 
+where T: Ord {
+    if a > b {
+        return a
+    } else {
+        return b
+    }
+}
+
+// 5. Functions with Ownership Borrowing (&User, &mut User)
+fn print_user_summary(user: &User) {
+    say "User #{user.id}: {user.name} <{user.email}>"
+}
+
+fn increment_user_age(user: &mut User) {
+    user.age += 1
+}
+
+// 6. Async Function with Let-Else & Pattern Matching
+async fn fetch_user_handler(id: UserId) -> Result<User, ApiError> {
+    if id <= 0 {
+        return err ApiError.Invalid("ID must be positive")
+    }
+
+    let user = User {
+        id: id,
+        name: "Lutfi",
+        email: "lutfi@sora.dev",
+        age: 21
+    }
+
+    return Ok(user)
+}
+
+// 7. Main Program Entry
+pub fn main() -> Int {
+    say "=== 🌌 Sorayunara Syntax v3 Backend Architecture Demo ==="
+
+    // Let-Else Binding Invariant
+    let mut user = User {
+        id: 101,
+        name: "Lutfi",
+        email: "lutfi@sora.dev",
+        age: 21
+    }
+
+    // Explicit Borrowing
+    print_user_summary(&user)
+    increment_user_age(&mut user)
+    assert(user.age == 22)
+
+    // Destructuring with Guard
+    match user {
+        User { age, name, .. } if age >= 18 => {
+            say "Verified Adult User: {name}"
+        },
+        _ => {
+            say "Access Denied"
+        }
+    }
+
+    // Rich Enum Pattern Match
+    let event = HttpEvent::Response { status: 200, body: "OK" }
+    match event {
+        HttpEvent::Response { status, body } => {
+            say "HTTP Response received: Status {status}, Body: {body}"
+        },
+        HttpEvent::Request { method, path } => {
+            say "HTTP Request: {method} {path}"
+        },
+        HttpEvent::Closed => {
+            say "Connection closed"
+        }
+    }
+
+    // Generic Where Function Call
+    let larger = max_val(100, 250)
+    assert(larger == 250)
+
+    say "🎉 Sorayunara Syntax v3 Verified Successfully."
+    return 0
+}

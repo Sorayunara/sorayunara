@@ -1,0 +1,83 @@
+// ==============================================================================
+// 🌌 Sorayunara Syntax v2 Formal Implementation
+// Based on: Sorayunara_Syntax_v2_Design_Proposal.pdf
+// Principles: Short to write, clear to read, powerful underneath.
+// ==============================================================================
+
+use std.io
+use std.channel
+
+// 1. Types, Structs & Enums
+type User {
+    name: String,
+    age: Int
+}
+
+type Message {
+    id: Int,
+    text: String
+}
+
+enum Result<T, E> {
+    Ok(T),
+    Err(E)
+}
+
+// 2. Short Function Syntax
+fn add(a: Int, b: Int) -> Int {
+    return a + b
+}
+
+fn process(data: Int) -> Int {
+    let x = data + 10
+    let y = x * 2
+    return y
+}
+
+// 3. Async Function & Actor Message Passing
+async fn worker(ch: Channel) {
+    loop {
+        let msg = await ch.recv()?
+        match msg {
+            Some(m) => say "[{m.id}] {m.text}",
+            None => break
+        }
+    }
+}
+
+// 4. Main Program
+pub fn main() -> Int {
+    say "=== Sorayunara Syntax v2 Showcase ==="
+
+    // Variables & Type Inference
+    let name = "Lutfi"
+    var count = 0
+    count = count + 1
+
+    // Type instantiation
+    let user = User {
+        name: "Lutfi",
+        age: 21
+    }
+
+    // Control Flow
+    if user.age >= 18 {
+        say "Adult"
+    } else {
+        say "Minor"
+    }
+
+    // Collection & Loops
+    let nums = [1, 2, 3, 4]
+    for i in 0..10 {
+        say i
+    }
+
+    // Function calls & assertions
+    let sum = add(15, 25)
+    assert(sum == 40)
+    assert(count == 1)
+
+    say "Done"
+    return 0
+}

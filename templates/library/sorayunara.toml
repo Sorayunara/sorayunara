@@ -1,0 +1,10 @@
+[package]
+name = "sora-math"
+version = "0.1.0"
+authors = ["Sorayunara Author <author@sorayunara.org>"]
+description = "High-performance mathematics & numeric utilities in .sora"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/Sorayunara/sorayunara"
+
+[dependencies]
+# Dependencies can reference other registry packages or git repos
