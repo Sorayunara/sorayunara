@@ -4,29 +4,13 @@
 
 # 1. Primary Language: Sorayunara (.sora)
 *.sora linguist-language=Sorayunara
-*.sora linguist-detectable
+*.sora linguist-detectable=true
 
-# 2. Exclude all Rust bootstrap, scripts, and build files
-*.rs linguist-vendored
-*.rs linguist-generated
-*.toml linguist-vendored
-*.lock linguist-vendored
-*.ps1 linguist-vendored
-*.sh linguist-vendored
-*.bat linguist-vendored
-Cargo.toml linguist-vendored
-Cargo.lock linguist-vendored
-bootstrap/** linguist-vendored
-tests/** linguist-vendored
-tools/** linguist-vendored
-linguist-submission/** linguist-vendored
+# 2. Build outputs & generated caches
 target/** linguist-vendored
 output.* linguist-generated
+*.lock linguist-generated
 
-# 3. Exclude Web Playground, VS Code Tooling, Assets & Docs from language statistics
-playground/** linguist-vendored
-editors/** linguist-vendored
-assets/** linguist-vendored
+# 3. Documentation
 docs/** linguist-documentation
-demo-service/** linguist-vendored
-
+*.md linguist-documentation
