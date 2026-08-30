@@ -1,0 +1,9 @@
+// runtime/scheduler/work_stealing.sora
+struct WorkStealingQueue {
+    task_count: Int
+    worker_id: Int
+}
+
+fn schedule_task(q: WorkStealingQueue, task_id: Int) -> Int {
+    return q.task_count + 1
+}

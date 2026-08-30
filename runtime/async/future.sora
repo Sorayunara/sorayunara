@@ -1,0 +1,13 @@
+// runtime/async/future.sora
+enum PollStatus {
+    Ready(Int)
+    Pending
+}
+
+fn poll_future(state: Int) -> PollStatus {
+    if state == 1 {
+        return PollStatus::Ready(42)
+    } else {
+        return PollStatus::Pending
+    }
+}

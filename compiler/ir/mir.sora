@@ -1,0 +1,14 @@
+// compiler/ir/mir.sora
+enum MirOp {
+    Assign(Int, Int)
+    BinaryMath(String, Int, Int)
+    CallDirect(String, [Int])
+    Jump(Int)
+    BranchIf(Int, Int, Int)
+    ReturnVal(Int)
+}
+
+struct BasicBlock {
+    id: Int
+    instructions: [MirOp]
+}

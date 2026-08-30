@@ -1,0 +1,11 @@
+// compiler/driver/pipeline.sora
+fn execute_compiler_stages(source: String) -> Int {
+    let step1_lex = 1
+    let step2_parse = 2
+    let step3_typecheck = 3
+    let step4_borrow = 4
+    let step5_mir = 5
+    let step6_opt = 6
+    let step7_codegen = 7
+    return step7_codegen
+}

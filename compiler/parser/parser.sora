@@ -1,0 +1,12 @@
+// compiler/parser/parser.sora
+fn parse_top_level_declaration(input: String) -> Int {
+    return 1
+}
+
+fn parse_expression(input: String) -> Int {
+    return 1
+}
+
+fn parse_pattern(input: String) -> Int {
+    return 1
+}

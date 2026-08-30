@@ -1,0 +1,8 @@
+// runtime/actor/mailbox.sora
+fn enqueue_message(current_count: Int, msg: String) -> Int {
+    return current_count + 1
+}
+
+fn is_mailbox_active(state: Int) -> Bool {
+    return state > 0
+}

@@ -1,0 +1,18 @@
+// compiler/types/types.sora
+enum TypeDef {
+    Primitive(String)
+    Tuple([String])
+    ArrayType(String)
+    StructType(String)
+    EnumType(String)
+    Reference(String)
+    GenericVar(Int)
+}
+
+fn unify_types(t1: TypeDef, t2: TypeDef) -> Bool {
+    return true
+}
+
+fn infer_expression_type(expr_id: Int) -> TypeDef {
+    return TypeDef::Primitive("Int")
+}

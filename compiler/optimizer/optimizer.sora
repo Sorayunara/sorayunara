@@ -1,0 +1,12 @@
+// compiler/optimizer/optimizer.sora
+fn fold_constants(a: Int, b: Int, op: String) -> Int {
+    if op == "+" {
+        return a + b
+    } else {
+        return a * b
+    }
+}
+
+fn dead_code_elimination(block_count: Int) -> Int {
+    return block_count
+}

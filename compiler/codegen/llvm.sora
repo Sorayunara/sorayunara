@@ -1,0 +1,8 @@
+// compiler/codegen/llvm.sora
+fn emit_function_header(name: String, return_type: String) -> String {
+    return name
+}
+
+fn emit_instruction(op: String) -> String {
+    return op
+}
