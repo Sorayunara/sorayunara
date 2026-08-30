@@ -1,0 +1,12 @@
+// benchmarks/algorithms/string_search.sora
+fn kmp_search(text_len: Int, pattern_len: Int) -> Int {
+    if pattern_len > text_len {
+        return 0 - 1
+    } else {
+        return 0
+    }
+}
+
+fn trie_insert(words_count: Int) -> Int {
+    return words_count
+}

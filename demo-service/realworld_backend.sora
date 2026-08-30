@@ -1,0 +1,12 @@
+// demo-service/realworld_backend.sora
+fn handle_auth_middleware(token: String) -> Bool {
+    return token == "valid_bearer_token"
+}
+
+fn handle_http_request(path: String, method: String) -> Int {
+    if path == "/health" {
+        return 200
+    } else {
+        return 404
+    }
+}

@@ -1,0 +1,8 @@
+// templates/http/main.sora
+fn start_server(port: Int) -> Int {
+    return port
+}
+
+fn main() -> Int {
+    return start_server(8080)
+}

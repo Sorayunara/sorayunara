@@ -1,0 +1,4 @@
+// templates/library/lib.sora
+fn math_square(n: Int) -> Int {
+    return n * n
+}
