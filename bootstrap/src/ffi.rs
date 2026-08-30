@@ -46,7 +46,10 @@ impl ForeignType {
             ForeignType::Int8 | ForeignType::UInt8 => 1,
             ForeignType::Int16 | ForeignType::UInt16 => 2,
             ForeignType::Int32 | ForeignType::UInt32 | ForeignType::Float32 => 4,
-            ForeignType::Int64 | ForeignType::UInt64 | ForeignType::Float64 | ForeignType::Pointer => 8,
+            ForeignType::Int64
+            | ForeignType::UInt64
+            | ForeignType::Float64
+            | ForeignType::Pointer => 8,
             ForeignType::Void => 0,
             ForeignType::Struct(layout) => layout.size,
         }
@@ -57,7 +60,10 @@ impl ForeignType {
             ForeignType::Int8 | ForeignType::UInt8 => 1,
             ForeignType::Int16 | ForeignType::UInt16 => 2,
             ForeignType::Int32 | ForeignType::UInt32 | ForeignType::Float32 => 4,
-            ForeignType::Int64 | ForeignType::UInt64 | ForeignType::Float64 | ForeignType::Pointer => 8,
+            ForeignType::Int64
+            | ForeignType::UInt64
+            | ForeignType::Float64
+            | ForeignType::Pointer => 8,
             ForeignType::Void => 1,
             ForeignType::Struct(layout) => layout.align,
         }
@@ -124,7 +130,10 @@ impl StructLayout {
     }
 
     pub fn offset_of(&self, field_name: &str) -> Option<usize> {
-        self.fields.iter().find(|f| f.name == field_name).map(|f| f.offset)
+        self.fields
+            .iter()
+            .find(|f| f.name == field_name)
+            .map(|f| f.offset)
     }
 }
 

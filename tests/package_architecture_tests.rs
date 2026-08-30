@@ -46,8 +46,16 @@ checksum = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
 
     fs::write(test_dir.join("build.sora"), "// build.sora\n").unwrap();
     fs::write(test_dir.join("src").join("main.sora"), "fn main() {}\n").unwrap();
-    fs::write(test_dir.join("examples").join("basic.sora"), "fn main() {}\n").unwrap();
-    fs::write(test_dir.join("benches").join("bench_main.sora"), "fn main() {}\n").unwrap();
+    fs::write(
+        test_dir.join("examples").join("basic.sora"),
+        "fn main() {}\n",
+    )
+    .unwrap();
+    fs::write(
+        test_dir.join("benches").join("bench_main.sora"),
+        "fn main() {}\n",
+    )
+    .unwrap();
 
     // Verify all structure elements exist
     assert!(test_dir.join("sorayunara.toml").exists());

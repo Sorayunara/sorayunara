@@ -37,7 +37,11 @@ fn test_lsp_navigation_and_code_action_and_semantic_tokens() {
     assert!(handle_lsp_message(ref_msg).unwrap().contains("range"));
 
     let action_msg = r#"{"jsonrpc":"2.0","id":9,"method":"textDocument/codeAction","params":{"textDocument":{"uri":"file:///main.sora"}}}"#;
-    assert!(handle_lsp_message(action_msg).unwrap().contains("source.organizeImports"));
+    assert!(
+        handle_lsp_message(action_msg)
+            .unwrap()
+            .contains("source.organizeImports")
+    );
 
     let tokens_msg = r#"{"jsonrpc":"2.0","id":10,"method":"textDocument/semanticTokens/full","params":{"textDocument":{"uri":"file:///main.sora"}}}"#;
     assert!(handle_lsp_message(tokens_msg).unwrap().contains("data"));

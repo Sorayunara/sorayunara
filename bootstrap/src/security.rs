@@ -1,8 +1,8 @@
 #![allow(dead_code)]
 
-use std::collections::HashSet;
 use crate::ast::Program;
 use crate::lockfile::AetherLock;
+use std::collections::HashSet;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct SecurityPolicy {
@@ -134,10 +134,16 @@ impl SecurityEngine {
     pub fn verify_lockfile_security(lockfile: &AetherLock) -> Result<(), String> {
         for pkg in &lockfile.packages {
             if pkg.checksum.is_empty() {
-                return Err(format!("Security Warning: Package '{}' is missing cryptographic checksum in aether.lock", pkg.name));
+                return Err(format!(
+                    "Security Warning: Package '{}' is missing cryptographic checksum in aether.lock",
+                    pkg.name
+                ));
             }
             if !pkg.checksum.starts_with("sha256:") && !pkg.checksum.starts_with("blake3:") {
-                return Err(format!("Security Warning: Package '{}' checksum does not use strong hashing algorithm", pkg.name));
+                return Err(format!(
+                    "Security Warning: Package '{}' checksum does not use strong hashing algorithm",
+                    pkg.name
+                ));
             }
         }
         Ok(())

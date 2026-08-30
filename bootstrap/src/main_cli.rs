@@ -39,7 +39,9 @@ fn print_usage() {
     println!("Usage:");
     println!("  sorayunara <command> [arguments]\n");
     println!("Commands:");
-    println!("  sorayunara compile [file.sora]    Compile Sorayunara source into high-performance target");
+    println!(
+        "  sorayunara compile [file.sora]    Compile Sorayunara source into high-performance target"
+    );
     println!("  sorayunara run [file.sora]        Compile and execute Sorayunara program");
     println!("  sorayunara build [file.sora]      Build production target binary artifacts");
     println!("  sorayunara test                   Run all test suites and assert blocks");
@@ -50,18 +52,24 @@ fn print_usage() {
     println!("  sorayunara fmt [file.sora]        Format Sorayunara source code automatically");
     println!("  sorayunara lint [file.sora]       Run linter and static code quality checks");
     println!("  sorayunara check [file.sora]      Perform static type check & borrow check");
-    println!("  sorayunara add <pkg>              Add a package dependency from Sorayunara Registry");
+    println!(
+        "  sorayunara add <pkg>              Add a package dependency from Sorayunara Registry"
+    );
     println!("  sorayunara remove <pkg>           Remove a package dependency");
     println!("  sorayunara update                 Update and pin package dependencies");
     println!("  sorayunara publish                Publish package to official Sorayunara Registry");
-    println!("  sorayunara audit                  Run security and vulnerability audit on dependencies");
+    println!(
+        "  sorayunara audit                  Run security and vulnerability audit on dependencies"
+    );
     println!("  sorayunara tree                   Display hierarchical project dependency tree");
     println!("  sorayunara doc [file.sora]        Generate aesthetic HTML documentation (docs/)");
     println!("  sorayunara debug [file.sora]      Start interactive DAP debugging session");
     println!("  sorayunara profile [file.sora]    Profile execution latency and hotspot analysis");
     println!("  sorayunara clean                  Remove build artifacts and cache directory");
     println!("  sorayunara doctor                 Check toolchain environment and dependencies");
-    println!("  sorayunara lsp                    Start Sorayunara Language Server Protocol daemon");
+    println!(
+        "  sorayunara lsp                    Start Sorayunara Language Server Protocol daemon"
+    );
 }
 
 fn resolve_entry_file(args: &[String], start_idx: usize) -> String {
@@ -93,17 +101,24 @@ fn load_and_merge_modules(
     entry_path: &Path,
     visited: &mut HashSet<PathBuf>,
 ) -> Result<(String, ast::Program), (String, diagnostic::Span)> {
-    let canonical = entry_path
-        .canonicalize()
-        .map_err(|e| (format!("Cannot find module file {:?}: {}", entry_path, e), diagnostic::Span::dummy()))?;
+    let canonical = entry_path.canonicalize().map_err(|e| {
+        (
+            format!("Cannot find module file {:?}: {}", entry_path, e),
+            diagnostic::Span::dummy(),
+        )
+    })?;
 
     if visited.contains(&canonical) {
         return Ok((String::new(), ast::Program { statements: vec![] }));
     }
     visited.insert(canonical.clone());
 
-    let source = fs::read_to_string(&canonical)
-        .map_err(|e| (format!("Failed to read {:?}: {}", canonical, e), diagnostic::Span::dummy()))?;
+    let source = fs::read_to_string(&canonical).map_err(|e| {
+        (
+            format!("Failed to read {:?}: {}", canonical, e),
+            diagnostic::Span::dummy(),
+        )
+    })?;
 
     let tokens = lexer::tokenize(&source)?;
     let mut ast_program = parser::parse(tokens)?;
@@ -128,10 +143,14 @@ fn load_and_merge_modules(
                 let candidate4_ao = Path::new("packages").join(format!("{}.ao", normalized));
                 let candidate4_nm = Path::new("packages").join(format!("{}.nm", normalized));
                 let candidate4_ae = Path::new("packages").join(format!("{}.ae", normalized));
-                let candidate5 = Path::new("std").join(format!("{}.sora", normalized.trim_start_matches("std/")));
-                let candidate5_ao = Path::new("std").join(format!("{}.ao", normalized.trim_start_matches("std/")));
-                let candidate5_nm = Path::new("std").join(format!("{}.nm", normalized.trim_start_matches("std/")));
-                let candidate5_ae = Path::new("std").join(format!("{}.ae", normalized.trim_start_matches("std/")));
+                let candidate5 = Path::new("std")
+                    .join(format!("{}.sora", normalized.trim_start_matches("std/")));
+                let candidate5_ao =
+                    Path::new("std").join(format!("{}.ao", normalized.trim_start_matches("std/")));
+                let candidate5_nm =
+                    Path::new("std").join(format!("{}.nm", normalized.trim_start_matches("std/")));
+                let candidate5_ae =
+                    Path::new("std").join(format!("{}.ae", normalized.trim_start_matches("std/")));
                 let candidate6 = PathBuf::from(&normalized);
                 let candidate7 = PathBuf::from(format!("{}.sora", normalized));
                 let candidate7_ao = PathBuf::from(format!("{}.ao", normalized));
@@ -199,7 +218,12 @@ fn load_and_merge_modules(
     }
 
     combined_stmts.extend(ast_program.statements);
-    Ok((source, ast::Program { statements: combined_stmts }))
+    Ok((
+        source,
+        ast::Program {
+            statements: combined_stmts,
+        },
+    ))
 }
 
 fn execute_pipeline(file_path: &str) -> Result<(), ()> {
@@ -224,7 +248,11 @@ fn execute_pipeline(file_path: &str) -> Result<(), ()> {
     println!("---------------------------------------------------------------");
     let macro_ast = macro_expander::expand_macros(ast_program);
     let expanded_ast = monomorphizer::monomorphize(macro_ast);
-    println!("  ✅ Loaded, expanded & monomorphized {} top-level declarations across {} module(s).", expanded_ast.statements.len(), visited.len());
+    println!(
+        "  ✅ Loaded, expanded & monomorphized {} top-level declarations across {} module(s).",
+        expanded_ast.statements.len(),
+        visited.len()
+    );
 
     println!("\n[3] 🛡️ SEMANTIC ANALYSIS & TYPE/BORROW CHECKER");
     println!("---------------------------------------------------------------");
@@ -242,18 +270,26 @@ fn execute_pipeline(file_path: &str) -> Result<(), ()> {
     println!("\n[4] 📐 HIGH-LEVEL IR (HIR)");
     println!("---------------------------------------------------------------");
     let hir_program = hir::lower_ast_to_hir(&expanded_ast);
-    println!("  ✅ Lowered {} AST items to HIR typed representations.", hir_program.functions.len());
+    println!(
+        "  ✅ Lowered {} AST items to HIR typed representations.",
+        hir_program.functions.len()
+    );
 
     println!("\n[5] 🔀 MID-LEVEL IR (MIR & CONTROL FLOW GRAPH)");
     println!("---------------------------------------------------------------");
     let mir_program = mir::lower_hir_to_mir(&hir_program);
-    println!("  ✅ Generated {} MIR bodies with BasicBlocks & Place Operands.", mir_program.functions.len());
+    println!(
+        "  ✅ Generated {} MIR bodies with BasicBlocks & Place Operands.",
+        mir_program.functions.len()
+    );
 
     println!("\n[6] ⚙️ BYTECODE IR & MULTI-PASS OPTIMIZER");
     println!("---------------------------------------------------------------");
     let unopt_ir = ir::compile_to_ir(&expanded_ast);
     let ir_program = optimizer::optimize(unopt_ir);
-    println!("  ⚡ Optimizer Active: Constant folding, Dead Code Elimination, Peephole passes applied.");
+    println!(
+        "  ⚡ Optimizer Active: Constant folding, Dead Code Elimination, Peephole passes applied."
+    );
     for (name, func) in &ir_program.functions {
         println!("--- Function: {} ({}) ---", name, func.params.join(", "));
         println!("{}", func.disassemble());
@@ -349,7 +385,10 @@ fn cmd_check(file_path: &str) {
 
     match load_and_merge_modules(p, &mut visited) {
         Ok((src, ast_prog)) => match semantics::check_semantics(&ast_prog) {
-            Ok(_) => println!("✅ Static type check & borrow check PASSED for '{}'", file_path),
+            Ok(_) => println!(
+                "✅ Static type check & borrow check PASSED for '{}'",
+                file_path
+            ),
             Err(engine) => eprintln!("{}", engine.render_all(file_path, &src)),
         },
         Err((e, _)) => eprintln!("Error loading modules: {}", e),
@@ -532,16 +571,21 @@ fn main() {
     println!("   ├── benches/");
     println!("   │   └── bench_main.sora");
     println!("   └── packages/");
-    println!("\nTo get started:\n  cd {}\n  sorayunara run\n", project_name);
+    println!(
+        "\nTo get started:\n  cd {}\n  sorayunara run\n",
+        project_name
+    );
 }
-
 
 fn cmd_add(pkg_name: &str) {
     let client = registry::RegistryClient::new();
     let project_dir = Path::new(".");
     match client.install_package(pkg_name, project_dir) {
         Ok(meta) => {
-            println!("📦 Successfully resolved and added '{}' (v{}) from Sorayunara Registry.", meta.name, meta.version);
+            println!(
+                "📦 Successfully resolved and added '{}' (v{}) from Sorayunara Registry.",
+                meta.name, meta.version
+            );
             println!("   ↳ Checksum: {}", meta.checksum);
             println!("   ↳ Manifest updated: sorayunara.toml");
             println!("   ↳ Lockfile updated: sorayunara.lock");
@@ -555,9 +599,16 @@ fn cmd_add(pkg_name: &str) {
 fn cmd_search(query: &str) {
     let client = registry::RegistryClient::new();
     let results = client.search(query);
-    println!("🔍 Found {} package(s) matching '{}':\n", results.len(), query);
+    println!(
+        "🔍 Found {} package(s) matching '{}':\n",
+        results.len(),
+        query
+    );
     for pkg in results {
-        println!("  • \x1b[32m{}\x1b[0m (v{}) - {}", pkg.name, pkg.version, pkg.description);
+        println!(
+            "  • \x1b[32m{}\x1b[0m (v{}) - {}",
+            pkg.name, pkg.version, pkg.description
+        );
         println!("    Author: {} | License: {}\n", pkg.author, pkg.license);
     }
 }
@@ -568,8 +619,14 @@ fn cmd_audit() {
     let report = client.audit_project(project_dir);
     println!("🛡️  Sorayunara Security & Dependency Audit");
     println!("===============================================================");
-    println!("  Total Dependencies Scanned: {}", report.total_dependencies);
-    println!("  Vulnerabilities Detected:   {}", report.vulnerabilities_found);
+    println!(
+        "  Total Dependencies Scanned: {}",
+        report.total_dependencies
+    );
+    println!(
+        "  Vulnerabilities Detected:   {}",
+        report.vulnerabilities_found
+    );
     if report.warnings.is_empty() {
         println!("\n  ✅ Zero vulnerabilities found. All package checksums verified.");
     } else {
@@ -618,7 +675,10 @@ fn cmd_remove(pkg_name: &str) {
     let content = fs::read_to_string(toml_path).unwrap_or_default();
     let lines: Vec<&str> = content
         .lines()
-        .filter(|l| !l.trim_start().starts_with(&format!("{} =", pkg_name)) && !l.trim_start().starts_with(&format!("{}=", pkg_name)))
+        .filter(|l| {
+            !l.trim_start().starts_with(&format!("{} =", pkg_name))
+                && !l.trim_start().starts_with(&format!("{}=", pkg_name))
+        })
         .collect();
 
     fs::write(toml_path, lines.join("\n")).unwrap();
@@ -659,7 +719,9 @@ fn cmd_test(args: &[String]) {
     };
     let runner = test_runner::TestRunner::new(options);
 
-    let specific_file = args.iter().find(|a| a.ends_with(".sora") || a.ends_with(".ao") || a.ends_with(".nm") || a.ends_with(".ae"));
+    let specific_file = args.iter().find(|a| {
+        a.ends_with(".sora") || a.ends_with(".ao") || a.ends_with(".nm") || a.ends_with(".ae")
+    });
     if let Some(file) = specific_file {
         if let Ok(content) = fs::read_to_string(file) {
             let _ = runner.run_source(&content, file);
@@ -669,7 +731,16 @@ fn cmd_test(args: &[String]) {
 
     let mut found = 0;
     // Check main files and tests/ directory
-    let search_targets = vec!["main.sora", "src/main.sora", "main.ao", "src/main.ao", "main.nm", "src/main.nm", "main.ae", "src/main.ae"];
+    let search_targets = vec![
+        "main.sora",
+        "src/main.sora",
+        "main.ao",
+        "src/main.ao",
+        "main.nm",
+        "src/main.nm",
+        "main.ae",
+        "src/main.ae",
+    ];
     for target in search_targets {
         if Path::new(target).exists() {
             if let Ok(content) = fs::read_to_string(target) {
@@ -686,7 +757,9 @@ fn cmd_test(args: &[String]) {
         if let Ok(entries) = fs::read_dir(tests_dir) {
             for entry in entries.flatten() {
                 let path = entry.path();
-                if path.extension().map_or(false, |ext| ext == "sora" || ext == "ao" || ext == "nm" || ext == "ae") {
+                if path.extension().map_or(false, |ext| {
+                    ext == "sora" || ext == "ao" || ext == "nm" || ext == "ae"
+                }) {
                     found += 1;
                     if let Ok(content) = fs::read_to_string(&path) {
                         let _ = runner.run_source(&content, path.to_str().unwrap());
@@ -717,11 +790,19 @@ pub fn run_cli() {
 
     match args[1].as_str() {
         "new" => {
-            let name = if args.len() > 2 { &args[2] } else { "sorayunara-app" };
+            let name = if args.len() > 2 {
+                &args[2]
+            } else {
+                "sorayunara-app"
+            };
             cmd_new(name);
         }
         "init" => {
-            let name = if args.len() > 2 { &args[2] } else { "sorayunara-app" };
+            let name = if args.len() > 2 {
+                &args[2]
+            } else {
+                "sorayunara-app"
+            };
             cmd_init(name);
         }
         "doctor" => {
@@ -737,7 +818,9 @@ pub fn run_cli() {
         "compile" | "build" => {
             let is_locked = args.iter().any(|a| a == "--locked");
             if is_locked {
-                println!("🔒 Verifying dependency checksums from sorayunara.lock / aoi.lock / nami.lock / aether.lock...");
+                println!(
+                    "🔒 Verifying dependency checksums from sorayunara.lock / aoi.lock / nami.lock / aether.lock..."
+                );
                 let lockfile = if Path::new("sorayunara.lock").exists() {
                     Path::new("sorayunara.lock")
                 } else if Path::new("aoi.lock").exists() {
@@ -754,7 +837,10 @@ pub fn run_cli() {
                 println!("  ✅ Reproducible build checksum integrity verified.");
             }
 
-            let target_str = args.windows(2).find(|w| w[0] == "--target").map(|w| w[1].as_str());
+            let target_str = args
+                .windows(2)
+                .find(|w| w[0] == "--target")
+                .map(|w| w[1].as_str());
             if let Some(t_str) = target_str {
                 if let Some(target) = llvm_backend::Target::parse(t_str) {
                     println!("🎯 Target Architecture: {} ({})", t_str, target.triple());
@@ -766,7 +852,10 @@ pub fn run_cli() {
             }
 
             let file = resolve_entry_file(&args, 2);
-            println!("🌌 [Sorayunara] Compiling source '{}' into optimized target...", file);
+            println!(
+                "🌌 [Sorayunara] Compiling source '{}' into optimized target...",
+                file
+            );
             let _ = execute_pipeline(&file);
         }
         "install" | "lock" => {
@@ -834,7 +923,10 @@ pub fn run_cli() {
                     if let Ok(program) = parser::parse(tokens) {
                         let ir = ir::compile_to_ir(&program);
                         let session = debugger::DebugSession::new(ir);
-                        println!("  [DAP] Interactive Session Initialized. Breakpoints: 0, CallStack: {:?}", session.get_call_stack());
+                        println!(
+                            "  [DAP] Interactive Session Initialized. Breakpoints: 0, CallStack: {:?}",
+                            session.get_call_stack()
+                        );
                         println!("  [DAP] Ready for Step / Next / Breakpoint inspection.");
                     }
                 }
@@ -842,7 +934,10 @@ pub fn run_cli() {
         }
         "profile" => {
             let file = resolve_entry_file(&args, 2);
-            println!("⏱️ Profiling Sorayunara program execution for '{}'...\n", file);
+            println!(
+                "⏱️ Profiling Sorayunara program execution for '{}'...\n",
+                file
+            );
             if let Ok(content) = fs::read_to_string(&file) {
                 if let Ok(tokens) = lexer::tokenize(&content) {
                     if let Ok(program) = parser::parse(tokens) {
@@ -912,7 +1007,11 @@ pub fn run_cli() {
             }
         }
         other => {
-            if other.ends_with(".sora") || other.ends_with(".ao") || other.ends_with(".nm") || other.ends_with(".ae") {
+            if other.ends_with(".sora")
+                || other.ends_with(".ao")
+                || other.ends_with(".nm")
+                || other.ends_with(".ae")
+            {
                 let _ = execute_pipeline(other);
             } else {
                 print_usage();

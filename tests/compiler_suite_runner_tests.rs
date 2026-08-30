@@ -9,7 +9,10 @@ fn run_pass(src: &str) {
     let tokens = tokenize(src).expect("Lexing failed");
     let program = parse(tokens).expect("Parsing failed");
     if let Err(engine) = check_semantics(&program) {
-        panic!("Semantic check failed for compile-pass fixture:\n{}", engine.render_all("pass.sora", src));
+        panic!(
+            "Semantic check failed for compile-pass fixture:\n{}",
+            engine.render_all("pass.sora", src)
+        );
     }
 }
 
@@ -22,7 +25,10 @@ fn run_fail(src: &str) {
         Ok(p) => p,
         Err(_) => return,
     };
-    assert!(check_semantics(&program).is_err(), "Compile-fail fixture unexpectedly passed semantics");
+    assert!(
+        check_semantics(&program).is_err(),
+        "Compile-fail fixture unexpectedly passed semantics"
+    );
 }
 
 #[test]
@@ -57,7 +63,12 @@ fn test_compiler_diagnostics_non_exhaustive_pattern() {
     let res = check_semantics(&program);
     assert!(res.is_err());
     let rendered = res.unwrap_err().render_all("pattern.sora", src);
-    assert!(rendered.contains("pattern") || rendered.contains("exhaustive") || rendered.contains("match") || rendered.contains("error"));
+    assert!(
+        rendered.contains("pattern")
+            || rendered.contains("exhaustive")
+            || rendered.contains("match")
+            || rendered.contains("error")
+    );
 }
 
 #[test]

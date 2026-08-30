@@ -105,7 +105,10 @@ impl Parser {
                     if args.len() == 1 {
                         Ok(TypeNode::Array(Box::new(args[0].clone())))
                     } else {
-                        Err(("Array<T> expects exactly one type argument".into(), tok.span))
+                        Err((
+                            "Array<T> expects exactly one type argument".into(),
+                            tok.span,
+                        ))
                     }
                 }
                 "Slice" => {
@@ -113,7 +116,10 @@ impl Parser {
                     if args.len() == 1 {
                         Ok(TypeNode::Slice(Box::new(args[0].clone())))
                     } else {
-                        Err(("Slice<T> expects exactly one type argument".into(), tok.span))
+                        Err((
+                            "Slice<T> expects exactly one type argument".into(),
+                            tok.span,
+                        ))
                     }
                 }
                 "Set" => {
@@ -127,9 +133,15 @@ impl Parser {
                 "Map" => {
                     let args = self.parse_angle_type_args()?;
                     if args.len() == 2 {
-                        Ok(TypeNode::Map(Box::new(args[0].clone()), Box::new(args[1].clone())))
+                        Ok(TypeNode::Map(
+                            Box::new(args[0].clone()),
+                            Box::new(args[1].clone()),
+                        ))
                     } else {
-                        Err(("Map<K, V> expects exactly two type arguments".into(), tok.span))
+                        Err((
+                            "Map<K, V> expects exactly two type arguments".into(),
+                            tok.span,
+                        ))
                     }
                 }
                 "Option" => {
@@ -137,7 +149,10 @@ impl Parser {
                     if args.len() == 1 {
                         Ok(TypeNode::Option(Box::new(args[0].clone())))
                     } else {
-                        Err(("Option<T> expects exactly one type argument".into(), tok.span))
+                        Err((
+                            "Option<T> expects exactly one type argument".into(),
+                            tok.span,
+                        ))
                     }
                 }
                 "Task" => {
@@ -159,9 +174,15 @@ impl Parser {
                 "Result" => {
                     let args = self.parse_angle_type_args()?;
                     if args.len() == 2 {
-                        Ok(TypeNode::Result(Box::new(args[0].clone()), Box::new(args[1].clone())))
+                        Ok(TypeNode::Result(
+                            Box::new(args[0].clone()),
+                            Box::new(args[1].clone()),
+                        ))
                     } else {
-                        Err(("Result<T, E> expects exactly two type arguments".into(), tok.span))
+                        Err((
+                            "Result<T, E> expects exactly two type arguments".into(),
+                            tok.span,
+                        ))
                     }
                 }
                 custom => {
@@ -216,7 +237,10 @@ impl Parser {
                         false
                     }
                 } else {
-                    return Err(("Expected 'const' or 'mut' after '*' in pointer type".into(), tok.span));
+                    return Err((
+                        "Expected 'const' or 'mut' after '*' in pointer type".into(),
+                        tok.span,
+                    ));
                 };
                 let inner = self.parse_type()?;
                 Ok(TypeNode::Ptr(Box::new(inner), is_const))
@@ -244,7 +268,10 @@ impl Parser {
                 self.match_token(TokenKind::RParen)?;
                 Ok(TypeNode::Tuple(items))
             }
-            _ => Err((format!("Invalid type annotation '{:?}'", tok.kind), tok.span)),
+            _ => Err((
+                format!("Invalid type annotation '{:?}'", tok.kind),
+                tok.span,
+            )),
         }
     }
 
@@ -332,9 +359,17 @@ impl Parser {
                         self.advance();
                         n
                     }
-                    _ => return Err(("Expected module name or file path after 'import'".into(), tok.span)),
+                    _ => {
+                        return Err((
+                            "Expected module name or file path after 'import'".into(),
+                            tok.span,
+                        ));
+                    }
                 };
-                while self.check(&TokenKind::Dot) || self.check(&TokenKind::ColonColon) || self.check(&TokenKind::Slash) {
+                while self.check(&TokenKind::Dot)
+                    || self.check(&TokenKind::ColonColon)
+                    || self.check(&TokenKind::Slash)
+                {
                     self.advance();
                     match self.peek_kind() {
                         TokenKind::Ident(sub) => {
@@ -343,7 +378,12 @@ impl Parser {
                             path.push_str(&sub_name);
                             self.advance();
                         }
-                        _ => return Err(("Expected module sub-identifier after '.'".into(), tok.span)),
+                        _ => {
+                            return Err((
+                                "Expected module sub-identifier after '.'".into(),
+                                tok.span,
+                            ));
+                        }
                     }
                 }
                 self.skip_semicolons();
@@ -360,7 +400,12 @@ impl Parser {
                         self.advance();
                         n
                     }
-                    _ => return Err(("Expected module name identifier after 'mod'".into(), tok.span)),
+                    _ => {
+                        return Err((
+                            "Expected module name identifier after 'mod'".into(),
+                            tok.span,
+                        ));
+                    }
                 };
                 self.skip_semicolons();
                 Ok(SpannedStmt {
@@ -442,7 +487,12 @@ impl Parser {
                         args.push(arg.clone());
                         self.advance();
                     }
-                    _ => return Err(("Expected argument inside attribute ()".into(), self.peek().span)),
+                    _ => {
+                        return Err((
+                            "Expected argument inside attribute ()".into(),
+                            self.peek().span,
+                        ));
+                    }
                 }
                 if self.check(&TokenKind::Comma) {
                     self.advance();
@@ -461,7 +511,10 @@ impl Parser {
         })
     }
 
-    fn parse_struct_decl(&mut self, attributes: Vec<Attribute>) -> Result<SpannedStmt, (String, Span)> {
+    fn parse_struct_decl(
+        &mut self,
+        attributes: Vec<Attribute>,
+    ) -> Result<SpannedStmt, (String, Span)> {
         let st_tok = self.match_token(TokenKind::Struct)?;
         let name = match self.peek_kind() {
             TokenKind::Ident(n) => {
@@ -529,7 +582,10 @@ impl Parser {
                 TokenKind::Fn => methods.push(self.parse_trait_method_sig()?),
                 other => {
                     return Err((
-                        format!("Expected associated type or method in trait, got {:?}", other),
+                        format!(
+                            "Expected associated type or method in trait, got {:?}",
+                            other
+                        ),
                         self.peek().span,
                     ));
                 }
@@ -709,7 +765,12 @@ impl Parser {
                             self.advance();
                             n
                         }
-                        _ => return Err(("Expected associated type name in impl".into(), self.peek().span)),
+                        _ => {
+                            return Err((
+                                "Expected associated type name in impl".into(),
+                                self.peek().span,
+                            ));
+                        }
                     };
                     self.match_token(TokenKind::Equal)?;
                     let target = self.parse_type()?;
@@ -735,7 +796,10 @@ impl Parser {
                 }
                 other => {
                     return Err((
-                        format!("Expected associated type, method, or operator in impl, got {:?}", other),
+                        format!(
+                            "Expected associated type, method, or operator in impl, got {:?}",
+                            other
+                        ),
                         self.peek().span,
                     ));
                 }
@@ -755,7 +819,10 @@ impl Parser {
         })
     }
 
-    fn parse_operator_decl(&mut self, attributes: Vec<Attribute>) -> Result<SpannedStmt, (String, Span)> {
+    fn parse_operator_decl(
+        &mut self,
+        attributes: Vec<Attribute>,
+    ) -> Result<SpannedStmt, (String, Span)> {
         let op_tok = self.match_token(TokenKind::Operator)?;
         let operator = self.parse_operator_symbol()?;
         let type_params = self.parse_generic_params()?;
@@ -769,7 +836,12 @@ impl Parser {
                     self.advance();
                     n
                 }
-                _ => return Err(("Expected parameter name in operator declaration".into(), self.peek().span)),
+                _ => {
+                    return Err((
+                        "Expected parameter name in operator declaration".into(),
+                        self.peek().span,
+                    ));
+                }
             };
             self.match_token(TokenKind::Colon)?;
             let p_type = self.parse_type()?;
@@ -820,12 +892,20 @@ impl Parser {
             TokenKind::Pipe => "|".to_string(),
             TokenKind::CustomOperator(op) => op,
             TokenKind::Ident(op) => op,
-            other => return Err((format!("Expected operator symbol, got {:?}", other), tok.span)),
+            other => {
+                return Err((
+                    format!("Expected operator symbol, got {:?}", other),
+                    tok.span,
+                ));
+            }
         };
         Ok(op)
     }
 
-    fn parse_extern_block(&mut self, attributes: Vec<Attribute>) -> Result<SpannedStmt, (String, Span)> {
+    fn parse_extern_block(
+        &mut self,
+        attributes: Vec<Attribute>,
+    ) -> Result<SpannedStmt, (String, Span)> {
         let ext_tok = self.match_token(TokenKind::Extern)?;
 
         // Optional ABI string: extern "C" { ... } (defaults to "C")
@@ -869,7 +949,12 @@ impl Parser {
                         self.advance();
                         n
                     }
-                    _ => return Err(("Expected parameter name in extern fn".into(), self.peek().span)),
+                    _ => {
+                        return Err((
+                            "Expected parameter name in extern fn".into(),
+                            self.peek().span,
+                        ));
+                    }
                 };
                 self.match_token(TokenKind::Colon)?;
                 let p_type = self.parse_type()?;
@@ -995,7 +1080,10 @@ impl Parser {
         })
     }
 
-    fn parse_function(&mut self, attributes: Vec<Attribute>) -> Result<SpannedStmt, (String, Span)> {
+    fn parse_function(
+        &mut self,
+        attributes: Vec<Attribute>,
+    ) -> Result<SpannedStmt, (String, Span)> {
         let (is_async, start_span) = if self.check(&TokenKind::Async) {
             let tok = self.advance();
             self.match_token(TokenKind::Fn)?;
@@ -1032,7 +1120,9 @@ impl Parser {
                         self.advance();
                         n
                     }
-                    _ => return Err(("Expected parameter name after '&'".into(), self.peek().span)),
+                    _ => {
+                        return Err(("Expected parameter name after '&'".into(), self.peek().span));
+                    }
                 };
                 let ty = if self.check(&TokenKind::Colon) {
                     self.advance();
@@ -1158,7 +1248,12 @@ impl Parser {
                 self.advance();
                 n
             }
-            _ => return Err(("Expected variable identifier after 'let'".into(), self.peek().span)),
+            _ => {
+                return Err((
+                    "Expected variable identifier after 'let'".into(),
+                    self.peek().span,
+                ));
+            }
         };
 
         let mut type_annot = None;
@@ -1197,7 +1292,10 @@ impl Parser {
                             TokenKind::Ident(n) => n,
                             other => {
                                 return Err((
-                                    format!("Expected field name in struct pattern, got {:?}", other),
+                                    format!(
+                                        "Expected field name in struct pattern, got {:?}",
+                                        other
+                                    ),
                                     self.peek().span,
                                 ));
                             }
@@ -1242,7 +1340,10 @@ impl Parser {
                         TokenKind::Ident(n) => n,
                         other => {
                             return Err((
-                                format!("Expected field name in anonymous struct pattern, got {:?}", other),
+                                format!(
+                                    "Expected field name in anonymous struct pattern, got {:?}",
+                                    other
+                                ),
                                 self.peek().span,
                             ));
                         }
@@ -1264,7 +1365,10 @@ impl Parser {
                     fields,
                 })
             }
-            other => Err((format!("Invalid destructuring pattern {:?}", other), tok.span)),
+            other => Err((
+                format!("Invalid destructuring pattern {:?}", other),
+                tok.span,
+            )),
         }
     }
 
@@ -1276,7 +1380,12 @@ impl Parser {
                 self.advance();
                 n
             }
-            _ => return Err(("Expected constant identifier after 'const'".into(), self.peek().span)),
+            _ => {
+                return Err((
+                    "Expected constant identifier after 'const'".into(),
+                    self.peek().span,
+                ));
+            }
         };
 
         let mut type_annot = None;
@@ -1371,7 +1480,10 @@ impl Parser {
 
         let span = name_tok.span.merge(value.span);
         Ok(SpannedStmt {
-            kind: StmtKind::Assign { target: name, value },
+            kind: StmtKind::Assign {
+                target: name,
+                value,
+            },
             span,
         })
     }
@@ -1479,7 +1591,12 @@ impl Parser {
                 self.advance();
                 s
             }
-            _ => return Err(("Expected test name string literal after 'test'".into(), test_tok.span)),
+            _ => {
+                return Err((
+                    "Expected test name string literal after 'test'".into(),
+                    test_tok.span,
+                ));
+            }
         };
         let (body, body_span) = self.parse_block()?;
         Ok(SpannedStmt {
@@ -1556,7 +1673,12 @@ impl Parser {
                 self.match_token(TokenKind::LParen)?;
                 let var = match self.advance().kind {
                     TokenKind::Ident(n) => n,
-                    other => return Err((format!("Expected variable in Some pattern, got {:?}", other), tok.span)),
+                    other => {
+                        return Err((
+                            format!("Expected variable in Some pattern, got {:?}", other),
+                            tok.span,
+                        ));
+                    }
                 };
                 self.match_token(TokenKind::RParen)?;
                 Ok(MatchPattern::Some(var))
@@ -1566,7 +1688,12 @@ impl Parser {
                 self.match_token(TokenKind::LParen)?;
                 let var = match self.advance().kind {
                     TokenKind::Ident(n) => n,
-                    other => return Err((format!("Expected variable in Ok pattern, got {:?}", other), tok.span)),
+                    other => {
+                        return Err((
+                            format!("Expected variable in Ok pattern, got {:?}", other),
+                            tok.span,
+                        ));
+                    }
                 };
                 self.match_token(TokenKind::RParen)?;
                 Ok(MatchPattern::Ok(var))
@@ -1575,15 +1702,22 @@ impl Parser {
                 self.match_token(TokenKind::LParen)?;
                 let var = match self.advance().kind {
                     TokenKind::Ident(n) => n,
-                    other => return Err((format!("Expected variable in Err pattern, got {:?}", other), tok.span)),
+                    other => {
+                        return Err((
+                            format!("Expected variable in Err pattern, got {:?}", other),
+                            tok.span,
+                        ));
+                    }
                 };
                 self.match_token(TokenKind::RParen)?;
                 Ok(MatchPattern::Err(var))
             }
-            TokenKind::True | TokenKind::False => Ok(MatchPattern::Literal(Box::new(SpannedExpr {
-                kind: ExprKind::Bool(matches!(tok.kind, TokenKind::True)),
-                span: tok.span,
-            }))),
+            TokenKind::True | TokenKind::False => {
+                Ok(MatchPattern::Literal(Box::new(SpannedExpr {
+                    kind: ExprKind::Bool(matches!(tok.kind, TokenKind::True)),
+                    span: tok.span,
+                })))
+            }
             TokenKind::IntLit(value) => Ok(MatchPattern::Literal(Box::new(SpannedExpr {
                 kind: ExprKind::Int(value),
                 span: tok.span,
@@ -1647,7 +1781,10 @@ impl Parser {
 
     fn parse_equality(&mut self) -> Result<SpannedExpr, (String, Span)> {
         let mut left = self.parse_comparison()?;
-        while matches!(self.peek_kind(), TokenKind::EqualEqual | TokenKind::BangEqual) {
+        while matches!(
+            self.peek_kind(),
+            TokenKind::EqualEqual | TokenKind::BangEqual
+        ) {
             let op_tok = self.advance();
             let op = match op_tok.kind {
                 TokenKind::EqualEqual => BinaryOpKind::Equal,
@@ -1786,7 +1923,10 @@ impl Parser {
                 kind: ExprKind::Move(Box::new(operand)),
                 span,
             })
-        } else if self.check(&TokenKind::Unsafe) && self.pos + 1 < self.tokens.len() && self.tokens[self.pos + 1].kind == TokenKind::LBrace {
+        } else if self.check(&TokenKind::Unsafe)
+            && self.pos + 1 < self.tokens.len()
+            && self.tokens[self.pos + 1].kind == TokenKind::LBrace
+        {
             // `unsafe { ... }` as an expression
             let unsafe_tok = self.advance();
             let (body, body_span) = self.parse_block()?;
@@ -1857,7 +1997,12 @@ impl Parser {
                         args.insert(0, *target);
                         format!("__aether_method::{}", field)
                     }
-                    _ => return Err(("Only named identifiers or methods can be called directly".into(), expr.span)),
+                    _ => {
+                        return Err((
+                            "Only named identifiers or methods can be called directly".into(),
+                            expr.span,
+                        ));
+                    }
                 };
 
                 expr = SpannedExpr {
@@ -2052,7 +2197,12 @@ impl Parser {
                     self.advance();
                     let variant_name = match self.advance().kind {
                         TokenKind::Ident(name) => name,
-                        other => return Err((format!("Expected enum variant name, got {:?}", other), tok.span)),
+                        other => {
+                            return Err((
+                                format!("Expected enum variant name, got {:?}", other),
+                                tok.span,
+                            ));
+                        }
                     };
                     let payload = if self.check(&TokenKind::LParen) {
                         self.advance();

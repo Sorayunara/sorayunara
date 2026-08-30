@@ -6,7 +6,10 @@ fn check_valid(src: &str) {
     let tokens = tokenize(src).expect("Lexing failed");
     let program = parse(tokens).expect("Parsing failed");
     if let Err(engine) = check_semantics(&program) {
-        panic!("Semantic check failed:\n{}", engine.render_all("test.sora", src));
+        panic!(
+            "Semantic check failed:\n{}",
+            engine.render_all("test.sora", src)
+        );
     }
 }
 

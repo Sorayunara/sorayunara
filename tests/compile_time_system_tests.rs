@@ -3,7 +3,7 @@ use sorayunara::lexer::tokenize;
 use sorayunara::macro_expander::expand_macros;
 use sorayunara::parser::parse;
 use sorayunara::semantics::check_semantics;
-use sorayunara::vm::{execute_ir, Value};
+use sorayunara::vm::{Value, execute_ir};
 
 #[test]
 fn test_compile_time_constants_and_comptime_blocks() {

@@ -6,7 +6,10 @@ fn check_fixture_valid(source: &str) {
     let tokens = tokenize(source).expect("Lexing fixture failed");
     let program = parse(tokens).expect("Parsing fixture failed");
     if let Err(engine) = check_semantics(&program) {
-        panic!("Valid fixture failed borrow analysis:\n{}", engine.render_all("valid_test.sora", source));
+        panic!(
+            "Valid fixture failed borrow analysis:\n{}",
+            engine.render_all("valid_test.sora", source)
+        );
     }
 }
 

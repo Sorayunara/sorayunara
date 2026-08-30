@@ -14,7 +14,11 @@ fn test_compile_fail_borrow_immutable_as_mut() {
     let program = parse(tokens).unwrap();
     let err = check_semantics(&program).unwrap_err();
     let rendered = err.render_all("main.sora", source);
-    assert!(rendered.contains("immutable") || rendered.contains("error"), "Rendered: {}", rendered);
+    assert!(
+        rendered.contains("immutable") || rendered.contains("error"),
+        "Rendered: {}",
+        rendered
+    );
 }
 
 #[test]
@@ -30,7 +34,11 @@ fn test_compile_fail_use_after_move() {
     let program = parse(tokens).unwrap();
     let err = check_semantics(&program).unwrap_err();
     let rendered = err.render_all("main.sora", source);
-    assert!(rendered.contains("moved") || rendered.contains("error"), "Rendered: {}", rendered);
+    assert!(
+        rendered.contains("moved") || rendered.contains("error"),
+        "Rendered: {}",
+        rendered
+    );
 }
 
 #[test]
@@ -44,7 +52,11 @@ fn test_compile_fail_type_mismatch_assignment() {
     let program = parse(tokens).unwrap();
     let err = check_semantics(&program).unwrap_err();
     let rendered = err.render_all("main.sora", source);
-    assert!(rendered.contains("mismatch") || rendered.contains("error"), "Rendered: {}", rendered);
+    assert!(
+        rendered.contains("mismatch") || rendered.contains("error"),
+        "Rendered: {}",
+        rendered
+    );
 }
 
 #[test]
@@ -60,7 +72,13 @@ fn test_compile_fail_non_exhaustive_pattern_match() {
     let program = parse(tokens).unwrap();
     let err = check_semantics(&program).unwrap_err();
     let rendered = err.render_all("main.sora", source);
-    assert!(rendered.contains("non-exhaustive") || rendered.contains("pattern") || rendered.contains("error"), "Rendered: {}", rendered);
+    assert!(
+        rendered.contains("non-exhaustive")
+            || rendered.contains("pattern")
+            || rendered.contains("error"),
+        "Rendered: {}",
+        rendered
+    );
 }
 
 #[test]
@@ -74,5 +92,11 @@ fn test_compile_fail_undeclared_function_call() {
     let program = parse(tokens).unwrap();
     let err = check_semantics(&program).unwrap_err();
     let rendered = err.render_all("main.sora", source);
-    assert!(rendered.contains("Unknown") || rendered.contains("undeclared") || rendered.contains("error"), "Rendered: {}", rendered);
+    assert!(
+        rendered.contains("Unknown")
+            || rendered.contains("undeclared")
+            || rendered.contains("error"),
+        "Rendered: {}",
+        rendered
+    );
 }

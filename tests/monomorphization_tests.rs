@@ -1,10 +1,10 @@
 use sorayunara::ast::*;
+use sorayunara::ir::compile_to_ir;
 use sorayunara::lexer::tokenize;
 use sorayunara::monomorphizer::monomorphize;
 use sorayunara::parser::parse;
 use sorayunara::semantics::check_semantics;
-use sorayunara::ir::compile_to_ir;
-use sorayunara::vm::{execute_ir, Value};
+use sorayunara::vm::{Value, execute_ir};
 
 #[test]
 fn test_generic_monomorphization_zero_cost() {

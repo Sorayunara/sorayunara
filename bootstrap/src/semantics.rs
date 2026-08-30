@@ -1,12 +1,12 @@
 #![allow(dead_code)]
 
-use std::collections::{HashMap, HashSet};
 use crate::ast::*;
 use crate::diagnostic::{Diagnostic, DiagnosticEngine, Span};
 use crate::symbol_table::{
-    FunctionSymbol, OperatorSymbol, SymbolTable, TraitImpl, TraitSymbol, Type, VariableSymbol,
-    Substitution,
+    FunctionSymbol, OperatorSymbol, Substitution, SymbolTable, TraitImpl, TraitSymbol, Type,
+    VariableSymbol,
 };
+use std::collections::{HashMap, HashSet};
 
 pub struct SemanticAnalyzer {
     symbol_table: SymbolTable,
@@ -35,33 +35,35 @@ impl SemanticAnalyzer {
         let a = self.substitution.apply(a);
         let b = self.substitution.apply(b);
         match (&a, &b) {
-            (Type::TypeVar(id), _) => {
-                self.substitution.bind(*id, b.clone())
-                    .map_err(|e| {
-                        self.engine.emit(Diagnostic::error(
-                            format!("Unification error: {}", e),
-                            span,
-                        ).with_hint("Try adding explicit type annotations to resolve the ambiguity"));
-                        e
-                    })
-            }
-            (_, Type::TypeVar(id)) => {
-                self.substitution.bind(*id, a.clone())
-                    .map_err(|e| {
-                        self.engine.emit(Diagnostic::error(
-                            format!("Unification error: {}", e),
-                            span,
-                        ).with_hint("Try adding explicit type annotations to resolve the ambiguity"));
-                        e
-                    })
-            }
+            (Type::TypeVar(id), _) => self.substitution.bind(*id, b.clone()).map_err(|e| {
+                self.engine.emit(
+                    Diagnostic::error(format!("Unification error: {}", e), span)
+                        .with_hint("Try adding explicit type annotations to resolve the ambiguity"),
+                );
+                e
+            }),
+            (_, Type::TypeVar(id)) => self.substitution.bind(*id, a.clone()).map_err(|e| {
+                self.engine.emit(
+                    Diagnostic::error(format!("Unification error: {}", e), span)
+                        .with_hint("Try adding explicit type annotations to resolve the ambiguity"),
+                );
+                e
+            }),
             (Type::Any, _) | (_, Type::Any) => Ok(()),
             (Type::Generic(na), Type::Generic(nb)) if na == nb => Ok(()),
-            (Type::Int, Type::Int) | (Type::Float, Type::Float) | (Type::Bool, Type::Bool)
-            | (Type::String, Type::String) | (Type::Char, Type::Char) | (Type::Void, Type::Void) => Ok(()),
+            (Type::Int, Type::Int)
+            | (Type::Float, Type::Float)
+            | (Type::Bool, Type::Bool)
+            | (Type::String, Type::String)
+            | (Type::Char, Type::Char)
+            | (Type::Void, Type::Void) => Ok(()),
             (Type::Tuple(xs), Type::Tuple(ys)) => {
                 if xs.len() != ys.len() {
-                    return Err(format!("Tuple arity mismatch: {} vs {}", xs.len(), ys.len()));
+                    return Err(format!(
+                        "Tuple arity mismatch: {} vs {}",
+                        xs.len(),
+                        ys.len()
+                    ));
                 }
                 for (x, y) in xs.iter().zip(ys.iter()) {
                     self.unify(x, y, span)?;
@@ -88,7 +90,11 @@ impl SemanticAnalyzer {
             (Type::Ptr(_, _), Type::Ptr(_, _)) => Ok(()),
             (Type::Function(p1, r1), Type::Function(p2, r2)) => {
                 if p1.len() != p2.len() {
-                    return Err(format!("Function arity mismatch: {} vs {}", p1.len(), p2.len()));
+                    return Err(format!(
+                        "Function arity mismatch: {} vs {}",
+                        p1.len(),
+                        p2.len()
+                    ));
                 }
                 for (a, b) in p1.iter().zip(p2.iter()) {
                     self.unify(a, b, span)?;
@@ -100,7 +106,12 @@ impl SemanticAnalyzer {
                     return Err(format!("Generic type mismatch: {} vs {}", na, nb));
                 }
                 if args_a.len() != args_b.len() {
-                    return Err(format!("Generic arity mismatch for {}: {} vs {}", na, args_a.len(), args_b.len()));
+                    return Err(format!(
+                        "Generic arity mismatch for {}: {} vs {}",
+                        na,
+                        args_a.len(),
+                        args_b.len()
+                    ));
                 }
                 for (a, b) in args_a.iter().zip(args_b.iter()) {
                     self.unify(a, b, span)?;
@@ -110,11 +121,22 @@ impl SemanticAnalyzer {
             (Type::Struct(na, _), Type::Struct(nb, _)) if na == nb => Ok(()),
             (Type::Enum(na, _), Type::Enum(nb, _)) if na == nb => Ok(()),
             (src, Type::Union(members)) => {
-                if members.iter().any(|m| self.substitution.apply(src).is_assignable_to(&self.substitution.apply(m))) {
+                if members.iter().any(|m| {
+                    self.substitution
+                        .apply(src)
+                        .is_assignable_to(&self.substitution.apply(m))
+                }) {
                     Ok(())
                 } else {
-                    Err(format!("Type {} is not assignable to union {}", src,
-                        members.iter().map(|t| format!("{}", t)).collect::<Vec<_>>().join(" | ")))
+                    Err(format!(
+                        "Type {} is not assignable to union {}",
+                        src,
+                        members
+                            .iter()
+                            .map(|t| format!("{}", t))
+                            .collect::<Vec<_>>()
+                            .join(" | ")
+                    ))
                 }
             }
             _ => {
@@ -137,7 +159,8 @@ impl SemanticAnalyzer {
             let tv = self.symbol_table.fresh_type_var();
             mapping.insert(name.clone(), tv.clone());
             for bound in bounds {
-                self.pending_trait_checks.push((tv.clone(), bound.clone(), call_span));
+                self.pending_trait_checks
+                    .push((tv.clone(), bound.clone(), call_span));
                 type_args_record.push((tv.clone(), call_span));
             }
         }
@@ -147,12 +170,13 @@ impl SemanticAnalyzer {
 
     fn apply_mapping(&self, ty: &Type, mapping: &HashMap<String, Type>) -> Type {
         match ty {
-            Type::Generic(name) => {
-                mapping.get(name).cloned().unwrap_or_else(|| ty.clone())
-            }
-            Type::Tuple(items) => {
-                Type::Tuple(items.iter().map(|t| self.apply_mapping(t, mapping)).collect())
-            }
+            Type::Generic(name) => mapping.get(name).cloned().unwrap_or_else(|| ty.clone()),
+            Type::Tuple(items) => Type::Tuple(
+                items
+                    .iter()
+                    .map(|t| self.apply_mapping(t, mapping))
+                    .collect(),
+            ),
             Type::Array(i) => Type::Array(Box::new(self.apply_mapping(i, mapping))),
             Type::Slice(i) => Type::Slice(Box::new(self.apply_mapping(i, mapping))),
             Type::Set(i) => Type::Set(Box::new(self.apply_mapping(i, mapping))),
@@ -173,7 +197,9 @@ impl SemanticAnalyzer {
             ),
             Type::GenericInstance(name, args) => Type::GenericInstance(
                 name.clone(),
-                args.iter().map(|t| self.apply_mapping(t, mapping)).collect(),
+                args.iter()
+                    .map(|t| self.apply_mapping(t, mapping))
+                    .collect(),
             ),
             Type::Ref(i, m) => Type::Ref(Box::new(self.apply_mapping(i, mapping)), *m),
             Type::Ptr(i, c) => Type::Ptr(Box::new(self.apply_mapping(i, mapping)), *c),
@@ -187,13 +213,19 @@ impl SemanticAnalyzer {
             Type::Enum(name, variants) => {
                 let mut new_variants = HashMap::new();
                 for (k, v) in variants {
-                    new_variants.insert(k.clone(), v.as_ref().map(|t| self.apply_mapping(t, mapping)));
+                    new_variants.insert(
+                        k.clone(),
+                        v.as_ref().map(|t| self.apply_mapping(t, mapping)),
+                    );
                 }
                 Type::Enum(name.clone(), new_variants)
             }
-            Type::Union(members) => {
-                Type::Union(members.iter().map(|t| self.apply_mapping(t, mapping)).collect())
-            }
+            Type::Union(members) => Type::Union(
+                members
+                    .iter()
+                    .map(|t| self.apply_mapping(t, mapping))
+                    .collect(),
+            ),
             other => other.clone(),
         }
     }
@@ -202,7 +234,10 @@ impl SemanticAnalyzer {
         let checks: Vec<_> = self.pending_trait_checks.drain(..).collect();
         for (ty, trait_name, span) in checks {
             let resolved = self.substitution.apply(&ty);
-            if !self.symbol_table.satisfies_trait(&resolved, &trait_name, &self.substitution) {
+            if !self
+                .symbol_table
+                .satisfies_trait(&resolved, &trait_name, &self.substitution)
+            {
                 let msg = format!(
                     "Type `{}` does not implement trait `{}`",
                     resolved, trait_name
@@ -214,43 +249,78 @@ impl SemanticAnalyzer {
                     "Display" => "Display is required for formatting/printing values as strings.".into(),
                     _ => format!("Consider adding `impl {} for {}`", trait_name, resolved),
                 };
-                self.engine.emit(Diagnostic::error(msg, span).with_hint(hint));
+                self.engine
+                    .emit(Diagnostic::error(msg, span).with_hint(hint));
             }
         }
     }
 
-    pub fn analyze(mut self, program: &Program) -> Result<(SymbolTable, HashMap<Span, Type>), DiagnosticEngine> {
+    pub fn analyze(
+        mut self,
+        program: &Program,
+    ) -> Result<(SymbolTable, HashMap<Span, Type>), DiagnosticEngine> {
         for stmt in &program.statements {
             match &stmt.kind {
-                StmtKind::StructDecl { name, fields, type_params, .. } => {
+                StmtKind::StructDecl {
+                    name,
+                    fields,
+                    type_params,
+                    ..
+                } => {
                     for gp in type_params {
-                        let bounds: Vec<String> = gp.bounds.iter().map(|b| match b {
-                            TypeNode::Custom(s) => s.clone(),
-                            _ => format!("{:?}", b),
-                        }).collect();
-                        self.symbol_table.current_generic_env.push_generic(gp.name.clone(), bounds);
+                        let bounds: Vec<String> = gp
+                            .bounds
+                            .iter()
+                            .map(|b| match b {
+                                TypeNode::Custom(s) => s.clone(),
+                                _ => format!("{:?}", b),
+                            })
+                            .collect();
+                        self.symbol_table
+                            .current_generic_env
+                            .push_generic(gp.name.clone(), bounds);
                     }
                     let mut field_map = HashMap::new();
                     for (f_name, f_type_node) in fields {
-                        if let Ok(f_ty) = Type::from_node(f_type_node, &self.symbol_table.structs, &self.symbol_table.enums) {
+                        if let Ok(f_ty) = Type::from_node(
+                            f_type_node,
+                            &self.symbol_table.structs,
+                            &self.symbol_table.enums,
+                        ) {
                             field_map.insert(f_name.clone(), f_ty);
                         }
                     }
                     self.symbol_table.structs.insert(name.clone(), field_map);
                     self.symbol_table.current_generic_env = crate::symbol_table::GenericEnv::new();
                 }
-                StmtKind::EnumDecl { name, variants, type_params, .. } => {
+                StmtKind::EnumDecl {
+                    name,
+                    variants,
+                    type_params,
+                    ..
+                } => {
                     for gp in type_params {
-                        let bounds: Vec<String> = gp.bounds.iter().map(|b| match b {
-                            TypeNode::Custom(s) => s.clone(),
-                            _ => format!("{:?}", b),
-                        }).collect();
-                        self.symbol_table.current_generic_env.push_generic(gp.name.clone(), bounds);
+                        let bounds: Vec<String> = gp
+                            .bounds
+                            .iter()
+                            .map(|b| match b {
+                                TypeNode::Custom(s) => s.clone(),
+                                _ => format!("{:?}", b),
+                            })
+                            .collect();
+                        self.symbol_table
+                            .current_generic_env
+                            .push_generic(gp.name.clone(), bounds);
                     }
                     let mut variant_map = HashMap::new();
                     for (v_name, v_type_node) in variants {
                         let v_ty = match v_type_node {
-                            Some(tn) => Type::from_node(tn, &self.symbol_table.structs, &self.symbol_table.enums).ok(),
+                            Some(tn) => Type::from_node(
+                                tn,
+                                &self.symbol_table.structs,
+                                &self.symbol_table.enums,
+                            )
+                            .ok(),
                             None => None,
                         };
                         variant_map.insert(v_name.clone(), v_ty);
@@ -265,18 +335,23 @@ impl SemanticAnalyzer {
                     methods,
                     ..
                 } => {
-                    let super_traits: Vec<String> = type_params.iter()
-                        .flat_map(|gp| gp.bounds.iter()
-                            .map(|b| match b {
+                    let super_traits: Vec<String> = type_params
+                        .iter()
+                        .flat_map(|gp| {
+                            gp.bounds.iter().map(|b| match b {
                                 TypeNode::Custom(s) => s.clone(),
                                 _ => format!("{:?}", b),
-                            }))
+                            })
+                        })
                         .collect();
                     self.symbol_table.traits.insert(
                         name.clone(),
                         TraitSymbol {
                             name: name.clone(),
-                            associated_types: associated_types.iter().map(|t| t.name.clone()).collect(),
+                            associated_types: associated_types
+                                .iter()
+                                .map(|t| t.name.clone())
+                                .collect(),
                             methods: methods.iter().map(|m| m.name.clone()).collect(),
                             span: stmt.span,
                             super_traits,
@@ -291,35 +366,55 @@ impl SemanticAnalyzer {
                     ..
                 } => {
                     for gp in type_params {
-                        let bounds: Vec<String> = gp.bounds.iter().map(|b| match b {
-                            TypeNode::Custom(s) => s.clone(),
-                            _ => format!("{:?}", b),
-                        }).collect();
-                        self.symbol_table.current_generic_env.push_generic(gp.name.clone(), bounds);
+                        let bounds: Vec<String> = gp
+                            .bounds
+                            .iter()
+                            .map(|b| match b {
+                                TypeNode::Custom(s) => s.clone(),
+                                _ => format!("{:?}", b),
+                            })
+                            .collect();
+                        self.symbol_table
+                            .current_generic_env
+                            .push_generic(gp.name.clone(), bounds);
                     }
                     let trait_name = match trait_ref {
                         Some(TypeNode::Custom(s)) => s.clone(),
                         Some(_) => "Unknown".to_string(),
                         None => "__inherent__".to_string(),
                     };
-                    let target_ty = Type::from_node(target_type, &self.symbol_table.structs, &self.symbol_table.enums)
-                        .unwrap_or(Type::Any);
-                    let item_names: Vec<String> = items.iter().filter_map(|it| match it {
-                        ImplItem::Method(m) => match &m.kind {
-                            StmtKind::Function { name, .. } => Some(name.clone()),
-                            _ => None,
-                        },
-                        ImplItem::AssociatedType { name, .. } => Some(format!("type {}", name)),
-                    }).collect();
+                    let target_ty = Type::from_node(
+                        target_type,
+                        &self.symbol_table.structs,
+                        &self.symbol_table.enums,
+                    )
+                    .unwrap_or(Type::Any);
+                    let item_names: Vec<String> = items
+                        .iter()
+                        .filter_map(|it| match it {
+                            ImplItem::Method(m) => match &m.kind {
+                                StmtKind::Function { name, .. } => Some(name.clone()),
+                                _ => None,
+                            },
+                            ImplItem::AssociatedType { name, .. } => Some(format!("type {}", name)),
+                        })
+                        .collect();
                     self.symbol_table.trait_impls.push(TraitImpl {
                         trait_name: trait_name.clone(),
-                        type_params: type_params.iter().map(|gp| {
-                            let b: Vec<String> = gp.bounds.iter().map(|b| match b {
-                                TypeNode::Custom(s) => s.clone(),
-                                _ => format!("{:?}", b),
-                            }).collect();
-                            (gp.name.clone(), b)
-                        }).collect(),
+                        type_params: type_params
+                            .iter()
+                            .map(|gp| {
+                                let b: Vec<String> = gp
+                                    .bounds
+                                    .iter()
+                                    .map(|b| match b {
+                                        TypeNode::Custom(s) => s.clone(),
+                                        _ => format!("{:?}", b),
+                                    })
+                                    .collect();
+                                (gp.name.clone(), b)
+                            })
+                            .collect(),
                         target_type: target_ty,
                         impl_items: item_names,
                         span: stmt.span,
@@ -341,24 +436,41 @@ impl SemanticAnalyzer {
                     ..
                 } => {
                     let saved_env = self.symbol_table.current_generic_env.clone();
-                    let typed_gp: Vec<(String, Vec<String>)> = type_params.iter().map(|gp| {
-                        let bounds: Vec<String> = gp.bounds.iter().map(|b| match b {
-                            TypeNode::Custom(s) => s.clone(),
-                            _ => format!("{:?}", b),
-                        }).collect();
-                        self.symbol_table.current_generic_env.push_generic(gp.name.clone(), bounds.clone());
-                        (gp.name.clone(), bounds)
-                    }).collect();
+                    let typed_gp: Vec<(String, Vec<String>)> = type_params
+                        .iter()
+                        .map(|gp| {
+                            let bounds: Vec<String> = gp
+                                .bounds
+                                .iter()
+                                .map(|b| match b {
+                                    TypeNode::Custom(s) => s.clone(),
+                                    _ => format!("{:?}", b),
+                                })
+                                .collect();
+                            self.symbol_table
+                                .current_generic_env
+                                .push_generic(gp.name.clone(), bounds.clone());
+                            (gp.name.clone(), bounds)
+                        })
+                        .collect();
                     let mut typed_params = Vec::new();
                     for (p_name, p_ty_node) in params {
-                        match Type::from_node(p_ty_node, &self.symbol_table.structs, &self.symbol_table.enums) {
+                        match Type::from_node(
+                            p_ty_node,
+                            &self.symbol_table.structs,
+                            &self.symbol_table.enums,
+                        ) {
                             Ok(t) => typed_params.push((p_name.clone(), t)),
                             Err(e) => {
                                 self.engine.emit(Diagnostic::error(e, stmt.span));
                             }
                         }
                     }
-                    let ret = match Type::from_node(ret_type, &self.symbol_table.structs, &self.symbol_table.enums) {
+                    let ret = match Type::from_node(
+                        ret_type,
+                        &self.symbol_table.structs,
+                        &self.symbol_table.enums,
+                    ) {
                         Ok(t) => t,
                         Err(e) => {
                             self.engine.emit(Diagnostic::error(e, stmt.span));
@@ -389,22 +501,39 @@ impl SemanticAnalyzer {
                     ..
                 } => {
                     let saved_env = self.symbol_table.current_generic_env.clone();
-                    let typed_gp: Vec<(String, Vec<String>)> = type_params.iter().map(|gp| {
-                        let bounds: Vec<String> = gp.bounds.iter().map(|b| match b {
-                            TypeNode::Custom(s) => s.clone(),
-                            _ => format!("{:?}", b),
-                        }).collect();
-                        self.symbol_table.current_generic_env.push_generic(gp.name.clone(), bounds.clone());
-                        (gp.name.clone(), bounds)
-                    }).collect();
+                    let typed_gp: Vec<(String, Vec<String>)> = type_params
+                        .iter()
+                        .map(|gp| {
+                            let bounds: Vec<String> = gp
+                                .bounds
+                                .iter()
+                                .map(|b| match b {
+                                    TypeNode::Custom(s) => s.clone(),
+                                    _ => format!("{:?}", b),
+                                })
+                                .collect();
+                            self.symbol_table
+                                .current_generic_env
+                                .push_generic(gp.name.clone(), bounds.clone());
+                            (gp.name.clone(), bounds)
+                        })
+                        .collect();
                     let mut typed_params = Vec::new();
                     for (p_name, p_ty_node) in params {
-                        match Type::from_node(p_ty_node, &self.symbol_table.structs, &self.symbol_table.enums) {
+                        match Type::from_node(
+                            p_ty_node,
+                            &self.symbol_table.structs,
+                            &self.symbol_table.enums,
+                        ) {
                             Ok(t) => typed_params.push((p_name.clone(), t)),
                             Err(e) => self.engine.emit(Diagnostic::error(e, stmt.span)),
                         }
                     }
-                    let ret = match Type::from_node(ret_type, &self.symbol_table.structs, &self.symbol_table.enums) {
+                    let ret = match Type::from_node(
+                        ret_type,
+                        &self.symbol_table.structs,
+                        &self.symbol_table.enums,
+                    ) {
                         Ok(t) => t,
                         Err(e) => {
                             self.engine.emit(Diagnostic::error(e, stmt.span));
@@ -415,10 +544,15 @@ impl SemanticAnalyzer {
                     if typed_params.len() != 2 {
                         self.engine.emit(
                             Diagnostic::error(
-                                format!("Operator '{}' must declare exactly two operands", operator),
+                                format!(
+                                    "Operator '{}' must declare exactly two operands",
+                                    operator
+                                ),
                                 stmt.span,
                             )
-                            .with_hint("Use syntax like: operator <+>(left: T, right: T) -> T { ... }"),
+                            .with_hint(
+                                "Use syntax like: operator <+>(left: T, right: T) -> T { ... }",
+                            ),
                         );
                     }
 
@@ -438,14 +572,22 @@ impl SemanticAnalyzer {
                     for ext_fn in functions {
                         let mut typed_params = Vec::new();
                         for (p_name, p_ty_node) in &ext_fn.params {
-                            match Type::from_node(p_ty_node, &self.symbol_table.structs, &self.symbol_table.enums) {
+                            match Type::from_node(
+                                p_ty_node,
+                                &self.symbol_table.structs,
+                                &self.symbol_table.enums,
+                            ) {
                                 Ok(t) => typed_params.push((p_name.clone(), t)),
                                 Err(e) => {
                                     self.engine.emit(Diagnostic::error(e, ext_fn.span));
                                 }
                             }
                         }
-                        let ret = match Type::from_node(&ext_fn.ret_type, &self.symbol_table.structs, &self.symbol_table.enums) {
+                        let ret = match Type::from_node(
+                            &ext_fn.ret_type,
+                            &self.symbol_table.structs,
+                            &self.symbol_table.enums,
+                        ) {
                             Ok(t) => t,
                             Err(e) => {
                                 self.engine.emit(Diagnostic::error(e, ext_fn.span));
@@ -469,7 +611,9 @@ impl SemanticAnalyzer {
                                     format!("FFI conflict: {} (ABI '{}')", err, abi),
                                     ext_fn.span,
                                 )
-                                .with_hint("External symbols must not collide with Aether functions"),
+                                .with_hint(
+                                    "External symbols must not collide with Aether functions",
+                                ),
                             );
                         }
                     }
@@ -515,7 +659,9 @@ impl SemanticAnalyzer {
                 self.current_fn_return = Some(sig.ret_type.clone());
                 let saved_env = self.symbol_table.current_generic_env.clone();
                 for (n, bounds) in &sig.type_params {
-                    self.symbol_table.current_generic_env.push_generic(n.clone(), bounds.clone());
+                    self.symbol_table
+                        .current_generic_env
+                        .push_generic(n.clone(), bounds.clone());
                 }
                 self.symbol_table.enter_scope(false);
 
@@ -551,22 +697,36 @@ impl SemanticAnalyzer {
             } => {
                 let mut typed_params = Vec::new();
                 for (p_name, p_type_node) in params {
-                    match Type::from_node(p_type_node, &self.symbol_table.structs, &self.symbol_table.enums) {
+                    match Type::from_node(
+                        p_type_node,
+                        &self.symbol_table.structs,
+                        &self.symbol_table.enums,
+                    ) {
                         Ok(t) => typed_params.push((p_name.clone(), t)),
                         Err(e) => self.engine.emit(Diagnostic::error(e, stmt.span)),
                     }
                 }
-                let expected_ret = Type::from_node(ret_type, &self.symbol_table.structs, &self.symbol_table.enums)
-                    .unwrap_or(Type::Any);
+                let expected_ret = Type::from_node(
+                    ret_type,
+                    &self.symbol_table.structs,
+                    &self.symbol_table.enums,
+                )
+                .unwrap_or(Type::Any);
 
                 self.current_fn_return = Some(expected_ret);
                 let saved_env = self.symbol_table.current_generic_env.clone();
                 for gp in type_params {
-                    let bounds: Vec<String> = gp.bounds.iter().map(|b| match b {
-                        TypeNode::Custom(s) => s.clone(),
-                        _ => format!("{:?}", b),
-                    }).collect();
-                    self.symbol_table.current_generic_env.push_generic(gp.name.clone(), bounds);
+                    let bounds: Vec<String> = gp
+                        .bounds
+                        .iter()
+                        .map(|b| match b {
+                            TypeNode::Custom(s) => s.clone(),
+                            _ => format!("{:?}", b),
+                        })
+                        .collect();
+                    self.symbol_table
+                        .current_generic_env
+                        .push_generic(gp.name.clone(), bounds);
                 }
                 self.symbol_table.enter_scope(false);
                 for (p_name, p_type) in typed_params {
@@ -612,14 +772,16 @@ impl SemanticAnalyzer {
             } => {
                 let value_span = value.span;
                 let inferred_ty_before = self.symbol_table.fresh_type_var();
-                self.inferred_annotations.insert(value.span, inferred_ty_before.clone());
+                self.inferred_annotations
+                    .insert(value.span, inferred_ty_before.clone());
 
                 let inferred_ty = self.analyze_expr(value);
 
                 let _ = self.unify(&inferred_ty_before, &inferred_ty, value_span);
 
                 let declared_ty = if let Some(tn) = type_annot {
-                    match Type::from_node(tn, &self.symbol_table.structs, &self.symbol_table.enums) {
+                    match Type::from_node(tn, &self.symbol_table.structs, &self.symbol_table.enums)
+                    {
                         Ok(t) => t,
                         Err(e) => {
                             self.engine.emit(Diagnostic::error(e, stmt.span));
@@ -635,7 +797,9 @@ impl SemanticAnalyzer {
                         Diagnostic::error(
                             format!(
                                 "Type mismatch for '{}': declared {}, got {}",
-                                name, declared_ty, self.substitution.apply(&inferred_ty)
+                                name,
+                                declared_ty,
+                                self.substitution.apply(&inferred_ty)
                             ),
                             value.span,
                         )
@@ -644,7 +808,8 @@ impl SemanticAnalyzer {
                 }
 
                 let final_ty = self.substitution.apply(&declared_ty);
-                self.inferred_annotations.insert(stmt.span, final_ty.clone());
+                self.inferred_annotations
+                    .insert(stmt.span, final_ty.clone());
                 if type_annot.is_none() {
                     self.engine.emit(Diagnostic::note(
                         format!("Inferred type of `{}` is `{}`", name, final_ty),
@@ -704,7 +869,8 @@ impl SemanticAnalyzer {
             } => {
                 let inferred_ty = self.analyze_expr(value);
                 let declared_ty = if let Some(tn) = type_annot {
-                    match Type::from_node(tn, &self.symbol_table.structs, &self.symbol_table.enums) {
+                    match Type::from_node(tn, &self.symbol_table.structs, &self.symbol_table.enums)
+                    {
                         Ok(t) => t,
                         Err(e) => {
                             self.engine.emit(Diagnostic::error(e, stmt.span));
@@ -725,7 +891,8 @@ impl SemanticAnalyzer {
             } => {
                 let inferred_ty = self.analyze_expr(value);
                 let declared_ty = if let Some(tn) = type_annot {
-                    match Type::from_node(tn, &self.symbol_table.structs, &self.symbol_table.enums) {
+                    match Type::from_node(tn, &self.symbol_table.structs, &self.symbol_table.enums)
+                    {
                         Ok(t) => t,
                         Err(e) => {
                             self.engine.emit(Diagnostic::error(e, stmt.span));
@@ -901,7 +1068,8 @@ impl SemanticAnalyzer {
             StmtKind::Print(args) => {
                 for arg in args {
                     let arg_ty = self.analyze_expr(arg);
-                    self.pending_trait_checks.push((arg_ty, "Display".to_string(), arg.span));
+                    self.pending_trait_checks
+                        .push((arg_ty, "Display".to_string(), arg.span));
                 }
             }
             StmtKind::TestBlock { body, .. } => {
@@ -928,7 +1096,11 @@ impl SemanticAnalyzer {
 
     fn apply_narrowing_from_condition(&mut self, condition: &SpannedExpr, positive: bool) {
         match &condition.kind {
-            ExprKind::Binary { left, op: BinaryOpKind::And, right } => {
+            ExprKind::Binary {
+                left,
+                op: BinaryOpKind::And,
+                right,
+            } => {
                 if positive {
                     self.apply_narrowing_from_condition(left, true);
                     self.apply_narrowing_from_condition(right, true);
@@ -936,7 +1108,11 @@ impl SemanticAnalyzer {
                     self.apply_narrowing_from_condition(left, false);
                 }
             }
-            ExprKind::Binary { left, op: BinaryOpKind::Or, right } => {
+            ExprKind::Binary {
+                left,
+                op: BinaryOpKind::Or,
+                right,
+            } => {
                 if !positive {
                     self.apply_narrowing_from_condition(left, false);
                     self.apply_narrowing_from_condition(right, false);
@@ -944,7 +1120,10 @@ impl SemanticAnalyzer {
                     self.apply_narrowing_from_condition(left, true);
                 }
             }
-            ExprKind::Unary { op: UnaryOpKind::Not, expr: inner } => {
+            ExprKind::Unary {
+                op: UnaryOpKind::Not,
+                expr: inner,
+            } => {
                 self.apply_narrowing_from_condition(inner, !positive);
             }
             ExprKind::IsA { value, type_node } => {
@@ -953,28 +1132,39 @@ impl SemanticAnalyzer {
                         type_node,
                         &self.symbol_table.structs,
                         &self.symbol_table.enums,
-                    ).unwrap_or(Type::Any);
-                    let original_ty = self.symbol_table.get_variable_type(name).unwrap_or(Type::Any);
+                    )
+                    .unwrap_or(Type::Any);
+                    let original_ty = self
+                        .symbol_table
+                        .get_variable_type(name)
+                        .unwrap_or(Type::Any);
 
                     if positive {
-                        self.symbol_table.narrow_variable_type(name, target_ty.clone());
-                        self.engine.emit(Diagnostic::note(
-                            format!(
-                                "Type-narrowed `{}` from `{}` to `{}`",
-                                name, original_ty, target_ty
-                            ),
-                            value.span,
-                        ).with_hint("Use of `is` type guard enables flow-sensitive typing"));
+                        self.symbol_table
+                            .narrow_variable_type(name, target_ty.clone());
+                        self.engine.emit(
+                            Diagnostic::note(
+                                format!(
+                                    "Type-narrowed `{}` from `{}` to `{}`",
+                                    name, original_ty, target_ty
+                                ),
+                                value.span,
+                            )
+                            .with_hint("Use of `is` type guard enables flow-sensitive typing"),
+                        );
                     } else {
                         if let Type::Union(members) = &original_ty {
-                            let remaining: Vec<Type> = members.iter()
+                            let remaining: Vec<Type> = members
+                                .iter()
                                 .filter(|m| !m.is_assignable_to(&target_ty))
                                 .cloned()
                                 .collect();
                             if remaining.len() == 1 {
-                                self.symbol_table.narrow_variable_type(name, remaining[0].clone());
+                                self.symbol_table
+                                    .narrow_variable_type(name, remaining[0].clone());
                             } else if remaining.len() > 1 {
-                                self.symbol_table.narrow_variable_type(name, Type::Union(remaining));
+                                self.symbol_table
+                                    .narrow_variable_type(name, Type::Union(remaining));
                             }
                         }
                     }
@@ -1035,7 +1225,11 @@ impl SemanticAnalyzer {
                         if let Some(nested_pat) = nested {
                             self.bind_pattern(nested_pat, &field_ty, span);
                         } else {
-                            self.bind_pattern(&Pattern::Identifier(field_name.clone()), &field_ty, span);
+                            self.bind_pattern(
+                                &Pattern::Identifier(field_name.clone()),
+                                &field_ty,
+                                span,
+                            );
                         }
                     }
                 } else if *ty == Type::Any {
@@ -1043,7 +1237,11 @@ impl SemanticAnalyzer {
                         if let Some(nested_pat) = nested {
                             self.bind_pattern(nested_pat, &Type::Any, span);
                         } else {
-                            self.bind_pattern(&Pattern::Identifier(field_name.clone()), &Type::Any, span);
+                            self.bind_pattern(
+                                &Pattern::Identifier(field_name.clone()),
+                                &Type::Any,
+                                span,
+                            );
                         }
                     }
                 } else {
@@ -1094,7 +1292,12 @@ impl SemanticAnalyzer {
         }
     }
 
-    fn check_match_exhaustiveness(&mut self, arms: &[MatchArm], scrutinee_ty: &Type, match_span: Span) {
+    fn check_match_exhaustiveness(
+        &mut self,
+        arms: &[MatchArm],
+        scrutinee_ty: &Type,
+        match_span: Span,
+    ) {
         let scrutinee = self.substitution.apply(scrutinee_ty);
         match &scrutinee {
             Type::Enum(enum_name, variants) => {
@@ -1124,7 +1327,8 @@ impl SemanticAnalyzer {
                                 }
                             }
                         }
-                        MatchPattern::EnumVariant(name, _) | MatchPattern::EnumVariantStruct(name, _) => {
+                        MatchPattern::EnumVariant(name, _)
+                        | MatchPattern::EnumVariantStruct(name, _) => {
                             handled_variants.insert(name.clone());
                         }
                         MatchPattern::Var(_) => {
@@ -1136,26 +1340,42 @@ impl SemanticAnalyzer {
 
                 if !has_wildcard {
                     let all_variants: HashSet<String> = if enum_name == "Option" {
-                        vec!["Some".to_string(), "None".to_string()].into_iter().collect()
+                        vec!["Some".to_string(), "None".to_string()]
+                            .into_iter()
+                            .collect()
                     } else if enum_name == "Result" {
-                        vec!["Ok".to_string(), "Err".to_string()].into_iter().collect()
+                        vec!["Ok".to_string(), "Err".to_string()]
+                            .into_iter()
+                            .collect()
                     } else {
                         variants.keys().cloned().collect()
                     };
-                    let missing: Vec<String> = all_variants.difference(&handled_variants).cloned().collect();
+                    let missing: Vec<String> = all_variants
+                        .difference(&handled_variants)
+                        .cloned()
+                        .collect();
                     if !missing.is_empty() {
                         let msg = format!(
                             "Non-exhaustive `match` on `{}`: variant{} {} not covered",
                             enum_name,
                             if missing.len() > 1 { "s" } else { "" },
-                            missing.iter().map(|v| format!("`{}`", v)).collect::<Vec<_>>().join(", ")
+                            missing
+                                .iter()
+                                .map(|v| format!("`{}`", v))
+                                .collect::<Vec<_>>()
+                                .join(", ")
                         );
                         let hint = format!(
                             "Consider adding arm{} for: {}; or use a `_` wildcard catch-all arm",
                             if missing.len() > 1 { "s" } else { "" },
-                            missing.iter().map(|v| format!("{} => ...", v)).collect::<Vec<_>>().join(", ")
+                            missing
+                                .iter()
+                                .map(|v| format!("{} => ...", v))
+                                .collect::<Vec<_>>()
+                                .join(", ")
                         );
-                        self.engine.emit(Diagnostic::error(msg, match_span).with_hint(hint));
+                        self.engine
+                            .emit(Diagnostic::error(msg, match_span).with_hint(hint));
                     }
                 }
             }
@@ -1173,8 +1393,10 @@ impl SemanticAnalyzer {
                 }
                 if !has_wildcard && !(handled_some && handled_none) {
                     let msg = "Non-exhaustive `match` on `Option`: both `Some` and `None` must be covered";
-                    self.engine.emit(Diagnostic::error(msg, match_span)
-                        .with_hint("Add arms: `Some(v) => ..., None => ...` or use `_ => ...`"));
+                    self.engine
+                        .emit(Diagnostic::error(msg, match_span).with_hint(
+                            "Add arms: `Some(v) => ..., None => ...` or use `_ => ...`",
+                        ));
                 }
             }
             Type::Result(_, _) => {
@@ -1190,9 +1412,12 @@ impl SemanticAnalyzer {
                     }
                 }
                 if !has_wildcard && !(handled_ok && handled_err) {
-                    let msg = "Non-exhaustive `match` on `Result`: both `Ok` and `Err` must be covered";
-                    self.engine.emit(Diagnostic::error(msg, match_span)
-                        .with_hint("Add arms: `Ok(v) => ..., Err(e) => ...` or use `_ => ...`"));
+                    let msg =
+                        "Non-exhaustive `match` on `Result`: both `Ok` and `Err` must be covered";
+                    self.engine
+                        .emit(Diagnostic::error(msg, match_span).with_hint(
+                            "Add arms: `Ok(v) => ..., Err(e) => ...` or use `_ => ...`",
+                        ));
                 }
             }
             Type::Bool => {
@@ -1202,7 +1427,11 @@ impl SemanticAnalyzer {
                 for arm in arms {
                     if let MatchPattern::Literal(lit) = &arm.pattern {
                         if let ExprKind::Bool(b) = lit.kind {
-                            if b { saw_true = true; } else { saw_false = true; }
+                            if b {
+                                saw_true = true;
+                            } else {
+                                saw_false = true;
+                            }
                         }
                     }
                     if let MatchPattern::Wildcard | MatchPattern::Var(_) = &arm.pattern {
@@ -1235,11 +1464,17 @@ impl SemanticAnalyzer {
             ExprKind::None => Type::Option(Box::new(self.symbol_table.fresh_type_var())),
             ExprKind::Ok(inner) => {
                 let inner_ty = self.analyze_expr(inner);
-                Type::Result(Box::new(inner_ty), Box::new(self.symbol_table.fresh_type_var()))
+                Type::Result(
+                    Box::new(inner_ty),
+                    Box::new(self.symbol_table.fresh_type_var()),
+                )
             }
             ExprKind::Err(inner) => {
                 let inner_ty = self.analyze_expr(inner);
-                Type::Result(Box::new(self.symbol_table.fresh_type_var()), Box::new(inner_ty))
+                Type::Result(
+                    Box::new(self.symbol_table.fresh_type_var()),
+                    Box::new(inner_ty),
+                )
             }
             ExprKind::Task(inner) => {
                 let inner_ty = self.analyze_expr(inner);
@@ -1252,7 +1487,11 @@ impl SemanticAnalyzer {
                     Type::Any => Type::Any,
                     Type::TypeVar(_) => {
                         let t_inner = self.symbol_table.fresh_type_var();
-                        let _ = self.unify(&inner_ty, &Type::Task(Box::new(t_inner.clone())), expr.span);
+                        let _ = self.unify(
+                            &inner_ty,
+                            &Type::Task(Box::new(t_inner.clone())),
+                            expr.span,
+                        );
                         t_inner
                     }
                     other => {
@@ -1281,7 +1520,12 @@ impl SemanticAnalyzer {
                 Type::Task(Box::new(fn_sym.ret_type))
             }
             ExprKind::MakeChan(type_node) => {
-                let elem_ty = Type::from_node(type_node, &self.symbol_table.structs, &self.symbol_table.enums).unwrap_or(Type::Any);
+                let elem_ty = Type::from_node(
+                    type_node,
+                    &self.symbol_table.structs,
+                    &self.symbol_table.enums,
+                )
+                .unwrap_or(Type::Any);
                 Type::Chan(Box::new(elem_ty))
             }
             ExprKind::ChanSend { chan, value } => {
@@ -1299,7 +1543,8 @@ impl SemanticAnalyzer {
                     Type::Any => Type::Any,
                     Type::TypeVar(_) => {
                         let t_inner = self.symbol_table.fresh_type_var();
-                        let _ = self.unify(&chan_ty, &Type::Chan(Box::new(t_inner.clone())), expr.span);
+                        let _ =
+                            self.unify(&chan_ty, &Type::Chan(Box::new(t_inner.clone())), expr.span);
                         t_inner
                     }
                     other => {
@@ -1311,20 +1556,29 @@ impl SemanticAnalyzer {
                     }
                 }
             }
-            ExprKind::Borrow { expr: sub_expr, is_mut } => {
+            ExprKind::Borrow {
+                expr: sub_expr,
+                is_mut,
+            } => {
                 let inner_ty = self.analyze_expr(sub_expr);
                 if let ExprKind::Var(ref name) = sub_expr.kind {
                     if let Some(var) = self.symbol_table.get_variable_mut(name) {
                         if *is_mut && !var.is_mut {
                             self.engine.emit(Diagnostic::error(
-                                format!("Cannot borrow immutable local variable '{}' as mutable", name),
+                                format!(
+                                    "Cannot borrow immutable local variable '{}' as mutable",
+                                    name
+                                ),
                                 expr.span,
                             ));
                         }
                         if *is_mut {
                             if var.borrow_count > 0 || var.is_mut_borrowed {
                                 self.engine.emit(Diagnostic::error(
-                                    format!("Cannot borrow '{}' as mutable more than once at a time", name),
+                                    format!(
+                                        "Cannot borrow '{}' as mutable more than once at a time",
+                                        name
+                                    ),
                                     expr.span,
                                 ));
                             }
@@ -1350,10 +1604,16 @@ impl SemanticAnalyzer {
                     if let Some(var) = self.symbol_table.get_variable_mut(name) {
                         if !var.is_moved {
                             var.is_moved = true;
-                            self.engine.emit(Diagnostic::note(
-                                format!("Ownership of `{}` explicitly moved (move {})", name, name),
-                                expr.span,
-                            ).with_hint("In Owned mode the old binding can no longer be used."));
+                            self.engine.emit(
+                                Diagnostic::note(
+                                    format!(
+                                        "Ownership of `{}` explicitly moved (move {})",
+                                        name, name
+                                    ),
+                                    expr.span,
+                                )
+                                .with_hint("In Owned mode the old binding can no longer be used."),
+                            );
                         }
                     }
                 }
@@ -1383,7 +1643,10 @@ impl SemanticAnalyzer {
                                     format!("Use of moved value: '{}'", name),
                                     expr.span,
                                 )
-                                .with_hint(format!("Value was previously moved. Consider borrowing with '&{}'", name)),
+                                .with_hint(format!(
+                                    "Value was previously moved. Consider borrowing with '&{}'",
+                                    name
+                                )),
                             );
                         }
                     }
@@ -1397,11 +1660,18 @@ impl SemanticAnalyzer {
                     Type::Any
                 }
             },
-            ExprKind::IsA { value, type_node: _ } => {
+            ExprKind::IsA {
+                value,
+                type_node: _,
+            } => {
                 self.analyze_expr(value);
                 Type::Bool
             }
-            ExprKind::EnumVariantConstruct { enum_name, variant_name, payload } => {
+            ExprKind::EnumVariantConstruct {
+                enum_name,
+                variant_name,
+                payload,
+            } => {
                 let variant_payload_ty = if let Some(p) = payload {
                     let ty = self.analyze_expr(p);
                     Some(ty)
@@ -1410,11 +1680,12 @@ impl SemanticAnalyzer {
                 };
 
                 let known_enum = self.symbol_table.enums.get(enum_name).cloned();
-                let variants_map: HashMap<String, Option<Type>> = known_enum.clone().unwrap_or_else(|| {
-                    let mut m = HashMap::new();
-                    m.insert(variant_name.clone(), variant_payload_ty.clone());
-                    m
-                });
+                let variants_map: HashMap<String, Option<Type>> =
+                    known_enum.clone().unwrap_or_else(|| {
+                        let mut m = HashMap::new();
+                        m.insert(variant_name.clone(), variant_payload_ty.clone());
+                        m
+                    });
 
                 if let Some(var_map) = &known_enum {
                     if let Some(expected_payload) = var_map.get(variant_name) {
@@ -1424,13 +1695,19 @@ impl SemanticAnalyzer {
                             }
                             (None, Some(_)) => {
                                 self.engine.emit(Diagnostic::error(
-                                    format!("Variant `{}::{}` takes no payload, but one provided", enum_name, variant_name),
+                                    format!(
+                                        "Variant `{}::{}` takes no payload, but one provided",
+                                        enum_name, variant_name
+                                    ),
                                     expr.span,
                                 ));
                             }
                             (Some(_), None) => {
                                 self.engine.emit(Diagnostic::error(
-                                    format!("Variant `{}::{}` requires a payload", enum_name, variant_name),
+                                    format!(
+                                        "Variant `{}::{}` requires a payload",
+                                        enum_name, variant_name
+                                    ),
                                     expr.span,
                                 ));
                             }
@@ -1440,9 +1717,14 @@ impl SemanticAnalyzer {
                 }
 
                 self.engine.emit(Diagnostic::note(
-                    format!("Constructed ADT variant `{}::{}`{}",
-                        enum_name, variant_name,
-                        variant_payload_ty.as_ref().map(|t| format!(" with payload {}", t)).unwrap_or_default()
+                    format!(
+                        "Constructed ADT variant `{}::{}`{}",
+                        enum_name,
+                        variant_name,
+                        variant_payload_ty
+                            .as_ref()
+                            .map(|t| format!(" with payload {}", t))
+                            .unwrap_or_default()
                     ),
                     expr.span,
                 ));
@@ -1461,8 +1743,9 @@ impl SemanticAnalyzer {
                     | BinaryOpKind::Mod => {
                         let result_tv = self.symbol_table.fresh_type_var();
                         let (int_unified, _) = (
-                            self.unify(&lt, &Type::Int, left.span).is_ok() && self.unify(&rt, &Type::Int, right.span).is_ok(),
-                            ()
+                            self.unify(&lt, &Type::Int, left.span).is_ok()
+                                && self.unify(&rt, &Type::Int, right.span).is_ok(),
+                            (),
                         );
                         if int_unified {
                             self.substitution = Substitution::new();
@@ -1470,9 +1753,14 @@ impl SemanticAnalyzer {
                             let _ = self.unify(&rt, &Type::Int, right.span);
                             let _ = self.unify(&result_tv, &Type::Int, expr.span);
                             Type::Int
-                        } else if self.substitution.apply(&lt) == Type::Float && self.substitution.apply(&rt) == Type::Float {
+                        } else if self.substitution.apply(&lt) == Type::Float
+                            && self.substitution.apply(&rt) == Type::Float
+                        {
                             Type::Float
-                        } else if *op == BinaryOpKind::Add && (self.substitution.apply(&lt) == Type::String || matches!(self.substitution.apply(&lt), Type::Ref(ref b, _) if **b == Type::String)) {
+                        } else if *op == BinaryOpKind::Add
+                            && (self.substitution.apply(&lt) == Type::String
+                                || matches!(self.substitution.apply(&lt), Type::Ref(ref b, _) if **b == Type::String))
+                        {
                             Type::String
                         } else if let Some(ret_ty) = self.resolve_operator(
                             match op {
@@ -1489,8 +1777,16 @@ impl SemanticAnalyzer {
                         ) {
                             ret_ty
                         } else {
-                            self.pending_trait_checks.push((lt.clone(), "Addable".to_string(), left.span));
-                            self.pending_trait_checks.push((rt.clone(), "Addable".to_string(), right.span));
+                            self.pending_trait_checks.push((
+                                lt.clone(),
+                                "Addable".to_string(),
+                                left.span,
+                            ));
+                            self.pending_trait_checks.push((
+                                rt.clone(),
+                                "Addable".to_string(),
+                                right.span,
+                            ));
                             let a = self.substitution.apply(&lt);
                             let b = self.substitution.apply(&rt);
                             self.engine.emit(Diagnostic::error(
@@ -1509,8 +1805,16 @@ impl SemanticAnalyzer {
                     | BinaryOpKind::LessEqual
                     | BinaryOpKind::Greater
                     | BinaryOpKind::GreaterEqual => {
-                        self.pending_trait_checks.push((lt.clone(), "Comparable".to_string(), left.span));
-                        self.pending_trait_checks.push((rt.clone(), "Comparable".to_string(), right.span));
+                        self.pending_trait_checks.push((
+                            lt.clone(),
+                            "Comparable".to_string(),
+                            left.span,
+                        ));
+                        self.pending_trait_checks.push((
+                            rt.clone(),
+                            "Comparable".to_string(),
+                            right.span,
+                        ));
                         let _ = self.unify(&lt, &rt, expr.span);
                         Type::Bool
                     }
@@ -1526,7 +1830,11 @@ impl SemanticAnalyzer {
                 match op {
                     UnaryOpKind::Neg => {
                         let unified = self.substitution.apply(&ty);
-                        if unified == Type::Int || unified == Type::Float || unified == Type::Any || matches!(unified, Type::TypeVar(_)) {
+                        if unified == Type::Int
+                            || unified == Type::Float
+                            || unified == Type::Any
+                            || matches!(unified, Type::TypeVar(_))
+                        {
                             ty
                         } else {
                             self.engine.emit(Diagnostic::error(
@@ -1553,7 +1861,8 @@ impl SemanticAnalyzer {
                 if callee == "println" {
                     for arg in args {
                         let arg_ty = self.analyze_expr(arg);
-                        self.pending_trait_checks.push((arg_ty, "Display".to_string(), arg.span));
+                        self.pending_trait_checks
+                            .push((arg_ty, "Display".to_string(), arg.span));
                     }
                     Type::Void
                 } else if let Some(method) = callee.strip_prefix("__aether_method::") {
@@ -1572,7 +1881,9 @@ impl SemanticAnalyzer {
                     match (method, receiver_ty) {
                         ("length", Type::String) => Type::Int,
                         ("length", Type::Ref(inner, _)) if *inner == Type::String => Type::Int,
-                        ("length", Type::Array(_)) | ("length", Type::Set(_)) | ("length", Type::Map(_, _)) => Type::Int,
+                        ("length", Type::Array(_))
+                        | ("length", Type::Set(_))
+                        | ("length", Type::Map(_, _)) => Type::Int,
                         ("length", Type::Any) | (_, Type::Any) => Type::Any,
                         ("length", other) => {
                             self.engine.emit(Diagnostic::error(
@@ -1590,78 +1901,83 @@ impl SemanticAnalyzer {
                         }
                     }
                 } else {
-                match self.symbol_table.lookup_function(callee).cloned() {
-                    Some(fn_sym) => {
-                        if fn_sym.params.len() != args.len() {
-                            self.engine.emit(Diagnostic::error(
-                                format!(
-                                    "Function '{}' expects {} arguments, but got {}",
-                                    callee,
-                                    fn_sym.params.len(),
-                                    args.len()
-                                ),
-                                expr.span,
-                            ));
-                        }
-
-                        let (instantiated_fn, _mapping) = self.instantiate_generic(
-                            &Type::Function(
-                                fn_sym.params.iter().map(|(_, t)| t.clone()).collect(),
-                                Box::new(fn_sym.ret_type.clone()),
-                            ),
-                            &fn_sym.type_params,
-                            expr.span,
-                        );
-
-                        let (expected_params, expected_ret) = match instantiated_fn {
-                            Type::Function(p, r) => (p, *r),
-                            _ => (Vec::new(), Type::Any),
-                        };
-
-                        let mut type_args = Vec::new();
-                        for (idx, (arg_expr, expected_ty)) in
-                            args.iter().zip(expected_params.iter()).enumerate()
-                        {
-                            let actual_ty = self.analyze_expr(arg_expr);
-                            type_args.push((actual_ty.clone(), arg_expr.span));
-                            if let Err(e) = self.unify(&actual_ty, expected_ty, arg_expr.span) {
-                                let got = self.substitution.apply(&actual_ty);
-                                let exp = self.substitution.apply(expected_ty);
+                    match self.symbol_table.lookup_function(callee).cloned() {
+                        Some(fn_sym) => {
+                            if fn_sym.params.len() != args.len() {
                                 self.engine.emit(Diagnostic::error(
                                     format!(
-                                        "Arg #{} in call to '{}': expected {}, got {} ({})",
-                                        idx + 1,
+                                        "Function '{}' expects {} arguments, but got {}",
                                         callee,
-                                        exp,
-                                        got,
-                                        e
+                                        fn_sym.params.len(),
+                                        args.len()
                                     ),
-                                    arg_expr.span,
+                                    expr.span,
                                 ));
                             }
-                        }
 
-                        if !fn_sym.type_params.is_empty() {
-                            self.call_site_instantiations.push((callee.clone(), type_args));
-                        }
+                            let (instantiated_fn, _mapping) = self.instantiate_generic(
+                                &Type::Function(
+                                    fn_sym.params.iter().map(|(_, t)| t.clone()).collect(),
+                                    Box::new(fn_sym.ret_type.clone()),
+                                ),
+                                &fn_sym.type_params,
+                                expr.span,
+                            );
 
-                        for (_, (_, bounds)) in fn_sym.type_params.iter().enumerate() {
-                            let applied = self.substitution.apply(&expected_ret);
-                            for bound in bounds {
-                                self.pending_trait_checks.push((applied.clone(), bound.clone(), expr.span));
+                            let (expected_params, expected_ret) = match instantiated_fn {
+                                Type::Function(p, r) => (p, *r),
+                                _ => (Vec::new(), Type::Any),
+                            };
+
+                            let mut type_args = Vec::new();
+                            for (idx, (arg_expr, expected_ty)) in
+                                args.iter().zip(expected_params.iter()).enumerate()
+                            {
+                                let actual_ty = self.analyze_expr(arg_expr);
+                                type_args.push((actual_ty.clone(), arg_expr.span));
+                                if let Err(e) = self.unify(&actual_ty, expected_ty, arg_expr.span) {
+                                    let got = self.substitution.apply(&actual_ty);
+                                    let exp = self.substitution.apply(expected_ty);
+                                    self.engine.emit(Diagnostic::error(
+                                        format!(
+                                            "Arg #{} in call to '{}': expected {}, got {} ({})",
+                                            idx + 1,
+                                            callee,
+                                            exp,
+                                            got,
+                                            e
+                                        ),
+                                        arg_expr.span,
+                                    ));
+                                }
                             }
-                        }
 
-                        self.substitution.apply(&expected_ret)
+                            if !fn_sym.type_params.is_empty() {
+                                self.call_site_instantiations
+                                    .push((callee.clone(), type_args));
+                            }
+
+                            for (_, (_, bounds)) in fn_sym.type_params.iter().enumerate() {
+                                let applied = self.substitution.apply(&expected_ret);
+                                for bound in bounds {
+                                    self.pending_trait_checks.push((
+                                        applied.clone(),
+                                        bound.clone(),
+                                        expr.span,
+                                    ));
+                                }
+                            }
+
+                            self.substitution.apply(&expected_ret)
+                        }
+                        None => {
+                            self.engine.emit(Diagnostic::error(
+                                format!("Undeclared function '{}'", callee),
+                                expr.span,
+                            ));
+                            Type::Any
+                        }
                     }
-                    None => {
-                        self.engine.emit(Diagnostic::error(
-                            format!("Undeclared function '{}'", callee),
-                            expr.span,
-                        ));
-                        Type::Any
-                    }
-                }
                 }
             }
             ExprKind::Array(elements) => {
@@ -1675,7 +1991,10 @@ impl SemanticAnalyzer {
                             let a = self.substitution.apply(&ty);
                             let b = self.substitution.apply(&elem_tv);
                             self.engine.emit(Diagnostic::error(
-                                format!("Array elements must have uniform type. Found {} and {}", b, a),
+                                format!(
+                                    "Array elements must have uniform type. Found {} and {}",
+                                    b, a
+                                ),
                                 elem.span,
                             ));
                         }
@@ -1685,7 +2004,10 @@ impl SemanticAnalyzer {
             }
             ExprKind::Map(entries) => {
                 if entries.is_empty() {
-                    Type::Map(Box::new(self.symbol_table.fresh_type_var()), Box::new(self.symbol_table.fresh_type_var()))
+                    Type::Map(
+                        Box::new(self.symbol_table.fresh_type_var()),
+                        Box::new(self.symbol_table.fresh_type_var()),
+                    )
                 } else {
                     let ktv = self.symbol_table.fresh_type_var();
                     let vtv = self.symbol_table.fresh_type_var();
@@ -1694,7 +2016,8 @@ impl SemanticAnalyzer {
                         let v_ty = self.analyze_expr(v);
                         let _ = self.unify(&k_ty, &ktv, k.span);
                         let _ = self.unify(&v_ty, &vtv, v.span);
-                        self.pending_trait_checks.push((k_ty, "Hashable".to_string(), k.span));
+                        self.pending_trait_checks
+                            .push((k_ty, "Hashable".to_string(), k.span));
                     }
                     Type::Map(
                         Box::new(self.substitution.apply(&ktv)),
@@ -1710,7 +2033,8 @@ impl SemanticAnalyzer {
                     for elem in elements {
                         let ty = self.analyze_expr(elem);
                         let _ = self.unify(&ty, &etv, elem.span);
-                        self.pending_trait_checks.push((ty, "Hashable".to_string(), elem.span));
+                        self.pending_trait_checks
+                            .push((ty, "Hashable".to_string(), elem.span));
                     }
                     Type::Set(Box::new(self.substitution.apply(&etv)))
                 }
@@ -1736,7 +2060,11 @@ impl SemanticAnalyzer {
                     }
                     Type::TypeVar(_) => {
                         let arr_inner = self.symbol_table.fresh_type_var();
-                        let _ = self.unify(&target_ty, &Type::Array(Box::new(arr_inner.clone())), target.span);
+                        let _ = self.unify(
+                            &target_ty,
+                            &Type::Array(Box::new(arr_inner.clone())),
+                            target.span,
+                        );
                         arr_inner
                     }
                     other => {
@@ -1764,12 +2092,13 @@ impl SemanticAnalyzer {
                         }
                     }
                     Type::Any => Type::Any,
-                    Type::TypeVar(_) => {
-                        self.symbol_table.fresh_type_var()
-                    }
+                    Type::TypeVar(_) => self.symbol_table.fresh_type_var(),
                     other => {
                         self.engine.emit(Diagnostic::error(
-                            format!("Cannot access field '{}' on non-struct type {}", field, other),
+                            format!(
+                                "Cannot access field '{}' on non-struct type {}",
+                                field, other
+                            ),
                             expr.span,
                         ));
                         Type::Any
@@ -1851,7 +2180,11 @@ impl SemanticAnalyzer {
                         MatchPattern::EnumVariant(variant, binding) => {
                             let resolved_val = self.substitution.apply(&val_ty);
                             if let Type::Enum(_, ref variants) = resolved_val {
-                                let payload_ty = variants.get(variant).cloned().flatten().unwrap_or(Type::Any);
+                                let payload_ty = variants
+                                    .get(variant)
+                                    .cloned()
+                                    .flatten()
+                                    .unwrap_or(Type::Any);
                                 if let Some(bind_name) = binding {
                                     let _ = self.symbol_table.define_variable(VariableSymbol {
                                         name: bind_name.clone(),
@@ -1869,33 +2202,42 @@ impl SemanticAnalyzer {
                         MatchPattern::EnumVariantStruct(variant, field_binds) => {
                             let resolved_val = self.substitution.apply(&val_ty);
                             if let Type::Enum(_, ref variants) = resolved_val {
-                                if let Some(Some(Type::Struct(_, struct_fields))) = variants.get(variant) {
+                                if let Some(Some(Type::Struct(_, struct_fields))) =
+                                    variants.get(variant)
+                                {
                                     for (field_name, pat_opt) in field_binds {
-                                        let f_ty = struct_fields.get(field_name).cloned().unwrap_or(Type::Any);
+                                        let f_ty = struct_fields
+                                            .get(field_name)
+                                            .cloned()
+                                            .unwrap_or(Type::Any);
                                         match pat_opt {
                                             Some(MatchPattern::Var(bind_name)) => {
-                                                let _ = self.symbol_table.define_variable(VariableSymbol {
-                                                    name: bind_name.clone(),
-                                                    ty: f_ty,
-                                                    is_mut: false,
-                                                    is_moved: false,
-                                                    borrow_count: 0,
-                                                    is_mut_borrowed: false,
-                                                    span: arm.span,
-                                                    narrowed_type: None,
-                                                });
+                                                let _ = self.symbol_table.define_variable(
+                                                    VariableSymbol {
+                                                        name: bind_name.clone(),
+                                                        ty: f_ty,
+                                                        is_mut: false,
+                                                        is_moved: false,
+                                                        borrow_count: 0,
+                                                        is_mut_borrowed: false,
+                                                        span: arm.span,
+                                                        narrowed_type: None,
+                                                    },
+                                                );
                                             }
                                             None => {
-                                                let _ = self.symbol_table.define_variable(VariableSymbol {
-                                                    name: field_name.clone(),
-                                                    ty: f_ty,
-                                                    is_mut: false,
-                                                    is_moved: false,
-                                                    borrow_count: 0,
-                                                    is_mut_borrowed: false,
-                                                    span: arm.span,
-                                                    narrowed_type: None,
-                                                });
+                                                let _ = self.symbol_table.define_variable(
+                                                    VariableSymbol {
+                                                        name: field_name.clone(),
+                                                        ty: f_ty,
+                                                        is_mut: false,
+                                                        is_moved: false,
+                                                        borrow_count: 0,
+                                                        is_mut_borrowed: false,
+                                                        span: arm.span,
+                                                        narrowed_type: None,
+                                                    },
+                                                );
                                             }
                                             _ => {}
                                         }
@@ -1916,10 +2258,15 @@ impl SemanticAnalyzer {
 
                 self.substitution.apply(&ret_ty)
             }
-            ExprKind::CustomBinary { left, operator, right } => {
+            ExprKind::CustomBinary {
+                left,
+                operator,
+                right,
+            } => {
                 let lt = self.analyze_expr(left);
                 let rt = self.analyze_expr(right);
-                self.resolve_operator(operator, &lt, &rt, expr.span).unwrap_or(Type::Any)
+                self.resolve_operator(operator, &lt, &rt, expr.span)
+                    .unwrap_or(Type::Any)
             }
             ExprKind::Block(stmts) => {
                 self.symbol_table.enter_scope(false);
@@ -1940,11 +2287,14 @@ impl SemanticAnalyzer {
         };
 
         let final_result = self.substitution.apply(&result);
-        self.inferred_annotations.insert(expr.span, final_result.clone());
+        self.inferred_annotations
+            .insert(expr.span, final_result.clone());
         final_result
     }
 }
 
-pub fn check_semantics(program: &Program) -> Result<(SymbolTable, HashMap<Span, Type>), DiagnosticEngine> {
+pub fn check_semantics(
+    program: &Program,
+) -> Result<(SymbolTable, HashMap<Span, Type>), DiagnosticEngine> {
     SemanticAnalyzer::new().analyze(program)
 }

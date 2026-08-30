@@ -85,11 +85,11 @@ pub enum TokenKind {
     GreaterEqual,
 
     // Logical & Reference Operators
-    Amp,        // & (Borrow)
-    AmpAmp,     // &&
-    Pipe,       // |
-    PipePipe,   // ||
-    Bang,       // !
+    Amp,      // & (Borrow)
+    AmpAmp,   // &&
+    Pipe,     // |
+    PipePipe, // ||
+    Bang,     // !
     CustomOperator(String),
 
     // Delimiters & Symbols
@@ -372,13 +372,26 @@ impl<'a> Lexer<'a> {
                             Some('\\') => '\\',
                             Some('\'') => '\'',
                             Some(other) => other,
-                            None => return Err(("Unterminated char literal".into(), Span::new(start_pos, self.pos, start_line, start_col))),
+                            None => {
+                                return Err((
+                                    "Unterminated char literal".into(),
+                                    Span::new(start_pos, self.pos, start_line, start_col),
+                                ));
+                            }
                         },
                         Some(ch) => ch,
-                        None => return Err(("Unterminated char literal".into(), Span::new(start_pos, self.pos, start_line, start_col))),
+                        None => {
+                            return Err((
+                                "Unterminated char literal".into(),
+                                Span::new(start_pos, self.pos, start_line, start_col),
+                            ));
+                        }
                     };
                     if !self.match_char('\'') {
-                        return Err(("Expected closing single quote for char literal".into(), Span::new(start_pos, self.pos, start_line, start_col)));
+                        return Err((
+                            "Expected closing single quote for char literal".into(),
+                            Span::new(start_pos, self.pos, start_line, start_col),
+                        ));
                     }
                     TokenKind::CharLit(c)
                 }
@@ -426,7 +439,9 @@ impl<'a> Lexer<'a> {
                         }
                     }
 
-                    if self.peek() == Some('.') && self.peek_next().map_or(false, |c| c.is_ascii_digit()) {
+                    if self.peek() == Some('.')
+                        && self.peek_next().map_or(false, |c| c.is_ascii_digit())
+                    {
                         num_str.push('.');
                         self.advance();
                         while let Some(d) = self.peek() {
@@ -440,12 +455,18 @@ impl<'a> Lexer<'a> {
                             }
                         }
                         let val: f64 = num_str.parse().map_err(|e| {
-                            (format!("Invalid float literal: {}", e), Span::new(start_pos, self.pos, start_line, start_col))
+                            (
+                                format!("Invalid float literal: {}", e),
+                                Span::new(start_pos, self.pos, start_line, start_col),
+                            )
                         })?;
                         TokenKind::FloatLit(val)
                     } else {
                         let val: i64 = num_str.parse().map_err(|e| {
-                            (format!("Invalid integer literal: {}", e), Span::new(start_pos, self.pos, start_line, start_col))
+                            (
+                                format!("Invalid integer literal: {}", e),
+                                Span::new(start_pos, self.pos, start_line, start_col),
+                            )
                         })?;
                         TokenKind::IntLit(val)
                     }

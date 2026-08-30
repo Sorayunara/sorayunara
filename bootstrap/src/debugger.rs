@@ -1,8 +1,8 @@
 #![allow(dead_code)]
 
-use std::collections::{HashMap, HashSet};
 use crate::ir::IrProgram;
 use crate::vm::{CallFrame, Value, VirtualMachine};
+use std::collections::{HashMap, HashSet};
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum DebugCommand {

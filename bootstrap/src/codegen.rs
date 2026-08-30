@@ -8,14 +8,12 @@ use std::collections::HashMap;
 /// the system headers, so prototypes are suppressed for these names.
 const DEFAULT_HEADER_SYMBOLS: &[&str] = &[
     // stdio.h
-    "printf", "fprintf", "sprintf", "snprintf", "puts", "putchar", "getchar",
-    "fopen", "fclose", "fgets", "fputs", "fread", "fwrite", "remove", "rename",
-    // stdlib.h
-    "malloc", "calloc", "realloc", "free", "abs", "labs", "rand", "srand",
-    "exit", "abort", "atoi", "atol", "atof", "qsort", "bsearch",
-    // string.h
-    "strlen", "strcmp", "strncmp", "strcpy", "strncpy", "strcat", "strncat",
-    "memcpy", "memmove", "memset", "memcmp", "strstr", "strchr", "strrchr",
+    "printf", "fprintf", "sprintf", "snprintf", "puts", "putchar", "getchar", "fopen", "fclose",
+    "fgets", "fputs", "fread", "fwrite", "remove", "rename", // stdlib.h
+    "malloc", "calloc", "realloc", "free", "abs", "labs", "rand", "srand", "exit", "abort", "atoi",
+    "atol", "atof", "qsort", "bsearch", // string.h
+    "strlen", "strcmp", "strncmp", "strcpy", "strncpy", "strcat", "strncat", "memcpy", "memmove",
+    "memset", "memcmp", "strstr", "strchr", "strrchr",
 ];
 
 pub fn emit_c(program: &Program) -> String {
@@ -84,7 +82,11 @@ pub fn emit_c(program: &Program) -> String {
             ..
         } = &stmt.kind
         {
-            let ret_c = if name == "main" { "int".to_string() } else { to_c_type(ret_type) };
+            let ret_c = if name == "main" {
+                "int".to_string()
+            } else {
+                to_c_type(ret_type)
+            };
             let mut param_types = Vec::new();
             if params.is_empty() {
                 param_types.push("void".to_string());
@@ -93,7 +95,12 @@ pub fn emit_c(program: &Program) -> String {
                     param_types.push(format!("{} {}", to_c_type(p_ty), p_name));
                 }
             }
-            out.push_str(&format!("{} {}({});\n", ret_c, name, param_types.join(", ")));
+            out.push_str(&format!(
+                "{} {}({});\n",
+                ret_c,
+                name,
+                param_types.join(", ")
+            ));
         }
     }
     out.push('\n');
@@ -121,7 +128,12 @@ pub fn emit_c(program: &Program) -> String {
                     param_types.push(format!("{} {}", to_c_type(p_ty), p_name));
                 }
             }
-            out.push_str(&format!("{} {}({}) {{\n", ret_c, name, param_types.join(", ")));
+            out.push_str(&format!(
+                "{} {}({}) {{\n",
+                ret_c,
+                name,
+                param_types.join(", ")
+            ));
             let mut var_types: HashMap<String, String> = HashMap::new();
             for (p_name, p_ty) in params {
                 var_types.insert(p_name.clone(), to_c_type(p_ty));
@@ -181,13 +193,19 @@ fn collect_var_types(stmts: &[SpannedStmt], var_types: &mut HashMap<String, Stri
             StmtKind::Let {
                 name, type_annot, ..
             } => {
-                let ty = type_annot.as_ref().map(to_c_type).unwrap_or_else(|| "long long".into());
+                let ty = type_annot
+                    .as_ref()
+                    .map(to_c_type)
+                    .unwrap_or_else(|| "long long".into());
                 var_types.insert(name.clone(), ty);
             }
             StmtKind::Const {
                 name, type_annot, ..
             } => {
-                let ty = type_annot.as_ref().map(to_c_type).unwrap_or_else(|| "long long".into());
+                let ty = type_annot
+                    .as_ref()
+                    .map(to_c_type)
+                    .unwrap_or_else(|| "long long".into());
                 var_types.insert(name.clone(), ty);
             }
             _ => {}
@@ -229,7 +247,13 @@ fn emit_stmt_c(stmt: &SpannedStmt, indent: usize, var_types: &HashMap<String, St
             ..
         } => {
             let ty = type_annot.as_ref().unwrap_or(&TypeNode::Int);
-            format!("{}{} {} = {};\n", pad, to_c_type(ty), name, emit_expr_c(value))
+            format!(
+                "{}{} {} = {};\n",
+                pad,
+                to_c_type(ty),
+                name,
+                emit_expr_c(value)
+            )
         }
         StmtKind::Const {
             name,
@@ -237,7 +261,13 @@ fn emit_stmt_c(stmt: &SpannedStmt, indent: usize, var_types: &HashMap<String, St
             value,
         } => {
             let ty = type_annot.as_ref().unwrap_or(&TypeNode::Int);
-            format!("{}const {} {} = {};\n", pad, to_c_type(ty), name, emit_expr_c(value))
+            format!(
+                "{}const {} {} = {};\n",
+                pad,
+                to_c_type(ty),
+                name,
+                emit_expr_c(value)
+            )
         }
         StmtKind::Comptime(body) => {
             let mut s = String::new();
@@ -326,7 +356,11 @@ fn emit_stmt_c(stmt: &SpannedStmt, indent: usize, var_types: &HashMap<String, St
             };
             format!("{}printf(\"{}\"{});\n", pad, formats, exprs_str)
         }
-        StmtKind::Assert(expr) => format!("{}if (!({})) {{ fprintf(stderr, \"Assertion Failed\\n\"); exit(1); }}\n", pad, emit_expr_c(expr)),
+        StmtKind::Assert(expr) => format!(
+            "{}if (!({})) {{ fprintf(stderr, \"Assertion Failed\\n\"); exit(1); }}\n",
+            pad,
+            emit_expr_c(expr)
+        ),
         StmtKind::TestBlock { .. } => String::new(),
         StmtKind::UnsafeBlock(body) => {
             // Unsafe mode: raw pointer access. Preserve the block structure
@@ -356,7 +390,13 @@ fn emit_expr_c_default(expr: &SpannedExpr) -> String {
         ExprKind::Float(f) => format!("{:.6}", f),
         ExprKind::Str(s) => format!("\"{}\"", s),
         ExprKind::Char(c) => format!("'{}'", c),
-        ExprKind::Bool(b) => if *b { "true".into() } else { "false".into() },
+        ExprKind::Bool(b) => {
+            if *b {
+                "true".into()
+            } else {
+                "false".into()
+            }
+        }
         ExprKind::Some(inner) => emit_expr_c(inner),
         ExprKind::None => "NULL".into(),
         ExprKind::Ok(inner) => emit_expr_c(inner),
@@ -404,7 +444,10 @@ fn emit_expr_c_default(expr: &SpannedExpr) -> String {
             if callee == "__aether_method::length" {
                 format!("strlen({})", arg_strs.first().cloned().unwrap_or_default())
             } else if callee == "println" {
-                format!("printf(\"%s\\n\", {})", arg_strs.first().cloned().unwrap_or_default())
+                format!(
+                    "printf(\"%s\\n\", {})",
+                    arg_strs.first().cloned().unwrap_or_default()
+                )
             } else {
                 format!("{}({})", callee, arg_strs.join(", "))
             }
@@ -431,8 +474,7 @@ pub fn emit_js(program: &Program) -> String {
                 if f.params.is_empty() {
                     continue;
                 }
-                let param_names: Vec<String> =
-                    f.params.iter().map(|p| p.0.clone()).collect();
+                let param_names: Vec<String> = f.params.iter().map(|p| p.0.clone()).collect();
                 let body = js_math_binding(&f.name, &param_names).unwrap_or_else(|| {
                     format!(
                         "throw new Error('FFI symbol \"{}\" is not available on the JS target; link a native build instead');",
@@ -464,7 +506,12 @@ pub fn emit_js(program: &Program) -> String {
             }
             let async_prefix = if *is_async { "async " } else { "" };
             let param_names: Vec<String> = params.iter().map(|p| p.0.clone()).collect();
-            out.push_str(&format!("{}function {}({}) {{\n", async_prefix, name, param_names.join(", ")));
+            out.push_str(&format!(
+                "{}function {}({}) {{\n",
+                async_prefix,
+                name,
+                param_names.join(", ")
+            ));
             for s in body {
                 out.push_str(&emit_stmt_js(s, 1));
             }
@@ -483,8 +530,8 @@ pub fn emit_js(program: &Program) -> String {
 
 fn js_math_binding(name: &str, params: &[String]) -> Option<String> {
     let math_fns = [
-        "sqrt", "pow", "abs", "floor", "ceil", "round", "sin", "cos", "tan",
-        "asin", "acos", "atan", "log", "log2", "exp",
+        "sqrt", "pow", "abs", "floor", "ceil", "round", "sin", "cos", "tan", "asin", "acos",
+        "atan", "log", "log2", "exp",
     ];
     if params.len() == 1 && math_fns.contains(&name) {
         return Some(format!("return Math.{}({});", name, params[0]));
@@ -589,7 +636,11 @@ fn emit_stmt_js(stmt: &SpannedStmt, indent: usize) -> String {
             let args_js: Vec<String> = args.iter().map(emit_expr_js).collect();
             format!("{}console.log({});\n", pad, args_js.join(", "))
         }
-        StmtKind::Assert(expr) => format!("{}if (!({})) throw new Error(\"Assertion Failed\");\n", pad, emit_expr_js(expr)),
+        StmtKind::Assert(expr) => format!(
+            "{}if (!({})) throw new Error(\"Assertion Failed\");\n",
+            pad,
+            emit_expr_js(expr)
+        ),
         StmtKind::TestBlock { .. } => String::new(),
         StmtKind::UnsafeBlock(body) => {
             let mut s = format!("{}// unsafe {{\n", pad);
@@ -632,7 +683,9 @@ fn emit_expr_js_default(expr: &SpannedExpr) -> String {
             format!("(async () => {}({}))()", callee, arg_strs.join(", "))
         }
         ExprKind::MakeChan(_) => "[]".into(),
-        ExprKind::ChanSend { chan, value } => format!("{}.push({})", emit_expr_js(chan), emit_expr_js(value)),
+        ExprKind::ChanSend { chan, value } => {
+            format!("{}.push({})", emit_expr_js(chan), emit_expr_js(value))
+        }
         ExprKind::ChanRecv(chan) => format!("{}.shift()", emit_expr_js(chan)),
         ExprKind::Binary { left, op, right } => {
             let op_str = match op {
@@ -650,7 +703,12 @@ fn emit_expr_js_default(expr: &SpannedExpr) -> String {
                 BinaryOpKind::And => "&&",
                 BinaryOpKind::Or => "||",
             };
-            format!("({} {} {})", emit_expr_js(left), op_str, emit_expr_js(right))
+            format!(
+                "({} {} {})",
+                emit_expr_js(left),
+                op_str,
+                emit_expr_js(right)
+            )
         }
         ExprKind::Unary { op, expr } => {
             let op_str = match op {

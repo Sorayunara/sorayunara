@@ -1,8 +1,8 @@
 use sorayunara::ir::compile_to_ir;
 use sorayunara::lexer::tokenize;
-use sorayunara::llvm_backend::{emit_llvm_ir_with_target, Target};
+use sorayunara::llvm_backend::{Target, emit_llvm_ir_with_target};
 use sorayunara::parser::parse;
-use sorayunara::vm::{execute_ir, Value};
+use sorayunara::vm::{Value, execute_ir};
 use sorayunara::wasm_backend::emit_wat;
 
 #[test]

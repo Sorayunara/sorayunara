@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
-use std::collections::HashMap;
 use crate::ast::*;
+use std::collections::HashMap;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum OpCode {
@@ -70,7 +70,11 @@ pub struct IrFunction {
 
 impl IrFunction {
     pub fn disassemble(&self) -> String {
-        let mut out = format!("--- Function: {} ({}) ---\n", self.name, self.params.join(", "));
+        let mut out = format!(
+            "--- Function: {} ({}) ---\n",
+            self.name,
+            self.params.join(", ")
+        );
         for (offset, op) in self.instructions.iter().enumerate() {
             out.push_str(&format!("{:04}  {:?}\n", offset, op));
         }
@@ -152,16 +156,15 @@ impl IrCompiler {
 
         for stmt in &program.statements {
             if let StmtKind::Function {
-                name,
-                params,
-                body,
-                ..
+                name, params, body, ..
             } = &stmt.kind
             {
                 let mut fn_compiler = IrCompiler::new();
                 fn_compiler.externs = self.externs.clone();
                 if name == "main" {
-                    fn_compiler.current_instructions.extend(top_level_compiler.current_instructions.clone());
+                    fn_compiler
+                        .current_instructions
+                        .extend(top_level_compiler.current_instructions.clone());
                 }
 
                 for s in body {
@@ -465,8 +468,12 @@ impl IrCompiler {
             ExprKind::Unary { op, expr } => {
                 self.compile_expr(expr);
                 match op {
-                    UnaryOpKind::Neg => { self.emit(OpCode::Neg); }
-                    UnaryOpKind::Not => { self.emit(OpCode::Not); }
+                    UnaryOpKind::Neg => {
+                        self.emit(OpCode::Neg);
+                    }
+                    UnaryOpKind::Not => {
+                        self.emit(OpCode::Not);
+                    }
                     UnaryOpKind::Deref => {}
                 };
             }

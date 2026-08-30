@@ -132,7 +132,10 @@ fn test_grammar_trait_and_impl_items() {
     }
 
     // 2. Struct verification
-    assert!(matches!(ast.statements[1].kind, StmtKind::StructDecl { .. }));
+    assert!(matches!(
+        ast.statements[1].kind,
+        StmtKind::StructDecl { .. }
+    ));
 
     // 3. Impl verification
     if let StmtKind::ImplBlock {
@@ -219,7 +222,13 @@ fn test_grammar_expression_hierarchy_and_ast_derivation() {
             if let ExprKind::Binary { left, op, right } = &value.kind {
                 assert_eq!(*op, BinaryOpKind::Add);
                 assert!(matches!(right.kind, ExprKind::Int(5)));
-                assert!(matches!(left.kind, ExprKind::Binary { op: BinaryOpKind::Mul, .. }));
+                assert!(matches!(
+                    left.kind,
+                    ExprKind::Binary {
+                        op: BinaryOpKind::Mul,
+                        ..
+                    }
+                ));
             } else {
                 panic!("Expected Binary Add expression");
             }
@@ -227,7 +236,13 @@ fn test_grammar_expression_hierarchy_and_ast_derivation() {
 
         // 5. Unary Expression
         if let StmtKind::Let { value, .. } = &body[4].kind {
-            assert!(matches!(value.kind, ExprKind::Unary { op: UnaryOpKind::Neg, .. }));
+            assert!(matches!(
+                value.kind,
+                ExprKind::Unary {
+                    op: UnaryOpKind::Neg,
+                    ..
+                }
+            ));
         }
 
         // 6. Array Literal
@@ -264,7 +279,11 @@ fn test_grammar_match_expression_ast() {
 
     if let StmtKind::Function { body, .. } = &ast.statements[0].kind {
         if let StmtKind::Let { value, .. } = &body[0].kind {
-            if let ExprKind::Match { value: target, arms } = &value.kind {
+            if let ExprKind::Match {
+                value: target,
+                arms,
+            } = &value.kind
+            {
                 assert!(matches!(&target.kind, ExprKind::Var(v) if v == "code"));
                 assert_eq!(arms.len(), 3);
                 assert!(matches!(arms[0].pattern, MatchPattern::Literal(..)));

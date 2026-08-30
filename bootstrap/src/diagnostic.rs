@@ -12,11 +12,21 @@ pub struct Span {
 
 impl Span {
     pub fn new(start: usize, end: usize, line: usize, col: usize) -> Self {
-        Self { start, end, line, col }
+        Self {
+            start,
+            end,
+            line,
+            col,
+        }
     }
 
     pub fn dummy() -> Self {
-        Self { start: 0, end: 0, line: 1, col: 1 }
+        Self {
+            start: 0,
+            end: 0,
+            line: 1,
+            col: 1,
+        }
     }
 
     pub fn merge(self, other: Span) -> Span {
@@ -24,7 +34,11 @@ impl Span {
             start: self.start.min(other.start),
             end: self.end.max(other.end),
             line: self.line.min(other.line),
-            col: if self.line <= other.line { self.col } else { other.col },
+            col: if self.line <= other.line {
+                self.col
+            } else {
+                other.col
+            },
         }
     }
 }
@@ -156,7 +170,10 @@ impl Diagnostic {
         }
 
         // 2. Location pointer: --> filename:line:col
-        output.push_str(&format!("  --> {}:{}:{}\n", filename, self.span.line, self.span.col));
+        output.push_str(&format!(
+            "  --> {}:{}:{}\n",
+            filename, self.span.line, self.span.col
+        ));
         output.push_str("   |\n");
 
         let lines: Vec<&str> = source.lines().collect();
@@ -203,7 +220,9 @@ pub struct DiagnosticEngine {
 
 impl DiagnosticEngine {
     pub fn new() -> Self {
-        Self { diagnostics: Vec::new() }
+        Self {
+            diagnostics: Vec::new(),
+        }
     }
 
     pub fn emit(&mut self, diag: Diagnostic) {
@@ -211,7 +230,9 @@ impl DiagnosticEngine {
     }
 
     pub fn has_errors(&self) -> bool {
-        self.diagnostics.iter().any(|d| d.level == DiagnosticLevel::Error)
+        self.diagnostics
+            .iter()
+            .any(|d| d.level == DiagnosticLevel::Error)
     }
 
     pub fn render_all(&self, filename: &str, source: &str) -> String {

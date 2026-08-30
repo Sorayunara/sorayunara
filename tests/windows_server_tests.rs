@@ -1,4 +1,4 @@
-use sorayunara::windows::{WindowsSystemInfo, WindowsSupportTier, ServiceConfig, WindowsEventLog};
+use sorayunara::windows::{ServiceConfig, WindowsEventLog, WindowsSupportTier, WindowsSystemInfo};
 
 #[test]
 fn test_windows_server_detection() {
@@ -11,7 +11,10 @@ fn test_windows_server_detection() {
 
 #[test]
 fn test_windows_service_configuration() {
-    let svc = ServiceConfig::new("SorayunaraApi", "C:\\Program Files\\Sorayunara\\bin\\sorayunara.exe");
+    let svc = ServiceConfig::new(
+        "SorayunaraApi",
+        "C:\\Program Files\\Sorayunara\\bin\\sorayunara.exe",
+    );
     assert_eq!(svc.name, "SorayunaraApi");
     assert_eq!(svc.start_type, "automatic");
     assert_eq!(svc.account, "LocalService");

@@ -65,8 +65,7 @@ fn test_formal_property_verification() {
     assert!(prop_comm.counterexample.is_none());
 
     // Property 2: multiplication distributes over addition: forall a, b: a * (b + c)
-    let prop_mult = runner.run_property_check("multiplication by zero", |a, _| {
-        a.wrapping_mul(0) == 0
-    });
+    let prop_mult =
+        runner.run_property_check("multiplication by zero", |a, _| a.wrapping_mul(0) == 0);
     assert!(prop_mult.passed);
 }

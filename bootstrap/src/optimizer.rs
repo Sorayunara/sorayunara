@@ -297,7 +297,9 @@ impl Optimizer {
         let mut changed = false;
         let len = func.instructions.len();
         if len >= 2 {
-            if let (OpCode::Call(target, _), OpCode::Return) = (&func.instructions[len - 2], &func.instructions[len - 1]) {
+            if let (OpCode::Call(target, _), OpCode::Return) =
+                (&func.instructions[len - 2], &func.instructions[len - 1])
+            {
                 if target == &func.name {
                     // Recursive tail call -> convert to loop jump
                     self.optimizations_count += 1;
@@ -328,7 +330,9 @@ impl Optimizer {
             }
         }
 
-        program.functions.retain(|name, _| used_functions.contains(name) || name.starts_with("__test_"));
+        program
+            .functions
+            .retain(|name, _| used_functions.contains(name) || name.starts_with("__test_"));
         let removed = initial_count - program.functions.len();
         if removed > 0 {
             self.optimizations_count += removed;

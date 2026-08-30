@@ -1,11 +1,11 @@
 #![allow(dead_code)]
 
-use std::time::Instant;
-use crate::ir::{compile_to_ir, IrProgram};
+use crate::ir::{IrProgram, compile_to_ir};
 use crate::lexer::tokenize;
 use crate::parser::parse;
 use crate::semantics::check_semantics;
 use crate::vm::VirtualMachine;
+use std::time::Instant;
 
 #[derive(Debug, Default, Clone)]
 pub struct TestOptions {
@@ -45,7 +45,9 @@ impl TestRunner {
         let tokens = tokenize(source).map_err(|e| format!("Lexer error: {:?}", e))?;
         let program = parse(tokens).map_err(|(e, _)| format!("Parse error: {}", e))?;
 
-        check_semantics(&program).map(|_| ()).map_err(|d| d.render_all(file_label, source))?;
+        check_semantics(&program)
+            .map(|_| ())
+            .map_err(|d| d.render_all(file_label, source))?;
 
         let ir = compile_to_ir(&program);
         self.run_ir(&ir)
@@ -139,13 +141,25 @@ impl TestRunner {
                 Ok(_) => {
                     if self.options.bench {
                         let per_op = duration / 100.0;
-                        println!("  ✅ test \"{}\" ... \x1b[32mPASSED\x1b[0m (bench: {:.4} ms/iter)", display_name, per_op);
+                        println!(
+                            "  ✅ test \"{}\" ... \x1b[32mPASSED\x1b[0m (bench: {:.4} ms/iter)",
+                            display_name, per_op
+                        );
                     } else if self.options.fuzz {
-                        println!("  ✅ test \"{}\" ... \x1b[32mPASSED\x1b[0m (fuzz: 100 trials, 0 crashes)", display_name);
+                        println!(
+                            "  ✅ test \"{}\" ... \x1b[32mPASSED\x1b[0m (fuzz: 100 trials, 0 crashes)",
+                            display_name
+                        );
                     } else if self.options.verify {
-                        println!("  ✅ property \"{}\" ... \x1b[32mVERIFIED\x1b[0m (formal invariant holds)", display_name);
+                        println!(
+                            "  ✅ property \"{}\" ... \x1b[32mVERIFIED\x1b[0m (formal invariant holds)",
+                            display_name
+                        );
                     } else {
-                        println!("  ✅ test \"{}\" ... \x1b[32mPASSED\x1b[0m ({:.2}ms)", display_name, duration);
+                        println!(
+                            "  ✅ test \"{}\" ... \x1b[32mPASSED\x1b[0m ({:.2}ms)",
+                            display_name, duration
+                        );
                     }
                     if let Some(f) = ir.functions.get(&fn_name) {
                         executed_instructions += f.instructions.len();
@@ -158,7 +172,10 @@ impl TestRunner {
                     });
                 }
                 Err(err) => {
-                    println!("  ❌ test \"{}\" ... \x1b[31mFAILED\x1b[0m ({:.2}ms)", display_name, duration);
+                    println!(
+                        "  ❌ test \"{}\" ... \x1b[31mFAILED\x1b[0m ({:.2}ms)",
+                        display_name, duration
+                    );
                     println!("     ↳ {}", err);
                     results.push(TestResult {
                         name: display_name.to_string(),
@@ -172,7 +189,10 @@ impl TestRunner {
 
         if self.options.coverage && total_instructions > 0 {
             let coverage_pct = (executed_instructions as f64 / total_instructions as f64) * 100.0;
-            println!("\n📊 Test Coverage: {:.1}% ({}/{} IR instructions covered)", coverage_pct, executed_instructions, total_instructions);
+            println!(
+                "\n📊 Test Coverage: {:.1}% ({}/{} IR instructions covered)",
+                coverage_pct, executed_instructions, total_instructions
+            );
         }
 
         let passed = results.iter().filter(|r| r.passed).count();

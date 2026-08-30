@@ -6,10 +6,22 @@ use sorayunara::semantics::check_semantics;
 
 #[test]
 fn test_calling_convention_and_abi() {
-    assert_eq!(CallingConvention::from_abi_str("C"), CallingConvention::Cdecl);
-    assert_eq!(CallingConvention::from_abi_str("stdcall"), CallingConvention::Stdcall);
-    assert_eq!(CallingConvention::from_abi_str("fastcall"), CallingConvention::Fastcall);
-    assert_eq!(CallingConvention::from_abi_str("system"), CallingConvention::System);
+    assert_eq!(
+        CallingConvention::from_abi_str("C"),
+        CallingConvention::Cdecl
+    );
+    assert_eq!(
+        CallingConvention::from_abi_str("stdcall"),
+        CallingConvention::Stdcall
+    );
+    assert_eq!(
+        CallingConvention::from_abi_str("fastcall"),
+        CallingConvention::Fastcall
+    );
+    assert_eq!(
+        CallingConvention::from_abi_str("system"),
+        CallingConvention::System
+    );
 }
 
 #[test]

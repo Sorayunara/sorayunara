@@ -3,10 +3,16 @@ use sorayunara::parser::parse;
 use sorayunara::semantics::check_semantics;
 
 fn verify_std_module(name: &str, content: &str) {
-    let tokens = tokenize(content).unwrap_or_else(|e| panic!("Lexing failed for std/{}.sora: {:?}", name, e));
-    let ast = parse(tokens).unwrap_or_else(|e| panic!("Parsing failed for std/{}.sora: {:?}", name, e));
+    let tokens = tokenize(content)
+        .unwrap_or_else(|e| panic!("Lexing failed for std/{}.sora: {:?}", name, e));
+    let ast =
+        parse(tokens).unwrap_or_else(|e| panic!("Parsing failed for std/{}.sora: {:?}", name, e));
     if let Err(engine) = check_semantics(&ast) {
-        panic!("Semantics failed for std/{}.sora:\n{}", name, engine.render_all(&format!("{}.sora", name), content));
+        panic!(
+            "Semantics failed for std/{}.sora:\n{}",
+            name,
+            engine.render_all(&format!("{}.sora", name), content)
+        );
     }
 }
 

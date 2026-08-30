@@ -31,6 +31,11 @@ fn test_official_ecosystem_all_pillars_exist() {
 
     for (name, rel_path) in pillars {
         let path = Path::new(rel_path);
-        assert!(path.exists(), "Ecosystem pillar missing: {} ({})", name, rel_path);
+        assert!(
+            path.exists(),
+            "Ecosystem pillar missing: {} ({})",
+            name,
+            rel_path
+        );
     }
 }

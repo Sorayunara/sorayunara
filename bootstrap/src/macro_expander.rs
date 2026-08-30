@@ -40,13 +40,16 @@ pub fn expand_macros(program: Program) -> Program {
                                 generated_stmts.push(generate_default_fn(name, fields, stmt.span));
                             }
                             "Serialize" => {
-                                generated_stmts.push(generate_serialize_fn(name, fields, stmt.span));
+                                generated_stmts
+                                    .push(generate_serialize_fn(name, fields, stmt.span));
                             }
                             "Deserialize" => {
-                                generated_stmts.push(generate_deserialize_fn(name, fields, stmt.span));
+                                generated_stmts
+                                    .push(generate_deserialize_fn(name, fields, stmt.span));
                             }
                             "PartialEq" => {
-                                generated_stmts.push(generate_partial_eq_fn(name, fields, stmt.span));
+                                generated_stmts
+                                    .push(generate_partial_eq_fn(name, fields, stmt.span));
                             }
                             _ => {}
                         }
@@ -126,7 +129,11 @@ fn generate_clone_fn(struct_name: &str, _fields: &[(String, TypeNode)], span: Sp
     }
 }
 
-fn generate_default_fn(struct_name: &str, _fields: &[(String, TypeNode)], span: Span) -> SpannedStmt {
+fn generate_default_fn(
+    struct_name: &str,
+    _fields: &[(String, TypeNode)],
+    span: Span,
+) -> SpannedStmt {
     let fn_name = format!("default_{}", struct_name);
     SpannedStmt {
         kind: StmtKind::Function {
@@ -148,7 +155,11 @@ fn generate_default_fn(struct_name: &str, _fields: &[(String, TypeNode)], span: 
     }
 }
 
-fn generate_serialize_fn(struct_name: &str, _fields: &[(String, TypeNode)], span: Span) -> SpannedStmt {
+fn generate_serialize_fn(
+    struct_name: &str,
+    _fields: &[(String, TypeNode)],
+    span: Span,
+) -> SpannedStmt {
     let fn_name = format!("serialize_{}", struct_name);
     SpannedStmt {
         kind: StmtKind::Function {
@@ -170,7 +181,11 @@ fn generate_serialize_fn(struct_name: &str, _fields: &[(String, TypeNode)], span
     }
 }
 
-fn generate_deserialize_fn(struct_name: &str, _fields: &[(String, TypeNode)], span: Span) -> SpannedStmt {
+fn generate_deserialize_fn(
+    struct_name: &str,
+    _fields: &[(String, TypeNode)],
+    span: Span,
+) -> SpannedStmt {
     let fn_name = format!("deserialize_{}", struct_name);
     SpannedStmt {
         kind: StmtKind::Function {
@@ -192,7 +207,11 @@ fn generate_deserialize_fn(struct_name: &str, _fields: &[(String, TypeNode)], sp
     }
 }
 
-fn generate_partial_eq_fn(struct_name: &str, _fields: &[(String, TypeNode)], span: Span) -> SpannedStmt {
+fn generate_partial_eq_fn(
+    struct_name: &str,
+    _fields: &[(String, TypeNode)],
+    span: Span,
+) -> SpannedStmt {
     let fn_name = format!("eq_{}", struct_name);
     SpannedStmt {
         kind: StmtKind::Function {
@@ -217,7 +236,11 @@ fn generate_partial_eq_fn(struct_name: &str, _fields: &[(String, TypeNode)], spa
     }
 }
 
-fn generate_reflection_fn(struct_name: &str, fields: &[(String, TypeNode)], span: Span) -> SpannedStmt {
+fn generate_reflection_fn(
+    struct_name: &str,
+    fields: &[(String, TypeNode)],
+    span: Span,
+) -> SpannedStmt {
     let fn_name = format!("reflect_fields_{}", struct_name);
     let field_exprs: Vec<SpannedExpr> = fields
         .iter()

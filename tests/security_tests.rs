@@ -76,7 +76,8 @@ fn test_memory_safety_audit_and_lockfile_security() {
         name: "http".to_string(),
         version: "2.1.0".to_string(),
         source: "https://pkg.aether.dev/http/2.1.0".to_string(),
-        checksum: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855".to_string(),
+        checksum: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            .to_string(),
         dependencies: vec![],
     });
     assert!(sorayunara::security::SecurityEngine::verify_lockfile_security(&lockfile).is_ok());

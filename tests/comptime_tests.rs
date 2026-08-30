@@ -3,7 +3,7 @@ use sorayunara::lexer::tokenize;
 use sorayunara::optimizer::optimize;
 use sorayunara::parser::parse;
 use sorayunara::semantics::check_semantics;
-use sorayunara::vm::{execute_ir, Value};
+use sorayunara::vm::{Value, execute_ir};
 
 #[test]
 fn test_const_declaration_and_folding() {

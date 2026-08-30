@@ -7,7 +7,7 @@ use crate::parser;
 pub fn format_source(source: &str) -> Result<String, String> {
     let tokens = lexer::tokenize(source).map_err(|e| e.0)?;
     let program = parser::parse(tokens).map_err(|e| e.0)?;
-    
+
     let mut out = String::new();
     for (i, stmt) in program.statements.iter().enumerate() {
         if i > 0 {
@@ -27,14 +27,21 @@ fn format_type(ty: &TypeNode) -> String {
         TypeNode::Bool => "Bool".to_string(),
         TypeNode::String => "String".to_string(),
         TypeNode::Char => "Char".to_string(),
-        TypeNode::Tuple(items) => format!("({})", items.iter().map(format_type).collect::<Vec<_>>().join(", ")),
+        TypeNode::Tuple(items) => format!(
+            "({})",
+            items.iter().map(format_type).collect::<Vec<_>>().join(", ")
+        ),
         TypeNode::Void => "Void".to_string(),
         TypeNode::Infer => "".to_string(),
         TypeNode::Array(inner) => format!("[{}]", format_type(inner)),
         TypeNode::Slice(inner) => format!("Slice<{}>", format_type(inner)),
         TypeNode::Map(k, v) => format!("Map<{}, {}>", format_type(k), format_type(v)),
         TypeNode::Set(inner) => format!("Set<{}>", format_type(inner)),
-        TypeNode::Union(items) => items.iter().map(format_type).collect::<Vec<_>>().join(" | "),
+        TypeNode::Union(items) => items
+            .iter()
+            .map(format_type)
+            .collect::<Vec<_>>()
+            .join(" | "),
         TypeNode::Option(inner) => format!("Option<{}>", format_type(inner)),
         TypeNode::Result(ok, err) => format!("Result<{}, {}>", format_type(ok), format_type(err)),
         TypeNode::Ref(inner, is_mut) => {
@@ -53,8 +60,20 @@ fn format_type(ty: &TypeNode) -> String {
         }
         TypeNode::Task(inner) => format!("Task<{}>", format_type(inner)),
         TypeNode::Chan(inner) => format!("Chan<{}>", format_type(inner)),
-        TypeNode::Function { params, ret } => format!("fn({}) -> {}", params.iter().map(format_type).collect::<Vec<_>>().join(", "), format_type(ret)),
-        TypeNode::Generic { name, args } => format!("{}<{}>", name, args.iter().map(format_type).collect::<Vec<_>>().join(", ")),
+        TypeNode::Function { params, ret } => format!(
+            "fn({}) -> {}",
+            params
+                .iter()
+                .map(format_type)
+                .collect::<Vec<_>>()
+                .join(", "),
+            format_type(ret)
+        ),
+        TypeNode::Generic { name, args } => format!(
+            "{}<{}>",
+            name,
+            args.iter().map(format_type).collect::<Vec<_>>().join(", ")
+        ),
         TypeNode::Custom(name) => name.clone(),
     }
 }
@@ -64,17 +83,25 @@ fn format_generic_params(params: &[GenericParam]) -> String {
         return String::new();
     }
 
-    let params = params.iter().map(|param| {
-        if param.bounds.is_empty() {
-            param.name.clone()
-        } else {
-            format!(
-                "{}: {}",
-                param.name,
-                param.bounds.iter().map(format_type).collect::<Vec<_>>().join(" + ")
-            )
-        }
-    }).collect::<Vec<_>>();
+    let params = params
+        .iter()
+        .map(|param| {
+            if param.bounds.is_empty() {
+                param.name.clone()
+            } else {
+                format!(
+                    "{}: {}",
+                    param.name,
+                    param
+                        .bounds
+                        .iter()
+                        .map(format_type)
+                        .collect::<Vec<_>>()
+                        .join(" + ")
+                )
+            }
+        })
+        .collect::<Vec<_>>();
     format!("<{}>", params.join(", "))
 }
 
@@ -93,7 +120,12 @@ fn format_stmt(stmt: &SpannedStmt, indent: usize) -> String {
                 if attr.args.is_empty() {
                     s.push_str(&format!("{}@{}\n", pad, attr.name));
                 } else {
-                    s.push_str(&format!("{}@{}({})\n", pad, attr.name, attr.args.join(", ")));
+                    s.push_str(&format!(
+                        "{}@{}({})\n",
+                        pad,
+                        attr.name,
+                        attr.args.join(", ")
+                    ));
                 }
             }
             s.push_str(&format!("{}extern \"{}\" {{\n", pad, abi));
@@ -130,18 +162,37 @@ fn format_stmt(stmt: &SpannedStmt, indent: usize) -> String {
                 if attr.args.is_empty() {
                     s.push_str(&format!("{}@{}\n", pad, attr.name));
                 } else {
-                    s.push_str(&format!("{}@{}({})\n", pad, attr.name, attr.args.join(", ")));
+                    s.push_str(&format!(
+                        "{}@{}({})\n",
+                        pad,
+                        attr.name,
+                        attr.args.join(", ")
+                    ));
                 }
             }
-            s.push_str(&format!("{}struct {}{} {{\n", pad, name, format_generic_params(type_params)));
+            s.push_str(&format!(
+                "{}struct {}{} {{\n",
+                pad,
+                name,
+                format_generic_params(type_params)
+            ));
             for (f_name, f_ty) in fields {
                 s.push_str(&format!("{}    {}: {},\n", pad, f_name, format_type(f_ty)));
             }
             s.push_str(&format!("{}}}", pad));
             s
         }
-        StmtKind::EnumDecl { name, type_params, variants } => {
-            let mut s = format!("{}enum {}{} {{\n", pad, name, format_generic_params(type_params));
+        StmtKind::EnumDecl {
+            name,
+            type_params,
+            variants,
+        } => {
+            let mut s = format!(
+                "{}enum {}{} {{\n",
+                pad,
+                name,
+                format_generic_params(type_params)
+            );
             for (v_name, payload) in variants {
                 if let Some(p) = payload {
                     s.push_str(&format!("{}    {}({}),\n", pad, v_name, format_type(p)));
@@ -155,36 +206,97 @@ fn format_stmt(stmt: &SpannedStmt, indent: usize) -> String {
         StmtKind::TypeAlias { name, target, .. } => {
             format!("{}type {} = {}", pad, name, format_type(target))
         }
-        StmtKind::TraitDecl { name, type_params, associated_types, methods } => {
-            let mut s = format!("{}trait {}{} {{\n", pad, name, format_generic_params(type_params));
+        StmtKind::TraitDecl {
+            name,
+            type_params,
+            associated_types,
+            methods,
+        } => {
+            let mut s = format!(
+                "{}trait {}{} {{\n",
+                pad,
+                name,
+                format_generic_params(type_params)
+            );
             for associated in associated_types {
                 s.push_str(&format!("{}    type {}\n", pad, associated.name));
             }
             for method in methods {
-                let params = method.params.iter().map(|param| match &param.type_annot {
-                    Some(ty) => format!("{}: {}", param.name, format_type(ty)),
-                    None => param.name.clone(),
-                }).collect::<Vec<_>>().join(", ");
-                s.push_str(&format!("{}    fn {}{}({}) -> {}\n", pad, method.name, format_generic_params(&method.type_params), params, format_type(&method.ret_type)));
+                let params = method
+                    .params
+                    .iter()
+                    .map(|param| match &param.type_annot {
+                        Some(ty) => format!("{}: {}", param.name, format_type(ty)),
+                        None => param.name.clone(),
+                    })
+                    .collect::<Vec<_>>()
+                    .join(", ");
+                s.push_str(&format!(
+                    "{}    fn {}{}({}) -> {}\n",
+                    pad,
+                    method.name,
+                    format_generic_params(&method.type_params),
+                    params,
+                    format_type(&method.ret_type)
+                ));
             }
             s.push_str(&format!("{}}}", pad));
             s
         }
-        StmtKind::ImplBlock { type_params, trait_ref, target_type, items } => {
-            let relation = trait_ref.as_ref().map(|trait_ref| format!("{} for ", format_type(trait_ref))).unwrap_or_default();
-            let mut s = format!("{}impl {}{}{} {{\n", pad, format_generic_params(type_params), relation, format_type(target_type));
+        StmtKind::ImplBlock {
+            type_params,
+            trait_ref,
+            target_type,
+            items,
+        } => {
+            let relation = trait_ref
+                .as_ref()
+                .map(|trait_ref| format!("{} for ", format_type(trait_ref)))
+                .unwrap_or_default();
+            let mut s = format!(
+                "{}impl {}{}{} {{\n",
+                pad,
+                format_generic_params(type_params),
+                relation,
+                format_type(target_type)
+            );
             for item in items {
                 match item {
-                    ImplItem::AssociatedType { name, target, .. } => s.push_str(&format!("{}    type {} = {}\n", pad, name, format_type(target))),
-                    ImplItem::Method(method) => s.push_str(&format!("{}\n", format_stmt(method, indent + 1))),
+                    ImplItem::AssociatedType { name, target, .. } => s.push_str(&format!(
+                        "{}    type {} = {}\n",
+                        pad,
+                        name,
+                        format_type(target)
+                    )),
+                    ImplItem::Method(method) => {
+                        s.push_str(&format!("{}\n", format_stmt(method, indent + 1)))
+                    }
                 }
             }
             s.push_str(&format!("{}}}", pad));
             s
         }
-        StmtKind::Operator { operator, type_params, params, ret_type, body, .. } => {
-            let params = params.iter().map(|(name, ty)| format!("{}: {}", name, format_type(ty))).collect::<Vec<_>>().join(", ");
-            let mut s = format!("{}operator {}{}({}) -> {} {{\n", pad, operator, format_generic_params(type_params), params, format_type(ret_type));
+        StmtKind::Operator {
+            operator,
+            type_params,
+            params,
+            ret_type,
+            body,
+            ..
+        } => {
+            let params = params
+                .iter()
+                .map(|(name, ty)| format!("{}: {}", name, format_type(ty)))
+                .collect::<Vec<_>>()
+                .join(", ");
+            let mut s = format!(
+                "{}operator {}{}({}) -> {} {{\n",
+                pad,
+                operator,
+                format_generic_params(type_params),
+                params,
+                format_type(ret_type)
+            );
             for statement in body {
                 s.push_str(&format_stmt(statement, indent + 1));
                 s.push('\n');
@@ -207,7 +319,12 @@ fn format_stmt(stmt: &SpannedStmt, indent: usize) -> String {
                 if attr.args.is_empty() {
                     s.push_str(&format!("{}@{}\n", pad, attr.name));
                 } else {
-                    s.push_str(&format!("{}@{}({})\n", pad, attr.name, attr.args.join(", ")));
+                    s.push_str(&format!(
+                        "{}@{}({})\n",
+                        pad,
+                        attr.name,
+                        attr.args.join(", ")
+                    ));
                 }
             }
             let async_prefix = if *is_async { "async " } else { "" };
@@ -221,7 +338,15 @@ fn format_stmt(stmt: &SpannedStmt, indent: usize) -> String {
                 String::new()
             };
 
-            let mut s = format!("{}{}fn {}{}({}){} {{\n", pad, async_prefix, name, format_generic_params(type_params), p_strs.join(", "), ret_str);
+            let mut s = format!(
+                "{}{}fn {}{}({}){} {{\n",
+                pad,
+                async_prefix,
+                name,
+                format_generic_params(type_params),
+                p_strs.join(", "),
+                ret_str
+            );
             for b in body {
                 s.push_str(&format_stmt(b, indent + 1));
                 s.push('\n');
@@ -241,20 +366,41 @@ fn format_stmt(stmt: &SpannedStmt, indent: usize) -> String {
             } else {
                 String::new()
             };
-            format!("{}let {}{}{} = {}", pad, mut_str, name, ty_str, format_expr(value))
+            format!(
+                "{}let {}{}{} = {}",
+                pad,
+                mut_str,
+                name,
+                ty_str,
+                format_expr(value)
+            )
         }
-        StmtKind::LetDestructure { pattern, type_annot, value } => {
+        StmtKind::LetDestructure {
+            pattern,
+            type_annot,
+            value,
+        } => {
             let pattern = match pattern {
                 Pattern::Wildcard => "_".into(),
                 Pattern::Identifier(name) => name.clone(),
-                Pattern::Tuple(items) => format!("({})", items.iter().map(|item| match item {
-                    Pattern::Wildcard => "_".into(),
-                    Pattern::Identifier(name) => name.clone(),
-                    _ => "…".into(),
-                }).collect::<Vec<_>>().join(", ")),
+                Pattern::Tuple(items) => format!(
+                    "({})",
+                    items
+                        .iter()
+                        .map(|item| match item {
+                            Pattern::Wildcard => "_".into(),
+                            Pattern::Identifier(name) => name.clone(),
+                            _ => "…".into(),
+                        })
+                        .collect::<Vec<_>>()
+                        .join(", ")
+                ),
                 Pattern::Struct { name, .. } => format!("{} {{ … }}", name),
             };
-            let ty = type_annot.as_ref().map(|ty| format!(": {}", format_type(ty))).unwrap_or_default();
+            let ty = type_annot
+                .as_ref()
+                .map(|ty| format!(": {}", format_type(ty)))
+                .unwrap_or_default();
             format!("{}let {}{} = {}", pad, pattern, ty, format_expr(value))
         }
         StmtKind::Const {
@@ -286,7 +432,12 @@ fn format_stmt(stmt: &SpannedStmt, indent: usize) -> String {
             index,
             value,
         } => {
-            format!("{}[{}] = {}", format_expr(target), format_expr(index), format_expr(value))
+            format!(
+                "{}[{}] = {}",
+                format_expr(target),
+                format_expr(index),
+                format_expr(value)
+            )
         }
         StmtKind::If {
             condition,
@@ -395,7 +546,9 @@ fn format_expr(expr: &SpannedExpr) -> String {
             format!("spawn {}({})", callee, a_strs.join(", "))
         }
         ExprKind::MakeChan(ty) => format!("chan<{}>()", format_type(ty)),
-        ExprKind::ChanSend { chan, value } => format!("{}.send({})", format_expr(chan), format_expr(value)),
+        ExprKind::ChanSend { chan, value } => {
+            format!("{}.send({})", format_expr(chan), format_expr(value))
+        }
         ExprKind::ChanRecv(chan) => format!("{}.recv()", format_expr(chan)),
         ExprKind::Binary { left, op, right } => {
             let op_str = match op {
@@ -427,12 +580,22 @@ fn format_expr(expr: &SpannedExpr) -> String {
             let a_strs: Vec<String> = args.iter().map(format_expr).collect();
             format!("{}({})", callee, a_strs.join(", "))
         }
-        ExprKind::Tuple(items) => format!("({})", items.iter().map(format_expr).collect::<Vec<_>>().join(", ")),
+        ExprKind::Tuple(items) => format!(
+            "({})",
+            items.iter().map(format_expr).collect::<Vec<_>>().join(", ")
+        ),
         ExprKind::Array(elements) => {
             let a_strs: Vec<String> = elements.iter().map(format_expr).collect();
             format!("[{}]", a_strs.join(", "))
         }
-        ExprKind::Set(elements) => format!("set {{{}}}", elements.iter().map(format_expr).collect::<Vec<_>>().join(", ")),
+        ExprKind::Set(elements) => format!(
+            "set {{{}}}",
+            elements
+                .iter()
+                .map(format_expr)
+                .collect::<Vec<_>>()
+                .join(", ")
+        ),
         ExprKind::Map(entries) => {
             let e_strs: Vec<String> = entries
                 .iter()
@@ -446,13 +609,21 @@ fn format_expr(expr: &SpannedExpr) -> String {
         ExprKind::Dot { target, field } => {
             format!("{}.{}", format_expr(target), field)
         }
-        ExprKind::CustomBinary { left, operator, right } => {
+        ExprKind::CustomBinary {
+            left,
+            operator,
+            right,
+        } => {
             format!("{} {} {}", format_expr(left), operator, format_expr(right))
         }
         ExprKind::IsA { value, type_node } => {
             format!("{} is {}", format_expr(value), format_type(type_node))
         }
-        ExprKind::EnumVariantConstruct { enum_name, variant_name, payload } => match payload {
+        ExprKind::EnumVariantConstruct {
+            enum_name,
+            variant_name,
+            payload,
+        } => match payload {
             Some(value) => format!("{}::{}({})", enum_name, variant_name, format_expr(value)),
             None => format!("{}::{}", enum_name, variant_name),
         },
@@ -475,10 +646,16 @@ fn format_expr(expr: &SpannedExpr) -> String {
                         }
                     }
                     MatchPattern::EnumVariantStruct(variant, fields) => {
-                        let fields = fields.iter().map(|(name, pattern)| match pattern {
-                            Some(MatchPattern::Var(binding)) => format!("{}: {}", name, binding),
-                            _ => name.clone(),
-                        }).collect::<Vec<_>>().join(", ");
+                        let fields = fields
+                            .iter()
+                            .map(|(name, pattern)| match pattern {
+                                Some(MatchPattern::Var(binding)) => {
+                                    format!("{}: {}", name, binding)
+                                }
+                                _ => name.clone(),
+                            })
+                            .collect::<Vec<_>>()
+                            .join(", ");
                         format!("{} {{ {} }}", variant, fields)
                     }
                 };
