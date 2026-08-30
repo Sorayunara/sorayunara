@@ -1,0 +1,34 @@
+name: Compiler Bug Report
+description: Report a compiler crash, miscompilation, or unexpected error diagnostic.
+title: "[Bug]: "
+labels: ["bug", "compiler"]
+body:
+  - type: markdown
+    attributes:
+      value: Thank you for reporting a compiler bug in Sorayunara!
+  - type: textarea
+    id: sora_code
+    attributes:
+      label: Minimal .sora Reproducer
+      description: Provide the smallest runnable .sora code that triggers the bug.
+      placeholder: |
+        fn main() {
+            // code here
+        }
+      render: sora
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      placeholder: What output or compiler diagnostic did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      placeholder: What was the actual output or panic trace?
+    validations:
+      required: true

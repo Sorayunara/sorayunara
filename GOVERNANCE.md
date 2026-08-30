@@ -1,59 +1,28 @@
-# 🏛️ Sorayunara Project Governance & Team Structure
+# Sorayunara Governance Model
 
-This document outlines the governance model, team structure, and decision-making processes for the **Sorayunara Programming Language Project**.
-
----
-
-## 👥 1. Teams & Responsibilities
-
-The Sorayunara organization is partitioned into specialized working groups (teams) to ensure fast, domain-focused reviews and clear ownership:
-
-### 👑 Core Maintainers (`@Sorayunara/core-maintainers`)
-- **Scope**: Global language architecture, security policy, release management, infrastructure, and final arbitration.
-- **Responsibilities**:
-  - Reviewing cross-cutting RFCs.
-  - Publishing official releases (`v*`) and signing binaries.
-  - Managing repository settings, secrets, and branch protection rules.
-
-### ⚙️ Compiler Team (`@Sorayunara/compiler-team`)
-- **Scope**: Lexer, Pratt Parser, AST, Hindley-Milner Typechecker, Borrowchecker, IR lowering, Optimizer, and Codegen (LLVM, C99, WASM).
-- **Responsibilities**:
-  - Reviewing changes to `compiler/`, `bootstrap/`, `specs/`.
-  - Ensuring zero compiler performance regressions and parser correctness.
-
-### 📦 Standard Library & Runtime Team (`@Sorayunara/stdlib-team`)
-- **Scope**: Standard library modules (`std/*`), runtime VM, memory allocators, M:N green-thread scheduler, CSP channels, and actors.
-- **Responsibilities**:
-  - Reviewing API additions to standard libraries.
-  - Ensuring cross-platform portability across Linux, Windows, macOS, Android, iOS, and WebAssembly.
-
-### 🛠️ Tooling & Developer Ecosystem Team (`@Sorayunara/tooling-team`)
-- **Scope**: Language Server Protocol (`lsp`), VS Code / Vim / Neovim / Emacs plugins, `sora fmt`, `sora lint`, package manager (`sora pkg`), and Web Playground.
-- **Responsibilities**:
-  - Maintaining developer ergonomics, formatting standards, and IDE extensions.
-
-### 📖 Documentation & Community Team (`@Sorayunara/docs-team`)
-- **Scope**: Language specifications, tutorials, architectural guides, i18n translations, and community management.
-- **Responsibilities**:
-  - Reviewing and editing `docs/`, `SPECIFICATION.md`, and tutorials.
-  - Welcoming new contributors and moderating discussions.
+This document outlines the governance structure, decision-making process, and RFC lifecycle for the Sorayunara project.
 
 ---
 
-## 📜 2. Decision Making & RFC Process
+## 1. Governance Roles
 
-For major features (new syntax, keywords, breaking changes to stdlib or type system):
-1. **Submit an RFC**: Create an issue using the `RFC Proposal` template.
-2. **Community Discussion**: The community and relevant domain team discuss tradeoffs for at least 7 days.
-3. **Consensus & Approval**: The relevant domain team votes (majority consensus required) before implementation begins.
-4. **Implementation**: Pull request created targeting the `develop` branch.
+- **Core Team**: Guides overall language philosophy, architectural consistency, and final approval on RFCs.
+- **Compiler Maintainers**: Maintain compiler pipeline (`lexer`, `parser`, `semantics`, `hir`, `mir`, `llvm`, `wasm`, `codegen`).
+- **Runtime & Stdlib Maintainers**: Maintain the concurrency runtime, scheduler, actors, and standard library modules.
+- **Community Contributors**: Authors of RFCs, bug reports, documentation, and external ecosystem tooling.
 
 ---
 
-## 🔒 3. Branch Protection & Merge Policy
+## 2. Decision Making & RFC Lifecycle
 
-- **`main` Branch**: Production releases only. Direct pushes are disallowed. Merges require all CI matrix checks to pass and approval from `@Sorayunara/core-maintainers`.
-- **`develop` Branch**: Integration branch for active development. Merges require:
-  - All automated CI checks green (`Test on ubuntu-latest`, `Test on windows-latest`, `Test on macos-latest`).
-  - At least 1 review approval from the code-owning team according to `.github/CODEOWNERS`.
-  - Clean linear Git history (Squash and Merge or Rebase).
+All major language changes, syntax additions, and breaking modifications must proceed through the RFC process:
+
+```
+[ Draft ] ──▶ [ Discussion ] ──▶ [ Accepted ] ──▶ [ Implemented ] ──▶ [ Stable ]
+```
+
+1. **Draft**: Create a markdown proposal in `rfcs/` following the standard template.
+2. **Discussion**: Community review on GitHub Discussions & Pull Requests.
+3. **Accepted**: Approved by Core Team.
+4. **Implemented**: Landed in compiler and verified with conformance tests.
+5. **Stable**: Finalized into formal specification in `docs/language-spec/`.
