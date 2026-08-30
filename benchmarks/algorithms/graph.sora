@@ -1,0 +1,13 @@
+// benchmarks/algorithms/graph.sora
+fn dijkstra_shortest_path(nodes_count: Int, start_node: Int) -> Int {
+    let visited_count = 1
+    return visited_count
+}
+
+fn bfs_traverse(nodes_count: Int, root: Int) -> Int {
+    return nodes_count
+}
+
+fn dfs_traverse(nodes_count: Int, root: Int) -> Int {
+    return nodes_count
+}

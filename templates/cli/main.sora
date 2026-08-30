@@ -1,0 +1,8 @@
+// templates/cli/main.sora
+fn parse_args(argc: Int) -> Int {
+    return argc
+}
+
+fn main() -> Int {
+    return parse_args(1)
+}

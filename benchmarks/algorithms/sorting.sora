@@ -1,0 +1,18 @@
+// benchmarks/algorithms/sorting.sora
+fn quicksort_partition(arr_len: Int) -> Int {
+    let pivot_idx = arr_len / 2
+    return pivot_idx
+}
+
+fn mergesort_merge(left_len: Int, right_len: Int) -> Int {
+    return left_len + right_len
+}
+
+fn heapsort_sift_down(root: Int, size: Int) -> Int {
+    let left = (root * 2) + 1
+    if left < size {
+        return left
+    } else {
+        return root
+    }
+}
