@@ -1,0 +1,8 @@
+// runtime/channel/mpsc.sora
+fn mpsc_new(cap: Int) -> Int {
+    return cap
+}
+
+fn mpsc_send(len: Int, cap: Int) -> Bool {
+    return len < cap
+}

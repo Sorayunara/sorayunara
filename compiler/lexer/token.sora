@@ -1,0 +1,24 @@
+// compiler/lexer/token.sora
+enum TokenType {
+    Identifier(String)
+    Keyword(String)
+    Integer(Int)
+    FloatNum(Float)
+    StringLit(String)
+    CharLit(Char)
+    Operator(String)
+    Punctuation(String)
+    Eof
+}
+
+struct Span {
+    start: Int
+    end: Int
+    line: Int
+    col: Int
+}
+
+struct Token {
+    token_type: TokenType
+    span: Span
+}

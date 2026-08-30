@@ -1,0 +1,8 @@
+// runtime/allocator/arena.sora
+fn arena_create(cap: Int) -> Int {
+    return cap
+}
+
+fn arena_alloc(used: Int, size: Int) -> Int {
+    return used + size
+}

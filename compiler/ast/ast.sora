@@ -1,0 +1,16 @@
+// compiler/ast/ast.sora
+enum AstNode {
+    FunctionDecl(String, [String], String)
+    StructDecl(String, [String])
+    EnumDecl(String, [String])
+    TraitDecl(String, [String])
+    ImplBlock(String, String)
+    LetStmt(String, String, Int)
+    ReturnStmt(Int)
+    IfStmt(Int, Int, Int)
+    MatchStmt(Int, [Int])
+}
+
+struct Program {
+    statements: [AstNode]
+}

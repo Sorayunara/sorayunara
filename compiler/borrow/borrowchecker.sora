@@ -1,0 +1,22 @@
+// compiler/borrow/borrowchecker.sora
+enum OwnershipState {
+    Owned
+    BorrowedImmutable
+    BorrowedMutable
+    Moved
+}
+
+struct BorrowLocation {
+    var_name: String
+    state: OwnershipState
+    scope_level: Int
+}
+
+fn check_borrow_validity(loc: BorrowLocation) -> Bool {
+    return match loc.state {
+        Owned => true
+        BorrowedImmutable => true
+        BorrowedMutable => true
+        Moved => false
+    }
+}
