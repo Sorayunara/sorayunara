@@ -1,0 +1,18 @@
+// tests/integration/full_app.sora
+enum Command {
+    Add(Int, Int)
+    Reset
+}
+
+fn execute(cmd: Command) -> Int {
+    return match cmd {
+        Add(a, b) => a + b
+        Reset => 0
+    }
+}
+
+fn main() -> Int {
+    let cmd = Command.Add(15, 25)
+    let result = execute(cmd)
+    return result
+}

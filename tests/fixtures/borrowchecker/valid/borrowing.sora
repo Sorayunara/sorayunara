@@ -1,0 +1,12 @@
+// tests/fixtures/borrowchecker/valid/borrowing.sora
+fn inspect(s: &String) -> &String {
+    return s
+}
+
+fn main() {
+    let buf: String = "Buffer"
+    let r1: &String = &buf
+    let r2: &String = &buf
+    let s1: &String = inspect(r1)
+    let s2: &String = inspect(r2)
+}

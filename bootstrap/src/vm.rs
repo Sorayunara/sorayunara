@@ -318,6 +318,8 @@ pub struct VirtualMachine {
     pub output_log: Vec<String>,
 }
 
+pub type VM = VirtualMachine;
+
 impl VirtualMachine {
     pub fn new(program: IrProgram) -> Self {
         Self {

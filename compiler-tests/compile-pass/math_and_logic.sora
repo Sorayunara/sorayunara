@@ -1,0 +1,14 @@
+// compiler-tests/compile-pass/math_and_logic.sora
+fn calculate(a: Int, b: Int) -> Int {
+    let sum = a + b
+    let is_even = sum % 2 == 0
+    if is_even {
+        return sum * 2
+    } else {
+        return sum + 1
+    }
+}
+
+fn main() -> Int {
+    return calculate(10, 20)
+}

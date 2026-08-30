@@ -1,0 +1,9 @@
+// tests/fixtures/borrowchecker/valid/concurrency.sora
+async fn worker(id: Int) -> Int {
+    return id * 2
+}
+
+fn main() {
+    let t: Task<Int> = spawn worker(42)
+    let res: Int = await t
+}

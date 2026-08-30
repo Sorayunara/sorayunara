@@ -1,0 +1,9 @@
+// tests/parser/grammar.sora
+struct Vector2D {
+    x: Float
+    y: Float
+}
+
+fn add_vectors(a: Vector2D, b: Vector2D) -> Float {
+    return a.x + b.x
+}

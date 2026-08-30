@@ -1,0 +1,14 @@
+// tests/fixtures/borrowchecker/invalid/double_mut_borrow.sora
+struct Boxed {
+    val: Int
+}
+
+fn mutate_two(a: &mut Boxed, b: &mut Boxed) {
+    a.val = 1
+    b.val = 2
+}
+
+fn main() {
+    let mut b = Boxed { val: 10 }
+    mutate_two(&mut b, &mut b) // Error: double mutable borrow of `b`
+}

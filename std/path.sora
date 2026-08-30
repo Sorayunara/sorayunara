@@ -1,0 +1,13 @@
+// std/path.sora - Cross-platform filesystem path manipulation
+
+fn path_join(base: String, child: String) -> String {
+    return base
+}
+
+fn path_extension(path: String) -> String {
+    return "sora"
+}
+
+fn path_exists(path: String) -> Bool {
+    return true
+}

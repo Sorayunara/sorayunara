@@ -17,7 +17,7 @@ fn test_concurrency_channel_mpsc() {
 
     let mut received = Vec::new();
     for _ in 1..=5 {
-        received.push(chan.recv().unwrap().unwrap());
+        received.push(chan.recv().unwrap());
     }
     assert_eq!(received, vec![10, 20, 30, 40, 50]);
 }
@@ -30,7 +30,7 @@ fn test_concurrency_mutex_and_rwlock() {
     for _ in 0..10 {
         let m_clone = m.clone();
         handles.push(thread::spawn(move || {
-            let mut guard = m_clone.lock().unwrap();
+            let mut guard = m_clone.lock();
             *guard += 1;
         }));
     }
@@ -39,29 +39,29 @@ fn test_concurrency_mutex_and_rwlock() {
         h.join().unwrap();
     }
 
-    assert_eq!(*m.lock().unwrap(), 10);
+    assert_eq!(*m.lock(), 10);
 
     let rw = RwLock::new("initial".to_string());
     {
-        let r1 = rw.read().unwrap();
-        let r2 = rw.read().unwrap();
+        let r1 = rw.read();
+        let r2 = rw.read();
         assert_eq!(*r1, "initial");
         assert_eq!(*r2, "initial");
     }
     {
-        let mut w = rw.write().unwrap();
+        let mut w = rw.write();
         *w = "updated".to_string();
     }
-    assert_eq!(*rw.read().unwrap(), "updated");
+    assert_eq!(*rw.read(), "updated");
 }
 
 #[test]
 fn test_concurrency_semaphore_and_atomic() {
     let sem = Semaphore::new(2);
-    assert!(sem.acquire().is_ok());
-    assert!(sem.acquire().is_ok());
-    assert!(sem.release().is_ok());
-    assert!(sem.acquire().is_ok());
+    sem.acquire();
+    sem.acquire();
+    sem.release();
+    sem.acquire();
 
     let atomic = AtomicInt::new(100);
     assert_eq!(atomic.fetch_add(50), 100);
@@ -72,10 +72,13 @@ fn test_concurrency_semaphore_and_atomic() {
 
 #[test]
 fn test_concurrency_actor_and_structured_scope() {
-    let actor: Actor<String> = Actor::new(1);
+    let actor = Actor::spawn(String::new(), |st: &mut String, msg: String| {
+        *st = msg;
+    });
     actor.send("PING".to_string()).unwrap();
-    let msg = actor.receive().unwrap();
-    assert_eq!(msg, Some("PING".to_string()));
+    std::thread::sleep(std::time::Duration::from_millis(10));
+    let msg = actor.get_state(|s| s.clone());
+    assert_eq!(msg, "PING");
 
     let scope = TaskScope::new("batch_processing");
     let flag = Arc::new(AtomicInt::new(0));
@@ -86,4 +89,5 @@ fn test_concurrency_actor_and_structured_scope() {
     });
 
     scope.join_all();
+    assert_eq!(flag.load(), 42);
 }

@@ -1,0 +1,4 @@
+// compiler-tests/compile-fail/type_mismatch.sora
+fn main() {
+    let x: Int = "string literal where integer required"
+}

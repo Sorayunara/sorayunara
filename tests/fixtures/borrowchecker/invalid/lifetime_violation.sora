@@ -1,0 +1,9 @@
+// tests/fixtures/borrowchecker/invalid/lifetime_violation.sora
+fn main() {
+    let mut out_ref: &Int = &0
+    {
+        let inner: Int = 100
+        out_ref = &inner // Error: `inner` does not live long enough
+    }
+    let val = out_ref
+}

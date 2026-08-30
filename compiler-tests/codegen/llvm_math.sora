@@ -1,0 +1,6 @@
+// compiler-tests/codegen/llvm_math.sora
+fn compute_hypot(a: Int, b: Int) -> Int {
+    let a2 = a * a
+    let b2 = b * b
+    return a2 + b2
+}

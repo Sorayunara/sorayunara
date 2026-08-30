@@ -1,0 +1,14 @@
+// benchmarks/memory/alloc_bench.sora
+fn allocate_chunk(size: Int) -> Int {
+    return size * 8
+}
+
+fn main() -> Int {
+    let mut total: Int = 0
+    let mut i: Int = 0
+    while i < 10000 {
+        total = total + allocate_chunk(64)
+        i = i + 1
+    }
+    return total
+}

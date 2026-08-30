@@ -1,0 +1,10 @@
+// tests/fixtures/borrowchecker/invalid/data_race.sora
+async fn race_worker(data: &mut Int) {
+    data = data + 1
+}
+
+fn main() {
+    let mut shared: Int = 0
+    let t1: Task<Void> = spawn race_worker(&mut shared)
+    let t2: Task<Void> = spawn race_worker(&mut shared) // Error: sending shared mutable reference across task boundary
+}

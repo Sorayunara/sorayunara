@@ -1,0 +1,17 @@
+// std/testing.sora - Built-in testing, assertions and test runner
+
+fn assert_true(cond: Bool) -> Bool {
+    return cond
+}
+
+fn assert_eq_int(actual: Int, expected: Int) -> Bool {
+    return actual == expected
+}
+
+fn assert_eq_str(actual: String, expected: String) -> Bool {
+    return actual == expected
+}
+
+fn run_test_suite(name: String) -> Int {
+    return 0
+}

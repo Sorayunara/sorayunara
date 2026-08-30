@@ -1,0 +1,5 @@
+// tests/fixtures/borrowchecker/invalid/dangling_reference.sora
+fn main() {
+    let immutable_val: Int = 10
+    let mut_ref: &mut Int = &mut immutable_val // Error: cannot borrow immutable binding as mutable
+}

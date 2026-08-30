@@ -1,0 +1,16 @@
+// benchmarks/http/http_bench.sora
+fn parse_http_header(status: Int) -> Bool {
+    return status == 200
+}
+
+fn main() -> Int {
+    let mut ok_count: Int = 0
+    let mut i: Int = 0
+    while i < 10000 {
+        if parse_http_header(200) {
+            ok_count = ok_count + 1
+        }
+        i = i + 1
+    }
+    return ok_count
+}

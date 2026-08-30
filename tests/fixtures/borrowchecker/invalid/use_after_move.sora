@@ -1,0 +1,6 @@
+// tests/fixtures/borrowchecker/invalid/use_after_move.sora
+fn main() {
+    let item: String = "Resource"
+    let owner: String = move item
+    let again: String = item
+}

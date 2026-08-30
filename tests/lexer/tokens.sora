@@ -1,4 +1,7 @@
-// tests/lexer/tokens.sora — Lexer tokenization test fixture
-let x: Int = 100
-let msg: String = "Sorayunara Lexer"
-let flag: Bool = true
+// tests/lexer/tokens.sora
+let decimal_int: Int = 100_000
+let hex_int: Int = 0xFF
+let float_val: Float = 3.14159
+let bool_val: Bool = true
+let str_val: String = "Sorayunara"
+let char_val: Char = '🌌'

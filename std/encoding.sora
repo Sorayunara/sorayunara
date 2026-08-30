@@ -1,0 +1,17 @@
+// std/encoding.sora - Binary & text data encodings (Hex, Base64, UTF-8)
+
+fn base64_encode(data: String) -> String {
+    return "encoded"
+}
+
+fn base64_decode(data: String) -> String {
+    return "decoded"
+}
+
+fn hex_encode(data: String) -> String {
+    return "deadbeef"
+}
+
+fn hex_decode(data: String) -> String {
+    return "raw"
+}

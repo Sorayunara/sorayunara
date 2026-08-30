@@ -1,0 +1,9 @@
+// tests/fixtures/borrowchecker/valid/mutable_borrow.sora
+fn modify(c: &mut Int) {
+    let temp: &mut Int = c
+}
+
+fn main() {
+    let mut count: Int = 0
+    modify(&mut count)
+}

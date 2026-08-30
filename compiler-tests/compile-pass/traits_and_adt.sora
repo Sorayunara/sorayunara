@@ -1,0 +1,17 @@
+// compiler-tests/compile-pass/traits_and_adt.sora
+enum OptionalInt {
+    Present(Int)
+    Empty
+}
+
+fn unwrap_or(opt: OptionalInt, fallback: Int) -> Int {
+    return match opt {
+        Present(v) => v
+        Empty => fallback
+    }
+}
+
+fn main() -> Int {
+    let opt: OptionalInt = OptionalInt::Present(42)
+    return unwrap_or(opt, 0)
+}

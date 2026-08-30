@@ -1,0 +1,18 @@
+// benchmarks/sorting/sort_bench.sora
+fn bubble_pass(a: Int, b: Int) -> Int {
+    if a > b {
+        return b
+    } else {
+        return a
+    }
+}
+
+fn main() -> Int {
+    let mut i: Int = 100
+    let mut acc: Int = 0
+    while i > 0 {
+        acc = acc + bubble_pass(i, i - 1)
+        i = i - 1
+    }
+    return acc
+}

@@ -646,12 +646,10 @@ impl SemanticAnalyzer {
                 let final_ty = self.substitution.apply(&declared_ty);
                 self.inferred_annotations.insert(stmt.span, final_ty.clone());
                 if type_annot.is_none() {
-                    self.engine.emit(Diagnostic {
-                        level: crate::diagnostic::DiagnosticLevel::Note,
-                        message: format!("Inferred type of `{}` is `{}`", name, final_ty),
-                        span: stmt.span,
-                        hint: None,
-                    });
+                    self.engine.emit(Diagnostic::note(
+                        format!("Inferred type of `{}` is `{}`", name, final_ty),
+                        stmt.span,
+                    ));
                 }
 
                 // Track memory model: `let` from a non-Copy value in
@@ -669,17 +667,15 @@ impl SemanticAnalyzer {
                             if let Some(src_var) = self.symbol_table.get_variable_mut(src_name) {
                                 if !src_var.is_moved {
                                     src_var.is_moved = true;
-                                    self.engine.emit(Diagnostic {
-                                        level: crate::diagnostic::DiagnosticLevel::Note,
-                                        message: format!(
+                                    self.engine.emit(Diagnostic::note(
+                                        format!(
                                             "Ownership of `{}` moved to `{}` (Owned mode)",
                                             src_name, name
                                         ),
-                                        span: stmt.span,
-                                        hint: Some(
-                                            "Use `&value` to borrow instead of move, or wrap the value in `managed` for the Managed (GC) mode.".to_string(),
-                                        ),
-                                    });
+                                        stmt.span,
+                                    ).with_hint(
+                                        "Use `&value` to borrow instead of move, or wrap the value in `managed` for the Managed (GC) mode.".to_string(),
+                                    ));
                                 }
                             }
                         }
@@ -962,15 +958,13 @@ impl SemanticAnalyzer {
 
                     if positive {
                         self.symbol_table.narrow_variable_type(name, target_ty.clone());
-                        self.engine.emit(Diagnostic {
-                            level: crate::diagnostic::DiagnosticLevel::Note,
-                            message: format!(
+                        self.engine.emit(Diagnostic::note(
+                            format!(
                                 "Type-narrowed `{}` from `{}` to `{}`",
                                 name, original_ty, target_ty
                             ),
-                            span: value.span,
-                            hint: Some("Use of `is` type guard enables flow-sensitive typing".into()),
-                        });
+                            value.span,
+                        ).with_hint("Use of `is` type guard enables flow-sensitive typing"));
                     } else {
                         if let Type::Union(members) = &original_ty {
                             let remaining: Vec<Type> = members.iter()
@@ -1356,12 +1350,10 @@ impl SemanticAnalyzer {
                     if let Some(var) = self.symbol_table.get_variable_mut(name) {
                         if !var.is_moved {
                             var.is_moved = true;
-                            self.engine.emit(Diagnostic {
-                                level: crate::diagnostic::DiagnosticLevel::Note,
-                                message: format!("Ownership of `{}` explicitly moved (move {})", name, name),
-                                span: expr.span,
-                                hint: Some("In Owned mode the old binding can no longer be used.".to_string()),
-                            });
+                            self.engine.emit(Diagnostic::note(
+                                format!("Ownership of `{}` explicitly moved (move {})", name, name),
+                                expr.span,
+                            ).with_hint("In Owned mode the old binding can no longer be used."));
                         }
                     }
                 }
@@ -1447,15 +1439,13 @@ impl SemanticAnalyzer {
                     }
                 }
 
-                self.engine.emit(Diagnostic {
-                    level: crate::diagnostic::DiagnosticLevel::Note,
-                    message: format!("Constructed ADT variant `{}::{}`{}",
+                self.engine.emit(Diagnostic::note(
+                    format!("Constructed ADT variant `{}::{}`{}",
                         enum_name, variant_name,
                         variant_payload_ty.as_ref().map(|t| format!(" with payload {}", t)).unwrap_or_default()
                     ),
-                    span: expr.span,
-                    hint: None,
-                });
+                    expr.span,
+                ));
 
                 Type::Enum(enum_name.clone(), variants_map)
             }

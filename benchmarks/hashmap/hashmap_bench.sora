@@ -1,0 +1,14 @@
+// benchmarks/hashmap/hashmap_bench.sora
+fn hash_key(key: Int) -> Int {
+    return (key * 2654435761) % 1024
+}
+
+fn main() -> Int {
+    let mut sum: Int = 0
+    let mut i: Int = 0
+    while i < 10000 {
+        sum = sum + hash_key(i)
+        i = i + 1
+    }
+    return sum
+}
