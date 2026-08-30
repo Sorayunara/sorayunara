@@ -1,0 +1,6 @@
+// tests/typechecker/inference.sora
+fn calculate(base: Int) -> Int {
+    let multiplier = 10
+    let offset = 5
+    return base * multiplier + offset
+}

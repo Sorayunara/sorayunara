@@ -1,0 +1,10 @@
+// tests/fixtures/borrowchecker/valid/lifetime.sora
+fn select_first(a: &Int, b: &Int) -> &Int {
+    return a
+}
+
+fn main() {
+    let x: Int = 10
+    let y: Int = 20
+    let res: &Int = select_first(&x, &y)
+}

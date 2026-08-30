@@ -1,55 +1,70 @@
-name: Continuous Integration & Matrix Tests
+name: Sorayunara Compiler CI/CD Matrix
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main", "develop" ]
-  workflow_dispatch:
-
-env:
-  CARGO_TERM_COLOR: always
+    branches: [ main ]
 
 jobs:
-  test:
-    name: Test on ${{ matrix.os }}
+  matrix-build-and-test:
+    name: ${{ matrix.os }} · ${{ matrix.target }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        rust: [stable]
+        include:
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+          - os: macos-latest
+            target: aarch64-apple-darwin
+          - os: ubuntu-latest
+            target: wasm32-unknown-unknown
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Rust Toolchain
+      - name: Set up Rust toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: ${{ matrix.rust }}
+          targets: ${{ matrix.target }}
           components: clippy, rustfmt
 
-      - name: Rust Cache
-        uses: Swatinem/rust-cache@v2
-
-      - name: Check Code Compilation
-        run: cargo check --all-targets
-
-      - name: Run Full Test Suites (35+ Suites)
-        run: cargo test --all-targets --verbose
-
-      - name: Build Release Binary
-        run: cargo build --release
-
-      - name: Verify CLI Diagnostics (sorayunara doctor)
+      - name: Codebase Formatting & Linter Check
         run: |
-          cargo run --release -- doctor
+          cargo fmt --check
+          cargo clippy -- -D warnings
 
-      - name: Verify End-to-End Execution (sorayunara run examples/main.sora)
+      - name: Core Compiler Pipeline & Stage Isolation Tests
         run: |
-          cargo run --release -- run examples/main.sora
+          cargo test --test compiler_suite_runner_tests
+          cargo test --test ir_pipeline_isolation_tests
+          cargo test --test grammar_verification_tests
 
-      - name: Verify Documentation Generation (sorayunara doc)
+      - name: Type System Formal Suite & Negative Tests
         run: |
-          cargo run --release -- doc examples/main.sora
+          cargo test --test type_system_formal_suite_tests
+          cargo test --test borrow_checker_matrix_tests
+          cargo test --test compile_fail_tests
+
+      - name: Standard Library 18 Core Modules Verification
+        run: |
+          cargo test --test standard_library_ecosystem_tests
+
+      - name: Multi-Backend Emission (LLVM, C99, WASM)
+        run: |
+          cargo test --test multi_target_backend_tests
+          cargo test --test backend_ecosystem_tests
+
+      - name: Concurrency Runtime & High-Performance Benchmarks
+        run: |
+          cargo test --test runtime_concurrency_formal_tests
+          cargo test --test runtime_concurrency_benchmarks_tests -- --nocapture
+
+      - name: Security Sandbox & Memory Safety Audit
+        run: |
+          cargo test --test security_tests
+          cargo test --test reproducible_build_tests

@@ -1,0 +1,9 @@
+// tests/std/collections.sora
+fn get_first(items: [Int]) -> Int {
+    return items[0]
+}
+
+fn main() {
+    let arr: [Int] = [10, 20, 30]
+    let first: Int = get_first(arr)
+}

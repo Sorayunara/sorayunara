@@ -1,0 +1,14 @@
+// benchmarks/matrix/matrix_mult.sora
+fn multiply_element(a: Int, b: Int) -> Int {
+    return a * b
+}
+
+fn main() -> Int {
+    let mut sum: Int = 0
+    let mut i: Int = 0
+    while i < 1000 {
+        sum = sum + multiply_element(i, 2)
+        i = i + 1
+    }
+    return sum
+}

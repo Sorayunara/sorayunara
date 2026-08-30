@@ -1,0 +1,120 @@
+// ==============================================================================
+// 🌌 Sorayunara (.sora) Complete Systems-Level Type System Showcase
+// ==============================================================================
+
+// 1. Type Aliases
+type Port = UInt16
+type UserID = Int64
+type Matrix2x2 = [[Float; 2]; 2]
+type BinaryOp = fn(Int, Int) -> Int
+
+// 2. Structs (Named & Tuple)
+struct Header {
+    magic: UInt32,
+    version: UInt16,
+    flags: Byte,
+}
+
+struct Point3D(Float, Float, Float)
+
+// 3. Enums & Tagged Unions (ADTs)
+enum NetworkStatus {
+    Idle,
+    Connected(String),
+    Error(Int),
+}
+
+// 4. Traits with Associated Types & Default Methods
+trait Printable {
+    type FormatSpec
+    fn format(&self, spec: Self.FormatSpec) -> String
+    fn print_default(&self) -> String {
+        return "Default"
+    }
+}
+
+// 5. Generic Structs
+struct Buffer[T] {
+    data: [T],
+    capacity: USize,
+}
+
+// 6. Generic Functions with Constraints & Operators
+fn compute_max[T: Ord + Copy](a: T, b: T) -> T {
+    if a >= b {
+        return a
+    } else {
+        return b
+    }
+}
+
+// 7. Result and Option Handling
+fn divide(numerator: Int, denominator: Int) -> Int!String {
+    if denominator == 0 {
+        return Err("Division by zero")
+    }
+    return Ok(numerator / denominator)
+}
+
+fn find_item(id: Int) -> String? {
+    if id > 0 {
+        return Some("Item Found")
+    }
+    return None
+}
+
+// 8. Ownership, Borrowing, Slices & Pattern Matching
+fn process_network(status: NetworkStatus) -> String {
+    return match status {
+        NetworkStatus.Idle => "Status: Idle",
+        NetworkStatus.Connected(addr) => "Status: Connected to " + addr,
+        NetworkStatus.Error(code) => "Status: Error Code",
+    }
+}
+
+fn sum_slice(slice: &[Int]) -> Int {
+    let mut total: Int = 0
+    let mut i: Int = 0
+    while i < slice.len() {
+        total = total + slice[i]
+        i = i + 1
+    }
+    return total
+}
+
+fn main() -> Int {
+    // Scalar Primitives
+    let b: Byte = 255u8
+    let i: Int = 100
+    let f: Float = 3.14159
+    let flag: Bool = true
+    let ch: Char = '🌌'
+
+    // Tuples & Fixed Arrays
+    let tup: (Int, String, Bool) = (42, "Sora", true)
+    let fixed_arr: [Int; 4] = [10, 20, 30, 40]
+
+    // Type Inferred Bindings
+    inferred_num = 500
+    inferred_str = "Hindley-Milner"
+
+    // Generics & Calls
+    let max_val: Int = compute_max(15, 25)
+    assert(max_val == 25)
+
+    // Option & Result Operations
+    let opt_val: String? = find_item(1)
+    let res_val: Int!String = divide(100, 4)
+
+    let quotient: Int = match res_val {
+        Ok(v) => v,
+        Err(_) => 0,
+    }
+    assert(quotient == 25)
+
+    let net_state = NetworkStatus.Connected("127.0.0.1:8080")
+    let msg: String = process_network(net_state)
+
+    print("Type System Fully Operational: ", msg)
+    return quotient
+}

@@ -1,0 +1,12 @@
+// compiler-tests/diagnostics/non_exhaustive_pattern.sora
+enum TriState {
+    A
+    B
+    C
+}
+
+fn check(s: TriState) -> Int {
+    return match s {
+        A => 1
+    }
+}

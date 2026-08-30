@@ -1,0 +1,9 @@
+// tests/codegen/c/emit_c.sora
+fn square(x: Int) -> Int {
+    return x * x
+}
+
+fn main() -> Int {
+    let res: Int = square(10)
+    return res
+}

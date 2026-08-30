@@ -1,0 +1,4 @@
+// compiler-tests/compile-fail/undeclared_var.sora
+fn main() {
+    let result = unknown_symbol_identifier + 10
+}

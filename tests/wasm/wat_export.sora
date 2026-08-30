@@ -1,0 +1,4 @@
+// tests/wasm/wat_export.sora
+fn wasm_add(a: Int, b: Int) -> Int {
+    return a + b
+}

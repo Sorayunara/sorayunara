@@ -1,0 +1,9 @@
+// tests/fixtures/borrowchecker/valid/ownership.sora
+fn consume(s: String) -> String {
+    return s
+}
+
+fn main() {
+    let item: String = "Resource"
+    let val: String = consume(item)
+}

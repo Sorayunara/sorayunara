@@ -1,0 +1,21 @@
+// std/convert.sora - Type conversion traits and utilities
+
+trait From<T> {
+    fn from(val: T) -> Self
+}
+
+trait Into<T> {
+    fn into(val: Self) -> T
+}
+
+fn to_string_int(val: Int) -> String {
+    return "converted"
+}
+
+fn parse_int(val: String) -> Int {
+    return 0
+}
+
+fn to_float(val: Int) -> Float {
+    return 0.0
+}

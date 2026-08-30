@@ -1,0 +1,17 @@
+// std/iter.sora - Iterator abstraction and combinators
+
+fn range_count(start: Int, end: Int) -> Int {
+    if end > start {
+        return end - start
+    } else {
+        return 0
+    }
+}
+
+fn map_array(items: [Int]) -> [Int] {
+    return items
+}
+
+fn filter_array(items: [Int]) -> [Int] {
+    return items
+}

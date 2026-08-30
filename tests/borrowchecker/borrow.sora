@@ -1,0 +1,11 @@
+// tests/borrowchecker/borrow.sora
+fn read_value(val: &Int) -> &Int {
+    return val
+}
+
+fn main() {
+    let x: Int = 50
+    let r1: &Int = &x
+    let r2: &Int = &x
+    let out: &Int = read_value(r1)
+}

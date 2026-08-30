@@ -1,0 +1,14 @@
+// benchmarks/json/json_bench.sora
+fn parse_json_field(val: Int) -> Int {
+    return val * 10
+}
+
+fn main() -> Int {
+    let mut sum: Int = 0
+    let mut i: Int = 0
+    while i < 10000 {
+        sum = sum + parse_json_field(i)
+        i = i + 1
+    }
+    return sum
+}

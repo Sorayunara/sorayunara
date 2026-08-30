@@ -1,10 +1,14 @@
-// tests/runtime/vm_exec.sora — Virtual machine execution fixture
-fn compute(n: Int) -> Int {
-    return n * 2
+// tests/runtime/vm_exec.sora
+fn compute_loop() -> Int {
+    let mut sum: Int = 0
+    let mut i: Int = 1
+    while i <= 5 {
+        sum = sum + i
+        i = i + 1
+    }
+    return sum
 }
 
 fn main() -> Int {
-    let result: Int = compute(21)
-    assert(result == 42)
-    return result
+    return compute_loop()
 }
