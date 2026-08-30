@@ -26,7 +26,10 @@ impl WindowsEventLog {
         }
         #[cfg(not(target_os = "windows"))]
         {
-            eprintln!("[Windows EventLog :: {}] Event {}: {:?}", self.source, event_id, message);
+            eprintln!(
+                "[Windows EventLog :: {}] Event {}: {:?}",
+                self.source, event_id, message
+            );
         }
     }
 

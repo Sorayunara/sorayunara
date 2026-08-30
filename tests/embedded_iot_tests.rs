@@ -1,5 +1,5 @@
 use sorayunara::lexer::tokenize;
-use sorayunara::llvm_backend::{emit_llvm_ir_with_target, Target};
+use sorayunara::llvm_backend::{Target, emit_llvm_ir_with_target};
 use sorayunara::parser::parse;
 use sorayunara::semantics::check_semantics;
 use std::fs;
@@ -9,7 +9,11 @@ use std::path::Path;
 fn test_embedded_targets_parsing_and_triples() {
     let targets = vec![
         ("arm-cortex-m", Target::ArmCortexM, "thumbv7em-none-eabihf"),
-        ("arm-cortex-a", Target::ArmCortexA, "aarch64-unknown-none-elf"),
+        (
+            "arm-cortex-a",
+            Target::ArmCortexA,
+            "aarch64-unknown-none-elf",
+        ),
         ("riscv32", Target::Riscv32, "riscv32imac-unknown-none-elf"),
         ("esp32", Target::Esp32, "xtensa-esp32-none-elf"),
         ("embedded", Target::Embedded, "thumbv7m-none-eabi"),

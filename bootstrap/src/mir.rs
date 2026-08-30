@@ -67,10 +67,16 @@ pub fn lower_hir_to_mir(hir: &HirProgram) -> MirProgram {
             match s {
                 HirStmt::Let { name, value, .. } => {
                     stmts.push(MirStatement::StorageLive(name.clone()));
-                    stmts.push(MirStatement::Assign(name.clone(), lower_hir_expr_to_rvalue(value)));
+                    stmts.push(MirStatement::Assign(
+                        name.clone(),
+                        lower_hir_expr_to_rvalue(value),
+                    ));
                 }
                 HirStmt::Assign { target, value } => {
-                    stmts.push(MirStatement::Assign(target.clone(), lower_hir_expr_to_rvalue(value)));
+                    stmts.push(MirStatement::Assign(
+                        target.clone(),
+                        lower_hir_expr_to_rvalue(value),
+                    ));
                 }
                 _ => {}
             }

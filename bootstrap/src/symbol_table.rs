@@ -1,8 +1,8 @@
 #![allow(dead_code)]
 
-use std::collections::{HashMap, HashSet};
 use crate::ast::TypeNode;
 use crate::diagnostic::Span;
+use std::collections::{HashMap, HashSet};
 
 pub type TypeVarId = usize;
 
@@ -66,10 +66,18 @@ impl std::fmt::Display for Type {
                 write!(f, "{}<{}>", name, as_.join(", "))
             }
             Type::Ref(inner, is_mut) => {
-                if *is_mut { write!(f, "&mut {}", inner) } else { write!(f, "&{}", inner) }
+                if *is_mut {
+                    write!(f, "&mut {}", inner)
+                } else {
+                    write!(f, "&{}", inner)
+                }
             }
             Type::Ptr(inner, is_const) => {
-                if *is_const { write!(f, "*const {}", inner) } else { write!(f, "*mut {}", inner) }
+                if *is_const {
+                    write!(f, "*const {}", inner)
+                } else {
+                    write!(f, "*mut {}", inner)
+                }
             }
             Type::Task(inner) => write!(f, "Task<{}>", inner),
             Type::Chan(inner) => write!(f, "Chan<{}>", inner),
@@ -90,7 +98,9 @@ pub struct Substitution {
 
 impl Substitution {
     pub fn new() -> Self {
-        Self { map: HashMap::new() }
+        Self {
+            map: HashMap::new(),
+        }
     }
 
     pub fn apply(&self, ty: &Type) -> Type {
@@ -102,27 +112,22 @@ impl Substitution {
                     ty.clone()
                 }
             }
-            Type::Tuple(items) => {
-                Type::Tuple(items.iter().map(|t| self.apply(t)).collect())
-            }
+            Type::Tuple(items) => Type::Tuple(items.iter().map(|t| self.apply(t)).collect()),
             Type::Array(inner) => Type::Array(Box::new(self.apply(inner))),
             Type::Slice(inner) => Type::Slice(Box::new(self.apply(inner))),
             Type::Map(k, v) => Type::Map(Box::new(self.apply(k)), Box::new(self.apply(v))),
             Type::Set(inner) => Type::Set(Box::new(self.apply(inner))),
             Type::Union(members) => Type::Union(members.iter().map(|t| self.apply(t)).collect()),
             Type::Option(inner) => Type::Option(Box::new(self.apply(inner))),
-            Type::Result(ok, err) => Type::Result(Box::new(self.apply(ok)), Box::new(self.apply(err))),
-            Type::Function(params, ret) => {
-                Type::Function(
-                    params.iter().map(|t| self.apply(t)).collect(),
-                    Box::new(self.apply(ret)),
-                )
+            Type::Result(ok, err) => {
+                Type::Result(Box::new(self.apply(ok)), Box::new(self.apply(err)))
             }
+            Type::Function(params, ret) => Type::Function(
+                params.iter().map(|t| self.apply(t)).collect(),
+                Box::new(self.apply(ret)),
+            ),
             Type::GenericInstance(name, args) => {
-                Type::GenericInstance(
-                    name.clone(),
-                    args.iter().map(|t| self.apply(t)).collect(),
-                )
+                Type::GenericInstance(name.clone(), args.iter().map(|t| self.apply(t)).collect())
             }
             Type::Ref(inner, is_mut) => Type::Ref(Box::new(self.apply(inner)), *is_mut),
             Type::Ptr(inner, is_const) => Type::Ptr(Box::new(self.apply(inner)), *is_const),
@@ -180,11 +185,15 @@ impl Substitution {
                 }
             }
             Type::Tuple(items) => items.iter().any(|t| self.occurs_check(id, t)),
-            Type::Array(inner) | Type::Slice(inner) | Type::Set(inner)
-            | Type::Option(inner) | Type::Task(inner) | Type::Chan(inner) => {
-                self.occurs_check(id, inner)
+            Type::Array(inner)
+            | Type::Slice(inner)
+            | Type::Set(inner)
+            | Type::Option(inner)
+            | Type::Task(inner)
+            | Type::Chan(inner) => self.occurs_check(id, inner),
+            Type::Map(k, v) | Type::Result(k, v) => {
+                self.occurs_check(id, k) || self.occurs_check(id, v)
             }
-            Type::Map(k, v) | Type::Result(k, v) => self.occurs_check(id, k) || self.occurs_check(id, v),
             Type::Union(members) => members.iter().any(|t| self.occurs_check(id, t)),
             Type::Function(params, ret) => {
                 params.iter().any(|t| self.occurs_check(id, t)) || self.occurs_check(id, ret)
@@ -193,7 +202,9 @@ impl Substitution {
             Type::Ref(inner, _) | Type::Ptr(inner, _) => self.occurs_check(id, inner),
             Type::Struct(_, fields) => fields.values().any(|t| self.occurs_check(id, t)),
             Type::Enum(_, variants) => variants.values().any(|opt| {
-                opt.as_ref().map(|t| self.occurs_check(id, t)).unwrap_or(false)
+                opt.as_ref()
+                    .map(|t| self.occurs_check(id, t))
+                    .unwrap_or(false)
             }),
             _ => false,
         }
@@ -209,12 +220,16 @@ impl Type {
 
     fn collect_type_vars(&self, set: &mut HashSet<TypeVarId>) {
         match self {
-            Type::TypeVar(id) => { set.insert(*id); }
-            Type::Tuple(items) => items.iter().for_each(|t| t.collect_type_vars(set)),
-            Type::Array(inner) | Type::Slice(inner) | Type::Set(inner)
-            | Type::Option(inner) | Type::Task(inner) | Type::Chan(inner) => {
-                inner.collect_type_vars(set)
+            Type::TypeVar(id) => {
+                set.insert(*id);
             }
+            Type::Tuple(items) => items.iter().for_each(|t| t.collect_type_vars(set)),
+            Type::Array(inner)
+            | Type::Slice(inner)
+            | Type::Set(inner)
+            | Type::Option(inner)
+            | Type::Task(inner)
+            | Type::Chan(inner) => inner.collect_type_vars(set),
             Type::Map(k, v) | Type::Result(k, v) => {
                 k.collect_type_vars(set);
                 v.collect_type_vars(set);
@@ -228,7 +243,9 @@ impl Type {
             Type::Ref(inner, _) | Type::Ptr(inner, _) => inner.collect_type_vars(set),
             Type::Struct(_, fields) => fields.values().for_each(|t| t.collect_type_vars(set)),
             Type::Enum(_, variants) => variants.values().for_each(|opt| {
-                if let Some(t) = opt { t.collect_type_vars(set); }
+                if let Some(t) = opt {
+                    t.collect_type_vars(set);
+                }
             }),
             _ => {}
         }
@@ -265,11 +282,15 @@ impl GenericEnv {
     }
 
     pub fn push_generic(&mut self, name: String, bounds: Vec<String>) {
-        self.generic_vars.push(GenericVarInfo { name: name.clone(), bounds });
+        self.generic_vars.push(GenericVarInfo {
+            name: name.clone(),
+            bounds,
+        });
     }
 
     pub fn lookup_bound(&self, name: &str) -> Option<&[String]> {
-        self.generic_vars.iter()
+        self.generic_vars
+            .iter()
             .find(|v| v.name == name)
             .map(|v| v.bounds.as_slice())
     }
@@ -277,10 +298,23 @@ impl GenericEnv {
 
 impl Type {
     pub fn is_copy(&self) -> bool {
-        matches!(self, Type::Int | Type::Float | Type::Bool | Type::Char | Type::Ref(_, _) | Type::Ptr(_, _) | Type::TypeVar(_))
+        matches!(
+            self,
+            Type::Int
+                | Type::Float
+                | Type::Bool
+                | Type::Char
+                | Type::Ref(_, _)
+                | Type::Ptr(_, _)
+                | Type::TypeVar(_)
+        )
     }
 
-    pub fn from_node(node: &TypeNode, structs: &HashMap<String, HashMap<String, Type>>, enums: &HashMap<String, HashMap<String, Option<Type>>>) -> Result<Self, String> {
+    pub fn from_node(
+        node: &TypeNode,
+        structs: &HashMap<String, HashMap<String, Type>>,
+        enums: &HashMap<String, HashMap<String, Option<Type>>>,
+    ) -> Result<Self, String> {
         match node {
             TypeNode::Int => Ok(Type::Int),
             TypeNode::Float => Ok(Type::Float),
@@ -408,13 +442,20 @@ impl Type {
                         .all(|(a, b)| a.is_assignable_to(b))
                     && a_ret.is_assignable_to(b_ret)
             }
-            (source, Type::Union(members)) => members.iter().any(|member| source.is_assignable_to(member)),
-            (Type::Union(members), target) => members.iter().all(|member| member.is_assignable_to(target)),
+            (source, Type::Union(members)) => {
+                members.iter().any(|member| source.is_assignable_to(member))
+            }
+            (Type::Union(members), target) => {
+                members.iter().all(|member| member.is_assignable_to(target))
+            }
             (Type::Generic(a), Type::Generic(b)) => a == b,
             (Type::GenericInstance(a_name, a_args), Type::GenericInstance(b_name, b_args)) => {
                 a_name == b_name
                     && a_args.len() == b_args.len()
-                    && a_args.iter().zip(b_args.iter()).all(|(a, b)| a.is_assignable_to(b))
+                    && a_args
+                        .iter()
+                        .zip(b_args.iter())
+                        .all(|(a, b)| a.is_assignable_to(b))
             }
             (Type::Struct(a_name, _), Type::Struct(b_name, _)) => a_name == b_name,
             (Type::Enum(a_name, _), Type::Enum(b_name, _)) => a_name == b_name,
@@ -515,47 +556,72 @@ impl SymbolTable {
     }
 
     fn register_builtin_traits(&mut self) {
-        self.traits.insert("Comparable".to_string(), TraitSymbol {
-            name: "Comparable".to_string(),
-            associated_types: vec![],
-            methods: vec!["compare".to_string(), "less".to_string(), "greater".to_string(), "equal".to_string()],
-            span: Span::dummy(),
-            super_traits: vec![],
-        });
-        self.traits.insert("Addable".to_string(), TraitSymbol {
-            name: "Addable".to_string(),
-            associated_types: vec!["Output".to_string()],
-            methods: vec!["add".to_string()],
-            span: Span::dummy(),
-            super_traits: vec![],
-        });
-        self.traits.insert("Hashable".to_string(), TraitSymbol {
-            name: "Hashable".to_string(),
-            associated_types: vec![],
-            methods: vec!["hash".to_string()],
-            span: Span::dummy(),
-            super_traits: vec!["Comparable".to_string()],
-        });
-        self.traits.insert("Display".to_string(), TraitSymbol {
-            name: "Display".to_string(),
-            associated_types: vec![],
-            methods: vec!["to_string".to_string()],
-            span: Span::dummy(),
-            super_traits: vec![],
-        });
-        self.traits.insert("Iterator".to_string(), TraitSymbol {
-            name: "Iterator".to_string(),
-            associated_types: vec!["Item".to_string()],
-            methods: vec!["next".to_string()],
-            span: Span::dummy(),
-            super_traits: vec![],
-        });
+        self.traits.insert(
+            "Comparable".to_string(),
+            TraitSymbol {
+                name: "Comparable".to_string(),
+                associated_types: vec![],
+                methods: vec![
+                    "compare".to_string(),
+                    "less".to_string(),
+                    "greater".to_string(),
+                    "equal".to_string(),
+                ],
+                span: Span::dummy(),
+                super_traits: vec![],
+            },
+        );
+        self.traits.insert(
+            "Addable".to_string(),
+            TraitSymbol {
+                name: "Addable".to_string(),
+                associated_types: vec!["Output".to_string()],
+                methods: vec!["add".to_string()],
+                span: Span::dummy(),
+                super_traits: vec![],
+            },
+        );
+        self.traits.insert(
+            "Hashable".to_string(),
+            TraitSymbol {
+                name: "Hashable".to_string(),
+                associated_types: vec![],
+                methods: vec!["hash".to_string()],
+                span: Span::dummy(),
+                super_traits: vec!["Comparable".to_string()],
+            },
+        );
+        self.traits.insert(
+            "Display".to_string(),
+            TraitSymbol {
+                name: "Display".to_string(),
+                associated_types: vec![],
+                methods: vec!["to_string".to_string()],
+                span: Span::dummy(),
+                super_traits: vec![],
+            },
+        );
+        self.traits.insert(
+            "Iterator".to_string(),
+            TraitSymbol {
+                name: "Iterator".to_string(),
+                associated_types: vec!["Item".to_string()],
+                methods: vec!["next".to_string()],
+                span: Span::dummy(),
+                super_traits: vec![],
+            },
+        );
         for t in [Type::Int, Type::Float, Type::Char, Type::String, Type::Bool] {
             self.trait_impls.push(TraitImpl {
                 trait_name: "Comparable".to_string(),
                 type_params: vec![],
                 target_type: t.clone(),
-                impl_items: vec!["compare".to_string(), "less".to_string(), "greater".to_string(), "equal".to_string()],
+                impl_items: vec![
+                    "compare".to_string(),
+                    "less".to_string(),
+                    "greater".to_string(),
+                    "equal".to_string(),
+                ],
                 span: Span::dummy(),
             });
             self.trait_impls.push(TraitImpl {
@@ -593,14 +659,22 @@ impl SymbolTable {
     pub fn define_variable(&mut self, sym: VariableSymbol) -> Result<(), String> {
         let current_scope = self.scopes.last_mut().unwrap();
         if current_scope.variables.contains_key(&sym.name) {
-            return Err(format!("Variable '{}' already declared in this scope", sym.name));
+            return Err(format!(
+                "Variable '{}' already declared in this scope",
+                sym.name
+            ));
         }
         current_scope.variables.insert(sym.name.clone(), sym);
         Ok(())
     }
 
     pub fn narrow_variable_type(&mut self, name: &str, narrowed: Type) {
-        if self.scopes.iter().rev().any(|scope| scope.variables.contains_key(name)) {
+        if self
+            .scopes
+            .iter()
+            .rev()
+            .any(|scope| scope.variables.contains_key(name))
+        {
             if let Some(scope) = self.scopes.last_mut() {
                 scope.narrowed_vars.insert(name.to_string(), narrowed);
             }
@@ -684,9 +758,9 @@ impl SymbolTable {
     }
 
     pub fn lookup_trait_impl(&self, trait_name: &str, ty: &Type) -> Option<&TraitImpl> {
-        self.trait_impls.iter().find(|imp| {
-            imp.trait_name == trait_name && imp.target_type.is_assignable_to(ty)
-        })
+        self.trait_impls
+            .iter()
+            .find(|imp| imp.trait_name == trait_name && imp.target_type.is_assignable_to(ty))
     }
 
     pub fn satisfies_trait(&self, ty: &Type, trait_name: &str, sub: &Substitution) -> bool {
@@ -696,13 +770,16 @@ impl SymbolTable {
         }
         if let Type::Generic(name) = &resolved {
             if let Some(bounds) = self.current_generic_env.lookup_bound(name) {
-                return bounds.iter().any(|b| b == trait_name || self.has_supertrait_impl(b, trait_name));
+                return bounds
+                    .iter()
+                    .any(|b| b == trait_name || self.has_supertrait_impl(b, trait_name));
             }
             return self.functions.values().any(|function| {
                 function.type_params.iter().any(|(param, bounds)| {
-                    param == name && bounds.iter().any(|bound| {
-                        bound == trait_name || self.has_supertrait_impl(bound, trait_name)
-                    })
+                    param == name
+                        && bounds.iter().any(|bound| {
+                            bound == trait_name || self.has_supertrait_impl(bound, trait_name)
+                        })
                 })
             });
         }
@@ -715,9 +792,14 @@ impl SymbolTable {
     }
 
     pub fn has_supertrait_impl(&self, base: &str, target: &str) -> bool {
-        if base == target { return true; }
+        if base == target {
+            return true;
+        }
         if let Some(trait_sym) = self.traits.get(base) {
-            trait_sym.super_traits.iter().any(|st| self.has_supertrait_impl(st, target))
+            trait_sym
+                .super_traits
+                .iter()
+                .any(|st| self.has_supertrait_impl(st, target))
         } else {
             false
         }

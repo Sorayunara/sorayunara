@@ -1,11 +1,11 @@
 use sorayunara::hir::lower_ast_to_hir;
-use sorayunara::ir::{compile_to_ir, OpCode};
+use sorayunara::ir::{OpCode, compile_to_ir};
 use sorayunara::lexer::tokenize;
 use sorayunara::mir::lower_hir_to_mir;
 use sorayunara::optimizer::Optimizer;
 use sorayunara::parser::parse;
 use sorayunara::semantics::check_semantics;
-use sorayunara::vm::{execute_ir, Value};
+use sorayunara::vm::{Value, execute_ir};
 
 #[test]
 fn test_end_to_end_compiler_pipeline() {

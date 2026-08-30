@@ -37,13 +37,19 @@ fn test_16_pillar_deep_technical_pipeline() {
 
     // 3. Type System & Hindley-Milner Inference
     if let Err(engine) = check_semantics(&ast) {
-        panic!("3. Type System check failed:\n{}", engine.render_all("main.sora", source));
+        panic!(
+            "3. Type System check failed:\n{}",
+            engine.render_all("main.sora", source)
+        );
     }
 
     // 4. Borrow Checker & Affine Ownership Verification
     let borrow_check_source = "fn chk(x: &Int) -> &Int { return x }";
     let borrow_ast = parse(tokenize(borrow_check_source).unwrap()).unwrap();
-    assert!(check_semantics(&borrow_ast).is_ok(), "4. Borrow Checker failed");
+    assert!(
+        check_semantics(&borrow_ast).is_ok(),
+        "4. Borrow Checker failed"
+    );
 
     // 5. HIR Lowering
     let hir = lower_ast_to_hir(&ast);
@@ -92,7 +98,9 @@ fn test_16_pillar_deep_technical_pipeline() {
 
     // 12. LSP (Language Server Protocol)
     let mut state = LspState::new();
-    state.documents.insert("file:///main.sora".to_string(), source.to_string());
+    state
+        .documents
+        .insert("file:///main.sora".to_string(), source.to_string());
     assert!(state.documents.contains_key("file:///main.sora"));
 
     // 13. Testing Framework

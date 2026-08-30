@@ -1,11 +1,11 @@
 #![allow(dead_code)]
 
-use std::collections::HashMap;
-use std::io::{self, BufRead, Read, Write};
+use crate::ast::StmtKind;
 use crate::formatter::format_source;
 use crate::lexer::{Lexer, TokenKind};
 use crate::parser::Parser;
-use crate::ast::StmtKind;
+use std::collections::HashMap;
+use std::io::{self, BufRead, Read, Write};
 
 pub struct LspState {
     pub documents: HashMap<String, String>,
@@ -35,10 +35,7 @@ pub fn run_lsp_server() {
         }
 
         if line.starts_with("Content-Length:") {
-            let len: usize = line["Content-Length:".len()..]
-                .trim()
-                .parse()
-                .unwrap_or(0);
+            let len: usize = line["Content-Length:".len()..].trim().parse().unwrap_or(0);
 
             let mut empty = String::new();
             let _ = reader.read_line(&mut empty);
@@ -96,7 +93,10 @@ pub fn handle_lsp_message_with_state(msg: &str, state: &mut LspState) -> Option<
         let uri = extract_uri(msg).unwrap_or_default();
         let doc_text = state.documents.get(&uri).cloned().unwrap_or_default();
         let completions = generate_completions(&doc_text);
-        Some(format!(r#"{{"jsonrpc":"2.0","id":{},"result":{}}}"#, id, completions))
+        Some(format!(
+            r#"{{"jsonrpc":"2.0","id":{},"result":{}}}"#,
+            id, completions
+        ))
     } else if msg.contains("\"method\":\"textDocument/hover\"") {
         let uri = extract_uri(msg).unwrap_or_default();
         let doc_text = state.documents.get(&uri).cloned().unwrap_or_default();
@@ -109,7 +109,10 @@ pub fn handle_lsp_message_with_state(msg: &str, state: &mut LspState) -> Option<
         let uri = extract_uri(msg).unwrap_or_default();
         let doc_text = state.documents.get(&uri).cloned().unwrap_or_default();
         let symbols = extract_document_symbols(&doc_text);
-        Some(format!(r#"{{"jsonrpc":"2.0","id":{},"result":{}}}"#, id, symbols))
+        Some(format!(
+            r#"{{"jsonrpc":"2.0","id":{},"result":{}}}"#,
+            id, symbols
+        ))
     } else if msg.contains("\"method\":\"textDocument/definition\"") {
         let uri = extract_uri(msg).unwrap_or_else(|| "file:///src/main.sora".to_string());
         Some(format!(
@@ -136,7 +139,10 @@ pub fn handle_lsp_message_with_state(msg: &str, state: &mut LspState) -> Option<
                 r#"[{{"range":{{"start":{{"line":0,"character":0}},"end":{{"line":10000,"character":0}}}},"newText":"{}"}}]"#,
                 escape_json(&formatted)
             );
-            Some(format!(r#"{{"jsonrpc":"2.0","id":{},"result":{}}}"#, id, edit))
+            Some(format!(
+                r#"{{"jsonrpc":"2.0","id":{},"result":{}}}"#,
+                id, edit
+            ))
         } else {
             Some(format!(r#"{{"jsonrpc":"2.0","id":{},"result":[]}}"#, id))
         }
@@ -155,12 +161,18 @@ pub fn handle_lsp_message_with_state(msg: &str, state: &mut LspState) -> Option<
         let uri = extract_uri(msg).unwrap_or_default();
         let doc_text = state.documents.get(&uri).cloned().unwrap_or_default();
         let hints = generate_inlay_hints(&doc_text);
-        Some(format!(r#"{{"jsonrpc":"2.0","id":{},"result":{}}}"#, id, hints))
+        Some(format!(
+            r#"{{"jsonrpc":"2.0","id":{},"result":{}}}"#,
+            id, hints
+        ))
     } else if msg.contains("\"method\":\"textDocument/semanticTokens/full\"") {
         let uri = extract_uri(msg).unwrap_or_default();
         let doc_text = state.documents.get(&uri).cloned().unwrap_or_default();
         let tokens = generate_semantic_tokens(&doc_text);
-        Some(format!(r#"{{"jsonrpc":"2.0","id":{},"result":{{"data":{}}}}}"#, id, tokens))
+        Some(format!(
+            r#"{{"jsonrpc":"2.0","id":{},"result":{{"data":{}}}}}"#,
+            id, tokens
+        ))
     } else if msg.contains("\"method\":\"shutdown\"") {
         Some(format!(r#"{{"jsonrpc":"2.0","id":{},"result":null}}"#, id))
     } else {
@@ -176,7 +188,11 @@ fn compute_diagnostics(source: &str) -> String {
             let col = span.col.saturating_sub(1);
             format!(
                 r#"[{{"range":{{"start":{{"line":{},"character":{}}},"end":{{"line":{},"character":{}}}}},"severity":1,"code":"E0001","source":"sorayunara","message":"{}"}}]"#,
-                line, col, line, col + 5, escape_json(&msg)
+                line,
+                col,
+                line,
+                col + 5,
+                escape_json(&msg)
             )
         }
         Ok(tokens) => {
@@ -188,7 +204,11 @@ fn compute_diagnostics(source: &str) -> String {
                     let col = span.col.saturating_sub(1);
                     format!(
                         r#"[{{"range":{{"start":{{"line":{},"character":{}}},"end":{{"line":{},"character":{}}}}},"severity":1,"code":"E0101","source":"sorayunara","message":"{}"}}]"#,
-                        line, col, line, col + 5, escape_json(&msg)
+                        line,
+                        col,
+                        line,
+                        col + 5,
+                        escape_json(&msg)
                     )
                 }
             }
@@ -251,7 +271,13 @@ fn generate_hover(source: &str) -> String {
         let mut parser = Parser::new(tokens);
         if let Ok(program) = parser.parse_program() {
             for stmt in &program.statements {
-                if let StmtKind::Function { name, ret_type, is_async, .. } = &stmt.kind {
+                if let StmtKind::Function {
+                    name,
+                    ret_type,
+                    is_async,
+                    ..
+                } = &stmt.kind
+                {
                     let async_prefix = if *is_async { "async " } else { "" };
                     return format!(
                         "**Sorayunara Native Function**\\n\\n```sora\\n{}fn {}() -> {:?}\\n```\\nFast, memory-safe, statically checked.",
@@ -300,7 +326,10 @@ fn generate_inlay_hints(source: &str) -> String {
         let mut parser = Parser::new(tokens);
         if let Ok(program) = parser.parse_program() {
             for stmt in &program.statements {
-                if let StmtKind::Let { name, type_annot, .. } = &stmt.kind {
+                if let StmtKind::Let {
+                    name, type_annot, ..
+                } = &stmt.kind
+                {
                     if type_annot.is_none() {
                         hints.push(format!(
                             r#"{{"position":{{"line":{},"character":{}}},"label":": inferred","kind":1,"paddingLeft":true}}"#,
@@ -335,9 +364,21 @@ fn generate_semantic_tokens(source: &str) -> String {
             };
 
             let token_type = match &t.kind {
-                TokenKind::Fn | TokenKind::Let | TokenKind::Mut | TokenKind::If | TokenKind::Else | TokenKind::While | TokenKind::Return => 0, // keyword
+                TokenKind::Fn
+                | TokenKind::Let
+                | TokenKind::Mut
+                | TokenKind::If
+                | TokenKind::Else
+                | TokenKind::While
+                | TokenKind::Return => 0, // keyword
                 TokenKind::Ident(name) => {
-                    if name == "Int" || name == "Float" || name == "String" || name == "Bool" || name == "Option" || name == "Result" {
+                    if name == "Int"
+                        || name == "Float"
+                        || name == "String"
+                        || name == "Bool"
+                        || name == "Option"
+                        || name == "Result"
+                    {
                         1 // type
                     } else {
                         2 // variable / ident

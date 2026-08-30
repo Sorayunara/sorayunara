@@ -201,7 +201,8 @@ pub struct WorkStealingScheduler {
 
 impl WorkStealingScheduler {
     pub fn new(num_threads: usize) -> Self {
-        let tasks: Arc<StdMutex<VecDeque<ScheduledTask>>> = Arc::new(StdMutex::new(VecDeque::new()));
+        let tasks: Arc<StdMutex<VecDeque<ScheduledTask>>> =
+            Arc::new(StdMutex::new(VecDeque::new()));
         let shutdown = Arc::new(AtomicBool::new(false));
         let mut workers = Vec::new();
 
@@ -262,7 +263,8 @@ impl ArenaAllocator {
         if aligned + size > self.capacity {
             return None;
         }
-        self.allocated.store((aligned + size) as u64, Ordering::Relaxed);
+        self.allocated
+            .store((aligned + size) as u64, Ordering::Relaxed);
         Some(aligned)
     }
 
@@ -274,25 +276,44 @@ impl ArenaAllocator {
 /// Synchronization Primitives
 pub struct Mutex<T>(StdMutex<T>);
 impl<T> Mutex<T> {
-    pub fn new(val: T) -> Self { Self(StdMutex::new(val)) }
-    pub fn lock(&self) -> std::sync::MutexGuard<'_, T> { self.0.lock().unwrap() }
+    pub fn new(val: T) -> Self {
+        Self(StdMutex::new(val))
+    }
+    pub fn lock(&self) -> std::sync::MutexGuard<'_, T> {
+        self.0.lock().unwrap()
+    }
 }
 
 pub struct RwLock<T>(StdRwLock<T>);
 impl<T> RwLock<T> {
-    pub fn new(val: T) -> Self { Self(StdRwLock::new(val)) }
-    pub fn read(&self) -> std::sync::RwLockReadGuard<'_, T> { self.0.read().unwrap() }
-    pub fn write(&self) -> std::sync::RwLockWriteGuard<'_, T> { self.0.write().unwrap() }
+    pub fn new(val: T) -> Self {
+        Self(StdRwLock::new(val))
+    }
+    pub fn read(&self) -> std::sync::RwLockReadGuard<'_, T> {
+        self.0.read().unwrap()
+    }
+    pub fn write(&self) -> std::sync::RwLockWriteGuard<'_, T> {
+        self.0.write().unwrap()
+    }
 }
 
 pub struct AtomicInt(AtomicI64);
 impl AtomicInt {
-    pub fn new(val: i64) -> Self { Self(AtomicI64::new(val)) }
-    pub fn fetch_add(&self, delta: i64) -> i64 { self.0.fetch_add(delta, Ordering::SeqCst) }
-    pub fn load(&self) -> i64 { self.0.load(Ordering::SeqCst) }
-    pub fn store(&self, val: i64) { self.0.store(val, Ordering::SeqCst); }
+    pub fn new(val: i64) -> Self {
+        Self(AtomicI64::new(val))
+    }
+    pub fn fetch_add(&self, delta: i64) -> i64 {
+        self.0.fetch_add(delta, Ordering::SeqCst)
+    }
+    pub fn load(&self) -> i64 {
+        self.0.load(Ordering::SeqCst)
+    }
+    pub fn store(&self, val: i64) {
+        self.0.store(val, Ordering::SeqCst);
+    }
     pub fn compare_exchange(&self, current: i64, new: i64) -> Result<i64, i64> {
-        self.0.compare_exchange(current, new, Ordering::SeqCst, Ordering::SeqCst)
+        self.0
+            .compare_exchange(current, new, Ordering::SeqCst, Ordering::SeqCst)
     }
 }
 

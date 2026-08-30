@@ -22,7 +22,10 @@ impl Linter {
                     if name.chars().any(|c| c.is_uppercase()) {
                         warnings.push(LintWarning {
                             rule: "style/snake_case".to_string(),
-                            message: format!("Function '{}' should follow snake_case convention", name),
+                            message: format!(
+                                "Function '{}' should follow snake_case convention",
+                                name
+                            ),
                             line: 1,
                         });
                     }

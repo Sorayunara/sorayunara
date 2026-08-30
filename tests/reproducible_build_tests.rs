@@ -1,4 +1,4 @@
-use sorayunara::lockfile::{SorayunaraLock, LockedPackage};
+use sorayunara::lockfile::{LockedPackage, SorayunaraLock};
 use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
@@ -27,7 +27,10 @@ fn test_reproducible_lockfile_roundtrip() {
     assert_eq!(parsed_lock.packages.len(), 2);
     assert_eq!(parsed_lock.packages[0].name, "http");
     assert_eq!(parsed_lock.packages[0].version, "1.2.0");
-    assert_eq!(parsed_lock.packages[0].dependencies, vec!["json".to_string()]);
+    assert_eq!(
+        parsed_lock.packages[0].dependencies,
+        vec!["json".to_string()]
+    );
     assert_eq!(parsed_lock.packages[1].name, "json");
 }
 

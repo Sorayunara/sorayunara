@@ -1,7 +1,7 @@
 use sorayunara::ir::compile_to_ir;
 use sorayunara::lexer::tokenize;
 use sorayunara::parser::parse;
-use sorayunara::vm::{execute_ir, Value};
+use sorayunara::vm::{Value, execute_ir};
 
 #[test]
 fn test_vm_arithmetic_execution() {

@@ -43,7 +43,10 @@ impl NativeBuilder {
             .status()
         {
             if status.success() {
-                return Ok(format!("Built native executable via Clang: '{}'", output_path));
+                return Ok(format!(
+                    "Built native executable via Clang: '{}'",
+                    output_path
+                ));
             }
         }
 
@@ -56,7 +59,10 @@ impl NativeBuilder {
             .status()
         {
             if status.success() {
-                return Ok(format!("Built native executable via GCC: '{}'", output_path));
+                return Ok(format!(
+                    "Built native executable via GCC: '{}'",
+                    output_path
+                ));
             }
         }
 
@@ -68,7 +74,10 @@ impl NativeBuilder {
             .status()
         {
             if status.success() {
-                return Ok(format!("Built native executable via MSVC cl.exe: '{}'", output_path));
+                return Ok(format!(
+                    "Built native executable via MSVC cl.exe: '{}'",
+                    output_path
+                ));
             }
         }
 

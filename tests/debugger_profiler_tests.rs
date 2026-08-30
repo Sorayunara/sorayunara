@@ -59,5 +59,9 @@ fn test_profiler_and_trace_execution() {
 
     let trace_logs = profiler.trace().unwrap();
     assert!(!trace_logs.is_empty());
-    assert!(trace_logs.iter().any(|l| l.contains("[TRACE] Function: main")));
+    assert!(
+        trace_logs
+            .iter()
+            .any(|l| l.contains("[TRACE] Function: main"))
+    );
 }

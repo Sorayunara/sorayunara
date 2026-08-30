@@ -15,8 +15,10 @@ pub mod llvm_backend;
 pub mod lockfile;
 pub mod lsp;
 pub mod macro_expander;
+pub mod main_cli;
 pub mod mir;
 pub mod monomorphizer;
+pub mod native_builder;
 pub mod optimizer;
 pub mod parser;
 pub mod profiler;
@@ -27,8 +29,6 @@ pub mod symbol_table;
 pub mod test_runner;
 pub mod vm;
 pub mod wasm_backend;
-pub mod native_builder;
-pub mod main_cli;
 #[path = "../../runtime/windows/mod.rs"]
 pub mod windows;
 

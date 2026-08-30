@@ -2,7 +2,7 @@ use sorayunara::ir::compile_to_ir;
 use sorayunara::lexer::tokenize;
 use sorayunara::parser::parse;
 use sorayunara::semantics::check_semantics;
-use sorayunara::vm::{execute_ir, Value};
+use sorayunara::vm::{Value, execute_ir};
 use std::fs;
 use std::path::Path;
 

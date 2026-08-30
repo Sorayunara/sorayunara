@@ -43,7 +43,10 @@ fn test_foundation_2_type_system_and_hindley_milner_conformance() {
     "#;
     let tokens = tokenize(source).unwrap();
     let ast = parse(tokens).unwrap();
-    assert!(check_semantics(&ast).is_ok(), "2. Type system conformance failed");
+    assert!(
+        check_semantics(&ast).is_ok(),
+        "2. Type system conformance failed"
+    );
 }
 
 #[test]
@@ -66,7 +69,10 @@ fn test_foundation_3_borrow_checker_and_move_semantics_conformance() {
         }
     "#;
     let ast_invalid = parse(tokenize(invalid_move).unwrap()).unwrap();
-    assert!(check_semantics(&ast_invalid).is_err(), "3. Borrow checker must reject use-after-move");
+    assert!(
+        check_semantics(&ast_invalid).is_err(),
+        "3. Borrow checker must reject use-after-move"
+    );
 }
 
 #[test]

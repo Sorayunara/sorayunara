@@ -55,10 +55,16 @@ fn calculate_total(items: Int) -> Int {
     assert!(output_dir.join("index.html").exists());
     assert!(output_dir.join("modules").join("index.html").exists());
     assert!(output_dir.join("traits").join("index.html").exists());
-    assert!(output_dir.join("functions").join("calculate_total.html").exists());
+    assert!(
+        output_dir
+            .join("functions")
+            .join("calculate_total.html")
+            .exists()
+    );
     assert!(output_dir.join("structs").join("Item.html").exists());
 
-    let fn_html = fs::read_to_string(output_dir.join("functions").join("calculate_total.html")).unwrap();
+    let fn_html =
+        fs::read_to_string(output_dir.join("functions").join("calculate_total.html")).unwrap();
     assert!(fn_html.contains("calculate_total"));
     assert!(fn_html.contains("Calculates the total price"));
     assert!(fn_html.contains("# Arguments"));

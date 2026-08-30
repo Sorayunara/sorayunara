@@ -36,10 +36,12 @@ impl RegistryClient {
             PackageMeta {
                 name: "http".to_string(),
                 version: "1.2.0".to_string(),
-                description: "High-performance HTTP/1.1, HTTP/2, and HTTP/3 Server & Client".to_string(),
+                description: "High-performance HTTP/1.1, HTTP/2, and HTTP/3 Server & Client"
+                    .to_string(),
                 author: "Sorayunara Core Team <core@sorayunara.org>".to_string(),
                 license: "MIT OR Apache-2.0".to_string(),
-                checksum: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855".to_string(),
+                checksum: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                    .to_string(),
                 dependencies: HashMap::new(),
             },
         );
@@ -49,10 +51,12 @@ impl RegistryClient {
             PackageMeta {
                 name: "postgres".to_string(),
                 version: "0.8.4".to_string(),
-                description: "Pure Sorayunara PostgreSQL driver with connection pooling".to_string(),
+                description: "Pure Sorayunara PostgreSQL driver with connection pooling"
+                    .to_string(),
                 author: "Sorayunara Database WG".to_string(),
                 license: "MIT".to_string(),
-                checksum: "cca72f0a9154460f9e160a04918f8e0d63fe83ec3d4df489f6d4d1252ccf784e".to_string(),
+                checksum: "cca72f0a9154460f9e160a04918f8e0d63fe83ec3d4df489f6d4d1252ccf784e"
+                    .to_string(),
                 dependencies: HashMap::new(),
             },
         );
@@ -65,7 +69,8 @@ impl RegistryClient {
                 description: "Zero-copy streaming JSON parser and serializer".to_string(),
                 author: "Sorayunara Standard WG".to_string(),
                 license: "MIT".to_string(),
-                checksum: "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08".to_string(),
+                checksum: "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+                    .to_string(),
                 dependencies: HashMap::new(),
             },
         );
@@ -78,7 +83,8 @@ impl RegistryClient {
                 description: "In-memory cache & Pub/Sub Redis driver".to_string(),
                 author: "Sorayunara Ecosystem".to_string(),
                 license: "MIT".to_string(),
-                checksum: "a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e".to_string(),
+                checksum: "a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e"
+                    .to_string(),
                 dependencies: HashMap::new(),
             },
         );
@@ -91,7 +97,8 @@ impl RegistryClient {
                 description: "HMAC and RSA JSON Web Token generator & validator".to_string(),
                 author: "Sorayunara Security".to_string(),
                 license: "MIT".to_string(),
-                checksum: "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865".to_string(),
+                checksum: "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+                    .to_string(),
                 dependencies: HashMap::new(),
             },
         );
@@ -105,18 +112,32 @@ impl RegistryClient {
         let q = query.to_lowercase();
         self.known_packages
             .values()
-            .filter(|pkg| pkg.name.to_lowercase().contains(&q) || pkg.description.to_lowercase().contains(&q))
+            .filter(|pkg| {
+                pkg.name.to_lowercase().contains(&q) || pkg.description.to_lowercase().contains(&q)
+            })
             .collect()
     }
 
-    pub fn install_package(&self, pkg_name: &str, project_dir: &Path) -> Result<PackageMeta, String> {
+    pub fn install_package(
+        &self,
+        pkg_name: &str,
+        project_dir: &Path,
+    ) -> Result<PackageMeta, String> {
         let meta = self
             .known_packages
             .get(pkg_name)
-            .ok_or_else(|| format!("Package '{}' not found in Sorayunara Registry (packages.sorayunara.org)", pkg_name))?
+            .ok_or_else(|| {
+                format!(
+                    "Package '{}' not found in Sorayunara Registry (packages.sorayunara.org)",
+                    pkg_name
+                )
+            })?
             .clone();
 
-        let pkg_cache_dir = project_dir.join(".sorayunara").join("packages").join(&meta.name);
+        let pkg_cache_dir = project_dir
+            .join(".sorayunara")
+            .join("packages")
+            .join(&meta.name);
         fs::create_dir_all(&pkg_cache_dir)
             .map_err(|e| format!("Failed to create package cache: {}", e))?;
 
@@ -186,7 +207,10 @@ impl RegistryClient {
             return AuditReport {
                 total_dependencies: 0,
                 vulnerabilities_found: 0,
-                warnings: vec!["No sorayunara.lock file found. Run 'sorayunara add' to lock dependencies.".to_string()],
+                warnings: vec![
+                    "No sorayunara.lock file found. Run 'sorayunara add' to lock dependencies."
+                        .to_string(),
+                ],
                 is_clean: true,
             };
         };
@@ -245,7 +269,11 @@ impl RegistryClient {
             for (idx, p) in pkgs.iter().enumerate() {
                 let is_last = idx == pkgs.len() - 1;
                 let branch = if is_last { "└──" } else { "├──" };
-                let ver = self.known_packages.get(*p).map(|m| m.version.as_str()).unwrap_or("0.1.0");
+                let ver = self
+                    .known_packages
+                    .get(*p)
+                    .map(|m| m.version.as_str())
+                    .unwrap_or("0.1.0");
                 tree.push_str(&format!("  {} {} v{}\n", branch, p, ver));
             }
         }

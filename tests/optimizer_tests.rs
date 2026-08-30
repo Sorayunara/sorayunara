@@ -1,4 +1,4 @@
-use sorayunara::ir::{compile_to_ir, OpCode};
+use sorayunara::ir::{OpCode, compile_to_ir};
 use sorayunara::lexer::tokenize;
 use sorayunara::optimizer::optimize;
 use sorayunara::parser::parse;
@@ -17,7 +17,12 @@ fn test_optimizer_constant_folding() {
 
     let main_fn = opt_ir.functions.get("main").unwrap();
     // 10 + 40 -> 50 folded into single PushInt(50)
-    assert!(main_fn.instructions.iter().any(|op| matches!(op, OpCode::PushInt(50))));
+    assert!(
+        main_fn
+            .instructions
+            .iter()
+            .any(|op| matches!(op, OpCode::PushInt(50)))
+    );
 }
 
 #[test]

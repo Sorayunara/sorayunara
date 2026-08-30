@@ -37,7 +37,10 @@ fn test_all_standard_library_modules_validity() {
             Ok(_) => {}
             Err(diag) => {
                 let rendered = diag.render_all(mod_name, &content);
-                panic!("Semantic analysis failed for std/{}:\n{}", mod_name, rendered);
+                panic!(
+                    "Semantic analysis failed for std/{}:\n{}",
+                    mod_name, rendered
+                );
             }
         }
     }

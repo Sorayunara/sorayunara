@@ -51,7 +51,10 @@ pub fn emit_wat(program: &Program) -> String {
                 ""
             };
 
-            wat.push_str(&format!("  (func ${} (export \"{}\"){}{}\n", name, name, p_sigs, ret_sig));
+            wat.push_str(&format!(
+                "  (func ${} (export \"{}\"){}{}\n",
+                name, name, p_sigs, ret_sig
+            ));
 
             for s in body {
                 wat.push_str(&emit_stmt_wat(s, 2));
@@ -81,7 +84,12 @@ fn emit_stmt_wat(stmt: &SpannedStmt, indent: usize) -> String {
         StmtKind::Print(args) => {
             let mut s = String::new();
             for arg in args {
-                s.push_str(&format!("{}{}\n{}call $print_i64\n", pad, emit_expr_wat(arg), pad));
+                s.push_str(&format!(
+                    "{}{}\n{}call $print_i64\n",
+                    pad,
+                    emit_expr_wat(arg),
+                    pad
+                ));
             }
             s
         }
@@ -110,7 +118,12 @@ fn emit_expr_wat(expr: &SpannedExpr) -> String {
                 BinaryOpKind::GreaterEqual => "i64.ge_s",
                 _ => "i64.add",
             };
-            format!("({} {} {})", op_wat, emit_expr_wat(left), emit_expr_wat(right))
+            format!(
+                "({} {} {})",
+                op_wat,
+                emit_expr_wat(left),
+                emit_expr_wat(right)
+            )
         }
         ExprKind::Call { callee, args } => {
             let a_strs: Vec<String> = args.iter().map(emit_expr_wat).collect();

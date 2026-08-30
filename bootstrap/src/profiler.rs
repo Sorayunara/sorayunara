@@ -1,9 +1,9 @@
 #![allow(dead_code)]
 
-use std::collections::HashMap;
-use std::time::Instant;
 use crate::ir::IrProgram;
 use crate::vm::{Value, VirtualMachine};
+use std::collections::HashMap;
+use std::time::Instant;
 
 #[derive(Debug, Clone)]
 pub struct FunctionProfile {
@@ -73,7 +73,11 @@ impl Profiler {
 
         for (name, func) in &self.program.functions {
             let inst_count = func.instructions.len();
-            let estimated_calls = if name == "main" { 1 } else { (inst_count * 10).max(1) };
+            let estimated_calls = if name == "main" {
+                1
+            } else {
+                (inst_count * 10).max(1)
+            };
             let estimated_us = if name == "main" {
                 total_us
             } else {
@@ -110,7 +114,12 @@ impl Profiler {
 
         // Async Profile
         let async_stats = AsyncProfile {
-            tasks_spawned: self.program.functions.iter().filter(|(k, _)| k.contains("spawn") || k.contains("async")).count(),
+            tasks_spawned: self
+                .program
+                .functions
+                .iter()
+                .filter(|(k, _)| k.contains("spawn") || k.contains("async"))
+                .count(),
             task_poll_count: 42,
             task_yield_count: 14,
             async_wait_time_us: total_us / 10,
@@ -142,14 +151,32 @@ impl Profiler {
         }
 
         out.push_str("\n📊 Memory & Allocation Analysis:\n");
-        out.push_str(&format!("  • Total Allocations:   {} objects\n", report.memory.total_allocations));
-        out.push_str(&format!("  • Total Allocated:     {} bytes\n", report.memory.total_bytes_allocated));
-        out.push_str(&format!("  • Peak Memory:         {} bytes\n", report.memory.peak_memory_bytes));
+        out.push_str(&format!(
+            "  • Total Allocations:   {} objects\n",
+            report.memory.total_allocations
+        ));
+        out.push_str(&format!(
+            "  • Total Allocated:     {} bytes\n",
+            report.memory.total_bytes_allocated
+        ));
+        out.push_str(&format!(
+            "  • Peak Memory:         {} bytes\n",
+            report.memory.peak_memory_bytes
+        ));
 
         out.push_str("\n⚡ Async & Scheduler Analysis:\n");
-        out.push_str(&format!("  • Tasks Spawned:       {}\n", report.async_stats.tasks_spawned));
-        out.push_str(&format!("  • Task Poll Iterations: {}\n", report.async_stats.task_poll_count));
-        out.push_str(&format!("  • Context Yields:      {}\n", report.async_stats.task_yield_count));
+        out.push_str(&format!(
+            "  • Tasks Spawned:       {}\n",
+            report.async_stats.tasks_spawned
+        ));
+        out.push_str(&format!(
+            "  • Task Poll Iterations: {}\n",
+            report.async_stats.task_poll_count
+        ));
+        out.push_str(&format!(
+            "  • Context Yields:      {}\n",
+            report.async_stats.task_yield_count
+        ));
 
         out.push_str("\n🔥 ASCII Flamegraph:\n");
         out.push_str(&report.flamegraph);
@@ -163,7 +190,10 @@ impl Profiler {
         for f in functions {
             let bar_len = ((f.time_percentage / 5.0) as usize).clamp(1, 20);
             let bar = "█".repeat(bar_len);
-            fg.push_str(&format!("    └── {:<18} |{}| {:.1}%\n", f.name, bar, f.time_percentage));
+            fg.push_str(&format!(
+                "    └── {:<18} |{}| {:.1}%\n",
+                f.name, bar, f.time_percentage
+            ));
         }
         fg
     }
@@ -171,7 +201,11 @@ impl Profiler {
     pub fn trace(&self) -> Result<Vec<String>, String> {
         let mut trace_logs = Vec::new();
         for (fn_name, func) in &self.program.functions {
-            trace_logs.push(format!("[TRACE] Function: {} ({} instructions)", fn_name, func.instructions.len()));
+            trace_logs.push(format!(
+                "[TRACE] Function: {} ({} instructions)",
+                fn_name,
+                func.instructions.len()
+            ));
             for (idx, op) in func.instructions.iter().enumerate() {
                 trace_logs.push(format!("  {:04} | {:?}", idx, op));
             }

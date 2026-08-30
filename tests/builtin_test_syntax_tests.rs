@@ -39,7 +39,13 @@ fn test_builtin_test_syntax_failing_assertion() {
 
     assert_eq!(results.len(), 1);
     assert!(!results[0].passed);
-    assert!(results[0].error_message.as_ref().unwrap().contains("Assertion Failed"));
+    assert!(
+        results[0]
+            .error_message
+            .as_ref()
+            .unwrap()
+            .contains("Assertion Failed")
+    );
 }
 
 #[test]

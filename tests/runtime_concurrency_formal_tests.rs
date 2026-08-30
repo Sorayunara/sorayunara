@@ -1,4 +1,6 @@
-use sorayunara::concurrency_runtime::{Actor, ArenaAllocator, AtomicInt, Channel, Mutex, RwLock, Semaphore, StructuredScope};
+use sorayunara::concurrency_runtime::{
+    Actor, ArenaAllocator, AtomicInt, Channel, Mutex, RwLock, Semaphore, StructuredScope,
+};
 use std::sync::Arc;
 
 #[test]

@@ -1,11 +1,11 @@
 #![allow(dead_code)]
 
+use crate::ir::{IrProgram, OpCode};
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::fmt;
 use std::rc::Rc;
 use std::sync::{Arc, Mutex};
-use crate::ir::{IrProgram, OpCode};
 
 #[derive(Debug, Clone)]
 pub enum Value {
@@ -152,11 +152,13 @@ fn resolve_host_fn(name: &str) -> Option<HostFn> {
             Some(Value::Float(x)) => Ok(Value::Float(x.abs())),
             other => Err(host_arg_err("abs", "(int)", other)),
         },
-        "rand" => |_| Ok(Value::Int(FAKE_RAND.fetch_add(1, std::sync::atomic::Ordering::Relaxed) % 32768)),
+        "rand" => |_| {
+            Ok(Value::Int(
+                FAKE_RAND.fetch_add(1, std::sync::atomic::Ordering::Relaxed) % 32768,
+            ))
+        },
         "malloc" => |args| match args.first() {
-            Some(Value::Int(size)) if *size >= 0 => {
-                Ok(Value::Ptr(host_malloc(*size as usize)))
-            }
+            Some(Value::Int(size)) if *size >= 0 => Ok(Value::Ptr(host_malloc(*size as usize))),
             other => Err(host_arg_err("malloc", "(size_t)", other)),
         },
         "calloc" => |args| match (args.first(), args.get(1)) {
@@ -200,7 +202,11 @@ fn resolve_host_fn(name: &str) -> Option<HostFn> {
                 std::cmp::Ordering::Equal => 0,
                 std::cmp::Ordering::Greater => 1,
             })),
-            _ => Err(host_arg_err("strcmp", "(const char*, const char*)", args.first())),
+            _ => Err(host_arg_err(
+                "strcmp",
+                "(const char*, const char*)",
+                args.first(),
+            )),
         },
         _ => return None,
     })
@@ -214,7 +220,9 @@ static HOST_HEAP: std::sync::OnceLock<Vec<std::sync::Mutex<bool>>> = std::sync::
 
 fn host_heap() -> &'static Vec<std::sync::Mutex<bool>> {
     HOST_HEAP.get_or_init(|| {
-        (0..HOST_HEAP_SIZE).map(|_| std::sync::Mutex::new(false)).collect()
+        (0..HOST_HEAP_SIZE)
+            .map(|_| std::sync::Mutex::new(false))
+            .collect()
     })
 }
 
@@ -356,7 +364,9 @@ impl VirtualMachine {
         while let Some(frame_idx) = self.call_stack.len().checked_sub(1) {
             cycles += 1;
             if cycles > max_cycles {
-                return Err("Execution aborted: cycle limit exceeded (infinite loop protection)".into());
+                return Err(
+                    "Execution aborted: cycle limit exceeded (infinite loop protection)".into(),
+                );
             }
 
             let fn_name = self.call_stack[frame_idx].fn_name.clone();
@@ -466,10 +476,21 @@ impl VirtualMachine {
                         }
                         (Value::Float(x), Value::Float(y)) => self.stack.push(Value::Float(x + y)),
                         (Value::Bool(x), Value::Bool(y)) => self.stack.push(Value::Bool(x || y)),
-                        (Value::Str(x), Value::Str(y)) => self.stack.push(Value::Str(format!("{}{}", x, y))),
-                        (Value::Str(x), other) => self.stack.push(Value::Str(format!("{}{}", x, other))),
-                        (other, Value::Str(y)) => self.stack.push(Value::Str(format!("{}{}", other, y))),
-                        (x, y) => return Err(format!("Cannot add incompatible types {:?} and {:?}", x, y)),
+                        (Value::Str(x), Value::Str(y)) => {
+                            self.stack.push(Value::Str(format!("{}{}", x, y)))
+                        }
+                        (Value::Str(x), other) => {
+                            self.stack.push(Value::Str(format!("{}{}", x, other)))
+                        }
+                        (other, Value::Str(y)) => {
+                            self.stack.push(Value::Str(format!("{}{}", other, y)))
+                        }
+                        (x, y) => {
+                            return Err(format!(
+                                "Cannot add incompatible types {:?} and {:?}",
+                                x, y
+                            ));
+                        }
                     }
                 }
                 OpCode::Sub => {
@@ -556,7 +577,9 @@ impl VirtualMachine {
                     match (a, b) {
                         (Value::Int(x), Value::Int(y)) => self.stack.push(Value::Bool(x <= y)),
                         (Value::Float(x), Value::Float(y)) => self.stack.push(Value::Bool(x <= y)),
-                        (x, y) => return Err(format!("Cannot compare '<=' on {:?} and {:?}", x, y)),
+                        (x, y) => {
+                            return Err(format!("Cannot compare '<=' on {:?} and {:?}", x, y));
+                        }
                     }
                 }
                 OpCode::Greater => {
@@ -574,7 +597,9 @@ impl VirtualMachine {
                     match (a, b) {
                         (Value::Int(x), Value::Int(y)) => self.stack.push(Value::Bool(x >= y)),
                         (Value::Float(x), Value::Float(y)) => self.stack.push(Value::Bool(x >= y)),
-                        (x, y) => return Err(format!("Cannot compare '>=' on {:?} and {:?}", x, y)),
+                        (x, y) => {
+                            return Err(format!("Cannot compare '>=' on {:?} and {:?}", x, y));
+                        }
                     }
                 }
 
@@ -587,7 +612,9 @@ impl VirtualMachine {
                     match a {
                         Value::Int(n) => self.stack.push(Value::Int(-n)),
                         Value::Float(f) => self.stack.push(Value::Float(-f)),
-                        other => return Err(format!("Cannot negate non-numeric value {:?}", other)),
+                        other => {
+                            return Err(format!("Cannot negate non-numeric value {:?}", other));
+                        }
                     }
                 }
 
@@ -681,7 +708,8 @@ impl VirtualMachine {
                     });
                     let res = sub_vm.run_entry(&callee_name).unwrap_or(Value::Null);
 
-                    self.stack.push(Value::Task(Arc::new(Mutex::new(Some(res)))));
+                    self.stack
+                        .push(Value::Task(Arc::new(Mutex::new(Some(res)))));
                 }
 
                 OpCode::Await => {
@@ -696,7 +724,8 @@ impl VirtualMachine {
                 }
 
                 OpCode::MakeChan => {
-                    self.stack.push(Value::Chan(Arc::new(Mutex::new(Vec::new()))));
+                    self.stack
+                        .push(Value::Chan(Arc::new(Mutex::new(Vec::new()))));
                 }
 
                 OpCode::SendChan => {
@@ -753,7 +782,8 @@ impl VirtualMachine {
                         elements.push(self.pop_stack()?);
                     }
                     elements.reverse();
-                    self.stack.push(Value::Array(Rc::new(RefCell::new(elements))));
+                    self.stack
+                        .push(Value::Array(Rc::new(RefCell::new(elements))));
                 }
 
                 OpCode::MakeMap(count) => {
@@ -787,7 +817,9 @@ impl VirtualMachine {
                             let val = borrowed.get(&key_str).cloned().unwrap_or(Value::Null);
                             self.stack.push(val);
                         }
-                        (other, _) => return Err(format!("Cannot index non-collection value {:?}", other)),
+                        (other, _) => {
+                            return Err(format!("Cannot index non-collection value {:?}", other));
+                        }
                     }
                 }
 
@@ -811,7 +843,12 @@ impl VirtualMachine {
                             let mut borrowed = map.borrow_mut();
                             borrowed.insert(key_val.to_string(), val);
                         }
-                        (other, _) => return Err(format!("Cannot index-assign non-collection value {:?}", other)),
+                        (other, _) => {
+                            return Err(format!(
+                                "Cannot index-assign non-collection value {:?}",
+                                other
+                            ));
+                        }
                     }
                 }
 
@@ -823,7 +860,10 @@ impl VirtualMachine {
                             return Err("Assertion Failed: condition evaluated to false".into());
                         }
                         other => {
-                            return Err(format!("Assertion Failed: expected Bool condition, got {:?}", other));
+                            return Err(format!(
+                                "Assertion Failed: expected Bool condition, got {:?}",
+                                other
+                            ));
                         }
                     }
                 }
@@ -834,7 +874,9 @@ impl VirtualMachine {
     }
 
     fn pop_stack(&mut self) -> Result<Value, String> {
-        self.stack.pop().ok_or_else(|| "Stack underflow in VM".to_string())
+        self.stack
+            .pop()
+            .ok_or_else(|| "Stack underflow in VM".to_string())
     }
 }
 

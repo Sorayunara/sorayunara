@@ -67,7 +67,9 @@ impl Target {
             }
             Target::Wasm32 => "e-m:e-p:32:32-i64:64-n32:64-S128",
             Target::Riscv64 => "e-m:e-p:64:64-i64:64-i128:128-n32:64-S128",
-            Target::ArmCortexM | Target::Embedded => "e-m:e-p:32:32-Fi8-i64:64-v128:64:128-a:0:32-n32-S64",
+            Target::ArmCortexM | Target::Embedded => {
+                "e-m:e-p:32:32-Fi8-i64:64-v128:64:128-a:0:32-n32-S64"
+            }
             Target::Riscv32 | Target::Esp32 => "e-m:e-p:32:32-i64:64-n32-S32",
         }
     }
@@ -82,11 +84,16 @@ pub fn emit_llvm_ir_with_target(program: &Program, target: Target) -> String {
 
     ir.push_str("; ModuleID = 'sorayunara_module'\n");
     ir.push_str("source_filename = \"main.sora\"\n");
-    ir.push_str(&format!("target datalayout = \"{}\"\n", target.datalayout()));
+    ir.push_str(&format!(
+        "target datalayout = \"{}\"\n",
+        target.datalayout()
+    ));
     ir.push_str(&format!("target triple = \"{}\"\n\n", target.triple()));
 
     ir.push_str("@.str_fmt = private unnamed_addr constant [6 x i8] c\"%lld\\0A\\00\", align 1\n");
-    ir.push_str("@.str_fmt_s = private unnamed_addr constant [4 x i8] c\"%s\\0A\\00\", align 1\n\n");
+    ir.push_str(
+        "@.str_fmt_s = private unnamed_addr constant [4 x i8] c\"%s\\0A\\00\", align 1\n\n",
+    );
     ir.push_str("declare i32 @printf(i8*, ...)\n");
 
     // FFI: extern "C" blocks become LLVM declarations resolved by the linker.
@@ -130,7 +137,12 @@ pub fn emit_llvm_ir_with_target(program: &Program, target: Target) -> String {
                 param_strs.push(format!("{} %{}", to_llvm_type(p_ty), p_name));
             }
 
-            ir.push_str(&format!("define {} @{}({}) {{\n", ret_ty, name, param_strs.join(", ")));
+            ir.push_str(&format!(
+                "define {} @{}({}) {{\n",
+                ret_ty,
+                name,
+                param_strs.join(", ")
+            ));
             ir.push_str("entry:\n");
 
             for s in body {
@@ -216,7 +228,12 @@ fn emit_expr_llvm(expr: &SpannedExpr, out: &mut String) -> (String, &'static str
                 arg_items.push(format!("{} {}", ty, val));
             }
             let temp = format!("%c_{}", expr.span.start);
-            out.push_str(&format!("  {} = call i64 @{}({})\n", temp, callee, arg_items.join(", ")));
+            out.push_str(&format!(
+                "  {} = call i64 @{}({})\n",
+                temp,
+                callee,
+                arg_items.join(", ")
+            ));
             (temp, "i64")
         }
         _ => ("0".to_string(), "i64"),

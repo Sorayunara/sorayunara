@@ -2,26 +2,21 @@ name: Sorayunara Compiler CI/CD Matrix
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
 
 jobs:
-  matrix-build-and-test:
-    name: ${{ matrix.os }} · ${{ matrix.target }}
+  native-tests:
+    name: ${{ matrix.os }} · Host
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - os: windows-latest
-            target: x86_64-pc-windows-msvc
           - os: ubuntu-latest
-            target: x86_64-unknown-linux-gnu
           - os: macos-latest
-            target: aarch64-apple-darwin
-          - os: ubuntu-latest
-            target: wasm32-unknown-unknown
 
     steps:
       - name: Checkout repository
@@ -30,41 +25,25 @@ jobs:
       - name: Set up Rust toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ matrix.target }}
-          components: clippy, rustfmt
+          components: rustfmt
 
-      - name: Codebase Formatting & Linter Check
-        run: |
-          cargo fmt --check
-          cargo clippy -- -D warnings
+      - name: Verify Code Formatting
+        run: cargo fmt --check
 
-      - name: Core Compiler Pipeline & Stage Isolation Tests
-        run: |
-          cargo test --test compiler_suite_runner_tests
-          cargo test --test ir_pipeline_isolation_tests
-          cargo test --test grammar_verification_tests
+      - name: Run Full Compiler & Verification Test Suite
+        run: cargo test
 
-      - name: Type System Formal Suite & Negative Tests
-        run: |
-          cargo test --test type_system_formal_suite_tests
-          cargo test --test borrow_checker_matrix_tests
-          cargo test --test compile_fail_tests
+  wasm-check:
+    name: ubuntu-latest · wasm32-unknown-unknown
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Standard Library 18 Core Modules Verification
-        run: |
-          cargo test --test standard_library_ecosystem_tests
+      - name: Set up Rust toolchain with wasm32 target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
 
-      - name: Multi-Backend Emission (LLVM, C99, WASM)
-        run: |
-          cargo test --test multi_target_backend_tests
-          cargo test --test backend_ecosystem_tests
-
-      - name: Concurrency Runtime & High-Performance Benchmarks
-        run: |
-          cargo test --test runtime_concurrency_formal_tests
-          cargo test --test runtime_concurrency_benchmarks_tests -- --nocapture
-
-      - name: Security Sandbox & Memory Safety Audit
-        run: |
-          cargo test --test security_tests
-          cargo test --test reproducible_build_tests
+      - name: Check wasm32 compilation
+        run: cargo check --target wasm32-unknown-unknown

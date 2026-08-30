@@ -23,7 +23,12 @@ fn test_bench_channel_mpmc_throughput() {
     }
     producer.join().unwrap();
     let elapsed = start.elapsed();
-    println!("Channel MPMC Throughput: {} msgs in {:.2?} ({:.2} M/s)", count, elapsed, (count as f64 / elapsed.as_secs_f64()) / 1_000_000.0);
+    println!(
+        "Channel MPMC Throughput: {} msgs in {:.2?} ({:.2} M/s)",
+        count,
+        elapsed,
+        (count as f64 / elapsed.as_secs_f64()) / 1_000_000.0
+    );
     assert_eq!(received, count);
 }
 
@@ -42,7 +47,10 @@ fn test_bench_actor_dispatch_performance() {
     std::thread::sleep(std::time::Duration::from_millis(50));
     let elapsed = start.elapsed();
     let final_val = actor.get_state(|s| *s);
-    println!("Actor Dispatch: {} messages processed in {:.2?} (Final count: {})", count, elapsed, final_val);
+    println!(
+        "Actor Dispatch: {} messages processed in {:.2?} (Final count: {})",
+        count, elapsed, final_val
+    );
 }
 
 #[test]
@@ -55,5 +63,10 @@ fn test_bench_arena_allocator_performance() {
         let _ = arena.alloc(32, 8);
     }
     let elapsed = start.elapsed();
-    println!("Arena Allocation: {} allocs in {:.2?} ({:.2} ns/alloc)", count, elapsed, (elapsed.as_nanos() as f64) / count as f64);
+    println!(
+        "Arena Allocation: {} allocs in {:.2?} ({:.2} ns/alloc)",
+        count,
+        elapsed,
+        (elapsed.as_nanos() as f64) / count as f64
+    );
 }

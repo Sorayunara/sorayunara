@@ -1,4 +1,6 @@
-use sorayunara::concurrency_runtime::{Actor, AtomicInt, Channel, Mutex, RwLock, Semaphore, TaskScope};
+use sorayunara::concurrency_runtime::{
+    Actor, AtomicInt, Channel, Mutex, RwLock, Semaphore, TaskScope,
+};
 use std::sync::Arc;
 use std::thread;
 

@@ -2,7 +2,7 @@ use sorayunara::docgen::generate_html_docs;
 use sorayunara::ir::compile_to_ir;
 use sorayunara::lexer::tokenize;
 use sorayunara::linter::Linter;
-use sorayunara::llvm_backend::{emit_llvm_ir_with_target, Target};
+use sorayunara::llvm_backend::{Target, emit_llvm_ir_with_target};
 use sorayunara::lockfile::NamiLock;
 use sorayunara::optimizer::Optimizer;
 use sorayunara::parser::parse;
@@ -40,10 +40,19 @@ fn test_heavyweight_matrix_all_17_areas() {
 
     // 3. Memory & Security (Ownership / Borrow / Bounds / Sandbox)
     let memory_audit = SecurityEngine::audit_program_memory_safety(&program);
-    assert!(memory_audit.use_after_free_prevented, "3. Memory safety failed");
-    assert!(memory_audit.double_free_prevented, "3. Memory safety failed");
+    assert!(
+        memory_audit.use_after_free_prevented,
+        "3. Memory safety failed"
+    );
+    assert!(
+        memory_audit.double_free_prevented,
+        "3. Memory safety failed"
+    );
     let sandbox = SecurityPolicy::strict_sandbox();
-    assert!(sandbox.check_fs_read("secret.pem").is_err(), "3. Sandbox security failed");
+    assert!(
+        sandbox.check_fs_read("secret.pem").is_err(),
+        "3. Sandbox security failed"
+    );
 
     // 4. Concurrency Runtime & 5. Compiler Multi-stage IR & 13. Optimizer
     let ir = compile_to_ir(&program);
@@ -52,13 +61,25 @@ fn test_heavyweight_matrix_all_17_areas() {
 
     // 6. Backend (Native LLVM + WASM + VM)
     let llvm_x64 = emit_llvm_ir_with_target(&program, Target::LinuxX64);
-    assert!(llvm_x64.contains("x86_64-unknown-linux-gnu"), "6. LLVM x86_64 target failed");
+    assert!(
+        llvm_x64.contains("x86_64-unknown-linux-gnu"),
+        "6. LLVM x86_64 target failed"
+    );
     let llvm_arm = emit_llvm_ir_with_target(&program, Target::LinuxArm64);
-    assert!(llvm_arm.contains("aarch64-unknown-linux-gnu"), "6. LLVM ARM64 target failed");
+    assert!(
+        llvm_arm.contains("aarch64-unknown-linux-gnu"),
+        "6. LLVM ARM64 target failed"
+    );
     let llvm_riscv = emit_llvm_ir_with_target(&program, Target::Riscv64);
-    assert!(llvm_riscv.contains("riscv64gc-unknown-linux-gnu"), "6. LLVM RISC-V target failed");
+    assert!(
+        llvm_riscv.contains("riscv64gc-unknown-linux-gnu"),
+        "6. LLVM RISC-V target failed"
+    );
     let llvm_cortex = emit_llvm_ir_with_target(&program, Target::ArmCortexM);
-    assert!(llvm_cortex.contains("thumbv7em-none-eabihf"), "6. LLVM Cortex-M target failed");
+    assert!(
+        llvm_cortex.contains("thumbv7em-none-eabihf"),
+        "6. LLVM Cortex-M target failed"
+    );
 
     // Execution in VM Runtime
     let exec_val = execute_ir(opt_ir).expect("6. VM execution failed");
@@ -73,21 +94,42 @@ fn test_heavyweight_matrix_all_17_areas() {
         name: "http".to_string(),
         version: "1.0.0".to_string(),
         source: "https://packages.nami.dev/http".to_string(),
-        checksum: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855".to_string(),
+        checksum: "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            .to_string(),
         dependencies: vec![],
     });
-    assert!(SecurityEngine::verify_lockfile_security(&lock).is_ok(), "8. Lockfile verification failed");
+    assert!(
+        SecurityEngine::verify_lockfile_security(&lock).is_ok(),
+        "8. Lockfile verification failed"
+    );
     let client = RegistryClient::new();
-    assert!(!client.search("http").is_empty(), "8. Registry search failed");
+    assert!(
+        !client.search("http").is_empty(),
+        "8. Registry search failed"
+    );
 
     // 9. Security audit
     let audit_res = client.audit_project(Path::new("."));
-    assert_eq!(audit_res.vulnerabilities_found, 0, "9. Security audit failed");
+    assert_eq!(
+        audit_res.vulnerabilities_found, 0,
+        "9. Security audit failed"
+    );
 
     // 10. Networking Stack
-    let net_modules = vec!["std/http.sora", "std/net.sora", "std/tls.sora", "std/quic.sora", "std/websocket.sora", "std/grpc.sora"];
+    let net_modules = vec![
+        "std/http.sora",
+        "std/net.sora",
+        "std/tls.sora",
+        "std/quic.sora",
+        "std/websocket.sora",
+        "std/grpc.sora",
+    ];
     for mod_path in net_modules {
-        assert!(Path::new(mod_path).exists(), "10. Networking module missing: {}", mod_path);
+        assert!(
+            Path::new(mod_path).exists(),
+            "10. Networking module missing: {}",
+            mod_path
+        );
     }
 
     // 11. Tooling (LSP + Formatter + Linter)
@@ -110,14 +152,29 @@ fn test_heavyweight_matrix_all_17_areas() {
     // 15. Documentation Generator
     let doc_out = Path::new("target/matrix_docs");
     let _ = generate_html_docs(&program, source, "Matrix Test", doc_out);
-    assert!(doc_out.join("index.html").exists(), "15. Doc generator failed");
+    assert!(
+        doc_out.join("index.html").exists(),
+        "15. Doc generator failed"
+    );
 
     // 16. Platforms & Standard Library
-    assert!(Path::new("std/embedded.sora").exists(), "16. Baremetal HAL missing");
+    assert!(
+        Path::new("std/embedded.sora").exists(),
+        "16. Baremetal HAL missing"
+    );
     assert!(Path::new("std/ml.sora").exists(), "16. ML Interop missing");
 
     // 17. Ecosystem (Playground + VS Code + Specification)
-    assert!(Path::new("SPECIFICATION.md").exists(), "17. Specification missing");
-    assert!(Path::new("playground/index.html").exists(), "17. Playground missing");
-    assert!(Path::new("editors/vscode/package.json").exists(), "17. VS Code extension missing");
+    assert!(
+        Path::new("SPECIFICATION.md").exists(),
+        "17. Specification missing"
+    );
+    assert!(
+        Path::new("playground/index.html").exists(),
+        "17. Playground missing"
+    );
+    assert!(
+        Path::new("editors/vscode/package.json").exists(),
+        "17. VS Code extension missing"
+    );
 }

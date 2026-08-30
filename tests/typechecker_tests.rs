@@ -1,10 +1,18 @@
+use sorayunara::diagnostic::Span;
 use sorayunara::lexer::tokenize;
 use sorayunara::parser::parse;
 use sorayunara::semantics::check_semantics;
-use sorayunara::diagnostic::Span;
 use std::collections::HashMap;
 
-fn run_analysis(src: &str) -> Result<(sorayunara::symbol_table::SymbolTable, HashMap<Span, sorayunara::symbol_table::Type>), String> {
+fn run_analysis(
+    src: &str,
+) -> Result<
+    (
+        sorayunara::symbol_table::SymbolTable,
+        HashMap<Span, sorayunara::symbol_table::Type>,
+    ),
+    String,
+> {
     let tokens = tokenize(src).map_err(|e| format!("Lexer error: {:?}", e))?;
     let program = parse(tokens).map_err(|(e, _)| format!("Parse error: {}", e))?;
     check_semantics(&program).map_err(|engine| engine.render_all("test.sora", src))
@@ -18,13 +26,16 @@ fn assert_inferred_type(src: &str, var_name: &str, expected_snippet: &str) {
         result.unwrap_err()
     );
     let (symtab, _annot) = result.unwrap();
-    let var = symtab.get_variable(var_name)
+    let var = symtab
+        .get_variable(var_name)
         .unwrap_or_else(|| panic!("Variable {} not found", var_name));
     let display = format!("{}", var.ty);
     assert!(
         display.contains(expected_snippet),
         "Expected type of `{}` to contain `{}`, got `{}`",
-        var_name, expected_snippet, display
+        var_name,
+        expected_snippet,
+        display
     );
 }
 
@@ -141,7 +152,11 @@ fn test_generic_constraint_comparable_valid() {
         }
     "#;
     let result = run_analysis(source);
-    assert!(result.is_ok(), "Expected comparable to be satisfied for Int, got: {}", result.unwrap_err());
+    assert!(
+        result.is_ok(),
+        "Expected comparable to be satisfied for Int, got: {}",
+        result.unwrap_err()
+    );
     assert_inferred_type(source, "r", "Int");
 }
 
@@ -211,7 +226,11 @@ fn test_type_narrowing_union_if_is() {
         }
     "#;
     let result = run_analysis(source);
-    assert!(result.is_ok(), "Type narrowing via `is` should pass: {}", result.unwrap_err());
+    assert!(
+        result.is_ok(),
+        "Type narrowing via `is` should pass: {}",
+        result.unwrap_err()
+    );
 }
 
 #[test]
@@ -226,7 +245,11 @@ fn test_type_narrowing_with_logical_and() {
         fn main() {}
     "#;
     let result = run_analysis(source);
-    assert!(result.is_ok(), "Nested narrowing should pass: {}", result.unwrap_err());
+    assert!(
+        result.is_ok(),
+        "Nested narrowing should pass: {}",
+        result.unwrap_err()
+    );
 }
 
 #[test]
@@ -242,7 +265,11 @@ fn test_type_narrowing_negation_else() {
         fn main() {}
     "#;
     let result = run_analysis(source);
-    assert!(result.is_ok(), "Else-branch narrowing should work: {}", result.unwrap_err());
+    assert!(
+        result.is_ok(),
+        "Else-branch narrowing should work: {}",
+        result.unwrap_err()
+    );
 }
 
 // =====================================================
@@ -262,7 +289,11 @@ fn test_adt_enum_basic_declaration() {
         }
     "#;
     let result = run_analysis(source);
-    assert!(result.is_ok(), "Simple ADT enum with payloads should register: {}", result.unwrap_err());
+    assert!(
+        result.is_ok(),
+        "Simple ADT enum with payloads should register: {}",
+        result.unwrap_err()
+    );
 }
 
 #[test]
@@ -277,7 +308,11 @@ fn test_adt_enum_multiple_payloads() {
         }
     "#;
     let result = run_analysis(source);
-    assert!(result.is_ok(), "Multi-variant ADT should parse and check: {}", result.unwrap_err());
+    assert!(
+        result.is_ok(),
+        "Multi-variant ADT should parse and check: {}",
+        result.unwrap_err()
+    );
 }
 
 #[test]
@@ -294,7 +329,11 @@ fn test_adt_enum_with_unit_payloads() {
         }
     "#;
     let result = run_analysis(source);
-    assert!(result.is_ok(), "Unit-only enum variants OK: {}", result.unwrap_err());
+    assert!(
+        result.is_ok(),
+        "Unit-only enum variants OK: {}",
+        result.unwrap_err()
+    );
 }
 
 #[test]
@@ -311,7 +350,11 @@ fn test_adt_enum_complex_nested() {
         }
     "#;
     let result = run_analysis(source);
-    assert!(result.is_ok(), "Json-like ADT compiles: {}", result.unwrap_err());
+    assert!(
+        result.is_ok(),
+        "Json-like ADT compiles: {}",
+        result.unwrap_err()
+    );
 }
 
 // =====================================================
@@ -354,7 +397,11 @@ fn test_exhaustiveness_bool_full() {
         fn main() {}
     "#;
     let result = run_analysis(source);
-    assert!(result.is_ok(), "Bool match with both branches should pass: {}", result.unwrap_err());
+    assert!(
+        result.is_ok(),
+        "Bool match with both branches should pass: {}",
+        result.unwrap_err()
+    );
 }
 
 #[test]
@@ -369,7 +416,11 @@ fn test_exhaustiveness_bool_wildcard_catchall() {
         fn main() {}
     "#;
     let result = run_analysis(source);
-    assert!(result.is_ok(), "Bool match with wildcard should pass: {}", result.unwrap_err());
+    assert!(
+        result.is_ok(),
+        "Bool match with wildcard should pass: {}",
+        result.unwrap_err()
+    );
 }
 
 #[test]
@@ -404,7 +455,11 @@ fn test_exhaustiveness_option_full() {
         fn main() {}
     "#;
     let result = run_analysis(source);
-    assert!(result.is_ok(), "Some/None match should pass: {}", result.unwrap_err());
+    assert!(
+        result.is_ok(),
+        "Some/None match should pass: {}",
+        result.unwrap_err()
+    );
 }
 
 #[test]
@@ -418,7 +473,10 @@ fn test_exhaustiveness_result_missing_err() {
         fn main() {}
     "#;
     let result = run_analysis(source);
-    assert!(result.is_err(), "Result missing Err should fail exhaustiveness");
+    assert!(
+        result.is_err(),
+        "Result missing Err should fail exhaustiveness"
+    );
     let err = result.unwrap_err();
     assert!(
         err.contains("Err") || err.contains("Result"),
@@ -439,7 +497,11 @@ fn test_exhaustiveness_result_full() {
         fn main() {}
     "#;
     let result = run_analysis(source);
-    assert!(result.is_ok(), "Result with Ok+Err should be exhaustive: {}", result.unwrap_err());
+    assert!(
+        result.is_ok(),
+        "Result with Ok+Err should be exhaustive: {}",
+        result.unwrap_err()
+    );
 }
 
 #[test]
@@ -459,7 +521,11 @@ fn test_exhaustiveness_wildcard_covers_all() {
         fn main() {}
     "#;
     let result = run_analysis(source);
-    assert!(result.is_ok(), "Wildcard covers rest: {}", result.unwrap_err());
+    assert!(
+        result.is_ok(),
+        "Wildcard covers rest: {}",
+        result.unwrap_err()
+    );
 }
 
 // =====================================================
@@ -508,8 +574,16 @@ fn test_integration_all_five_features_combined() {
     let (symtab, _) = result.unwrap();
 
     let f = symtab.lookup_function("cmp_max").unwrap();
-    assert_eq!(f.type_params.len(), 1, "cmp_max should have 1 generic param");
-    assert_eq!(f.type_params[0].1.first().unwrap(), "Comparable", "Generic param T should be Comparable");
+    assert_eq!(
+        f.type_params.len(),
+        1,
+        "cmp_max should have 1 generic param"
+    );
+    assert_eq!(
+        f.type_params[0].1.first().unwrap(),
+        "Comparable",
+        "Generic param T should be Comparable"
+    );
 }
 
 // =====================================================
@@ -529,7 +603,11 @@ fn test_typecheck_valid_program() {
         }
     "#;
     let result = run_analysis(source);
-    assert!(result.is_ok(), "Basic program should pass: {}", result.unwrap_err());
+    assert!(
+        result.is_ok(),
+        "Basic program should pass: {}",
+        result.unwrap_err()
+    );
 }
 
 #[test]
@@ -561,7 +639,11 @@ fn test_narrowed_string_supports_length_method_and_println() {
         fn main() {}
     "#;
     let result = run_analysis(source);
-    assert!(result.is_ok(), "Narrowed String should support length(): {}", result.unwrap_err());
+    assert!(
+        result.is_ok(),
+        "Narrowed String should support length(): {}",
+        result.unwrap_err()
+    );
 }
 
 #[test]
@@ -600,5 +682,9 @@ fn test_generic_constraint_rejects_non_comparable_type() {
         }
     "#;
     let error = run_analysis(source).expect_err("Array does not implement Comparable");
-    assert!(error.contains("Comparable"), "Expected Comparable constraint error, got: {}", error);
+    assert!(
+        error.contains("Comparable"),
+        "Expected Comparable constraint error, got: {}",
+        error
+    );
 }

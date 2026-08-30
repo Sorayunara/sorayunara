@@ -116,7 +116,9 @@ impl BenchmarkSuite {
 
     pub fn render_markdown_table(results: &[BenchmarkResult]) -> String {
         let mut table = String::new();
-        table.push_str("| Benchmark Category | Metric Unit | Sorayunara | Rust | Go | C++ | Zig |\n");
+        table.push_str(
+            "| Benchmark Category | Metric Unit | Sorayunara | Rust | Go | C++ | Zig |\n",
+        );
         table.push_str("|:---|:---|:---:|:---:|:---:|:---:|:---:|\n");
         for r in results {
             table.push_str(&format!(
